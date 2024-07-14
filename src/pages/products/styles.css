@@ -1,0 +1,35 @@
+.square-image {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    display: inline-block;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.square-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-card {
+    margin-bottom: 20px;
+}
+
+.product-image {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+
+}
