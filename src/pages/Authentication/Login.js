@@ -15,6 +15,7 @@ import {
 import { Link } from "react-router-dom"
 import withRouter from "components/Common/withRouter"
 import profile from "assets/images/profile-img.png"
+import io from "socket.io-client"
 import logo from "assets/images/logo.svg"
 import axios from "axios"
 import { useDispatch } from "react-redux"
@@ -33,6 +34,8 @@ const Login = ({ history }) => {
   const dispatch = useDispatch()
 
   const handleLogin = async () => {
+    console.log("yfyyuguigiuguiguiguigiu")
+
     let hasError = false
     if (email === "") {
       setEmailError(true)
@@ -46,7 +49,7 @@ const Login = ({ history }) => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_DATABASEURL}/admin/signin`,
+        `${process.env.REACT_APP_DATABASEURL}/admins/signin`,
         {
           email,
           password,
@@ -58,7 +61,12 @@ const Login = ({ history }) => {
       } else {
         localStorage.setItem("authUser", JSON.stringify(response.data.token))
         localStorage.setItem("admin", JSON.stringify(response.data.admin))
-        dispatch(loginUser(response.data.token, history))
+        io("ws://localhost:3636", {
+          query: {
+            client: JSON.stringify(response.data.admin),
+          },
+        })
+        // dispatch(loginUser(response.data.token, history))
         navigate("/dashboard")
       }
     } catch (error) {

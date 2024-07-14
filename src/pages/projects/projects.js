@@ -25,7 +25,6 @@ const Projects = () => {
         const response = await axios.get(
           process.env.REACT_APP_DATABASEURL + "/projects/find-all"
         )
-        console.log("Fetched projects:", response.data)
         setProjects(response.data)
         setLoading(false)
       } catch (error) {
@@ -39,8 +38,6 @@ const Projects = () => {
   const indexOfLast = currentPage * perPageData
   const indexOfFirst = indexOfLast - perPageData
   const currentdata = projects.slice(indexOfFirst, indexOfLast)
-
-  console.log("Current data to be displayed:", currentdata) // Debug: Check current page data
 
   return (
     <React.Fragment>

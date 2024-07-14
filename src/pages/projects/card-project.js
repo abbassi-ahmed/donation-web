@@ -4,8 +4,6 @@ import { Link } from "react-router-dom"
 import { Badge, Card, CardBody, Col, UncontrolledTooltip } from "reactstrap"
 
 const CardProject = ({ projects }) => {
-  console.log("Projects prop received by CardProject:", projects) // Debug: Check received projects prop
-
   return (
     <React.Fragment>
       {(projects || []).map((project, key) => (
@@ -95,11 +93,14 @@ const CardProject = ({ projects }) => {
                     Target Date
                   </UncontrolledTooltip>
                 </li>
-                <li className="list-inline-item me-3" id="comments">
-                  <i className="bx bx-comment-dots me-1" />
-                  {project.commentsCount || 0}
+                <li
+                  className="list-inline-item me-3 align-self-center"
+                  id="comments"
+                >
+                  <i className="bx bx-dollar me-1" />
+                  {project.target || 0}
                   <UncontrolledTooltip placement="top" target="comments">
-                    Comments
+                    Target Amount
                   </UncontrolledTooltip>
                 </li>
               </ul>

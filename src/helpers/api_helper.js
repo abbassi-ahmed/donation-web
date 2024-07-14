@@ -41,7 +41,7 @@ export async function del(url, config = {}) {
 }
 export const fetchProfile = async () => {
   try {
-    const response = await axios.get(`${API_URL}/admin/verify`)
+    const response = await axios.get(`${API_URL}/admins/verify`)
     return response.data
   } catch (error) {
     throw new Error(error.response ? error.response.data : error.message)

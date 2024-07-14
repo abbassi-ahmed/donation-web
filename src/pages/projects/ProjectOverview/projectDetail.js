@@ -1,8 +1,9 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { Card, CardBody, Col, Row } from "reactstrap"
+import ProgressBar from "react-bootstrap/ProgressBar"
 
-const ProjectDetail = ({ project }) => {
+const ProjectDetail = ({ project, sum }) => {
   return (
     <Card>
       <CardBody>
@@ -21,6 +22,16 @@ const ProjectDetail = ({ project }) => {
         <p className="text-muted">
           {project.description || "No detailed description available."}
         </p>
+        <h5 className="font-size-15 mt-4">Project Progress :</h5>
+        <ProgressBar
+          now={project.target ? (sum / project.target) * 100 : 0}
+          animated
+          style={{ height: "20px" }}
+          color="primary"
+          label={`${
+            project.target ? ((sum / project.target) * 100).toFixed(2) : "0.00"
+          }%`}
+        />
         <Row className="task-dates">
           <Col sm="4" xs="6">
             <div className="mt-4">
@@ -41,6 +52,15 @@ const ProjectDetail = ({ project }) => {
               <p className="text-muted mb-0">
                 {new Date(project.targetDate).toLocaleDateString()}
               </p>
+            </div>
+          </Col>
+          <Col sm="4" xs="6">
+            <div className="mt-4">
+              <h5 className="font-size-14">
+                <i className="bx bx-dollar-circle me-1 text-primary" /> Target
+                Ammount
+              </h5>
+              <p className="text-muted mb-0">{project.target}</p>
             </div>
           </Col>
         </Row>

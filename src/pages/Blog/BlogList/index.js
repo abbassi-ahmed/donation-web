@@ -8,16 +8,15 @@ import BlogList from "./BlogList"
 import RightBar from "./RightBar"
 
 const Index = () => {
-    //meta title
-    document.title="Blog List | Skote - React Admin & Dashboard Template";
+  //meta title
+  document.title = "Blog List | Skote - React Admin & Dashboard Template"
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title="Blog" breadcrumbItem="Blog List" />
-          <Row>
+          <Row className="justify-content-center">
             <BlogList />
-            <RightBar />
           </Row>
         </Container>
       </div>

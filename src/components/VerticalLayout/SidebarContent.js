@@ -174,24 +174,6 @@ const SidebarContent = props => {
                 <span>{props.t("Calendar")}</span>
               </Link>
             </li>
-            <li>
-              <Link to="/abonnement">
-                <i className="bx bx-gift"></i>
-                <span>{props.t("Abonnement")}</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/offers">
-                <i className="bx bxs-offer"></i>
-                <span>{props.t("Offer")}</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/courses">
-                <i className="bx bx-dumbbell"></i>
-                <span>{props.t("Courses")}</span>
-              </Link>
-            </li>
 
             {/* <li>
               <Link to="/apps-filemanager">
@@ -202,18 +184,19 @@ const SidebarContent = props => {
 
             <li>
               <Link to="/#" className="has-arrow ">
-                <i className="bx bx-group"></i>
-                <span>{props.t("Coaches")}</span>
+                <i className="bx bx-book-open"></i>
+                <span>{props.t("Projects")}</span>
               </Link>
               <ul className="sub-menu">
                 <li>
-                  <Link to="/coaches">{props.t("Coaches")}</Link>
+                  <Link to="/projects">{props.t("Projects")}</Link>
                 </li>
                 <li>
-                  <Link to="/coaches-create">{props.t("Create New")}</Link>
+                  <Link to="/projects-create">{props.t("Create New")}</Link>
                 </li>
               </ul>
             </li>
+            {/* 
             <li>
               <Link to="/#" className="has-arrow ">
                 <i className="bx bx-cart"></i>
@@ -227,7 +210,7 @@ const SidebarContent = props => {
                   <Link to="/products-create">{props.t("Create New")}</Link>
                 </li>
               </ul>
-            </li>
+            </li> */}
 
             <li>
               <Link to="/#" className="has-arrow ">
@@ -239,9 +222,6 @@ const SidebarContent = props => {
                   <Link to="/manage-admins">{props.t("Admins List")}</Link>
                 </li>
                 <li>
-                  <Link to="/manage-coach">{props.t("Coaches List")}</Link>
-                </li>
-                <li>
                   <Link to="/manage-users">{props.t("Users List")}</Link>
                 </li>
               </ul>
@@ -249,21 +229,31 @@ const SidebarContent = props => {
             <li>
               <Link to="/#" className="has-arrow ">
                 <i className="bx bx-dollar"></i>
-                <span>{props.t("Payments")}</span>
+                <span>{props.t("Donations")}</span>
               </Link>
               <ul className="sub-menu">
                 <li>
-                  <Link to="/abonnement-payments">
-                    {props.t("Abonnement Payments")}
+                  <Link to="/project-donation">
+                    {props.t("Project Donations")}
                   </Link>
                 </li>
                 <li>
-                  <Link to="/offer-payments">{props.t("Offer Payments")}</Link>
+                  <Link to="/donation">{props.t("Donation")}</Link>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <Link to="/#" className="has-arrow">
+                <i className="bx bxs-detail" />
+
+                <span>{props.t("Blog")}</span>
+              </Link>
+              <ul className="sub-menu">
+                <li>
+                  <Link to="/blog-grid">{props.t("Blogs")}</Link>
                 </li>
                 <li>
-                  <Link to="/product-payments">
-                    {props.t("Product Payments")}
-                  </Link>
+                  <Link to="/blog-create">{props.t("Blog Create")}</Link>
                 </li>
               </ul>
             </li>
@@ -272,24 +262,6 @@ const SidebarContent = props => {
                 <i className="bx bxs-comment-detail"></i>
                 <span>{props.t("Feedback")}</span>
               </Link>
-            </li> */}
-            {/* <li>
-              <Link to="/#" className="has-arrow">
-                <i className="bx bxs-detail" />
-
-                <span>{props.t("Blog")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/blog-list">{props.t("Blog List")}</Link>
-                </li>
-                <li>
-                  <Link to="/blog-grid">{props.t("Blog Grid")}</Link>
-                </li>
-                <li>
-                  <Link to="/blog-details">{props.t("Blog Details")}</Link>
-                </li>
-              </ul>
             </li> */}
 
             {/* <li className="menu-title">Pages</li>

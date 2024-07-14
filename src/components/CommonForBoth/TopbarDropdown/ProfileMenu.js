@@ -31,9 +31,8 @@ const ProfileMenu = props => {
           throw new Error("Token not found")
         }
         const response = await axios.post(
-          process.env.REACT_APP_DATABASEURL + "/admin/verify",
-          {},
-          { headers: { token: `${token}` } }
+          process.env.REACT_APP_DATABASEURL + "/admins/verify",
+          { token: token }
         )
         const profile = response.data
         setUser(profile)
@@ -41,7 +40,6 @@ const ProfileMenu = props => {
         console.error("Error fetching profile data", err)
       }
     }
-
     fetchProfile()
   }, [props.success])
 

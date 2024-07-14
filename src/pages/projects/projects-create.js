@@ -174,23 +174,6 @@ const ProjectsCreate = () => {
                       id="project-id-input"
                     />
                     <div className="mb-3">
-                      <Label htmlFor="projectname-input">Project Name</Label>
-                      <Input
-                        id="projectname"
-                        name="projectname"
-                        type="text"
-                        placeholder="Enter Project Name..."
-                        onChange={validation.handleChange}
-                        value={validation.values.projectname || ""}
-                      />
-                      {validation.touched.projectname &&
-                      validation.errors.projectname ? (
-                        <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.projectname}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                    <div className="mb-3">
                       <Label className="form-label">Project Image</Label>
 
                       <div className="text-center">
@@ -239,6 +222,23 @@ const ProjectsCreate = () => {
                           </FormFeedback>
                         ) : null}
                       </div>
+                    </div>
+                    <div className="mb-3">
+                      <Label htmlFor="projectname-input">Project Name</Label>
+                      <Input
+                        id="projectname"
+                        name="projectname"
+                        type="text"
+                        placeholder="Enter Project Name..."
+                        onChange={validation.handleChange}
+                        value={validation.values.projectname || ""}
+                      />
+                      {validation.touched.projectname &&
+                      validation.errors.projectname ? (
+                        <FormFeedback type="invalid" className="d-block">
+                          {validation.errors.projectname}
+                        </FormFeedback>
+                      ) : null}
                     </div>
                     <div className="mb-3">
                       <Label htmlFor="projectdesc-input">

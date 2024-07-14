@@ -57,19 +57,6 @@ const BlogList = () => {
                 All Post
               </NavLink>
             </NavItem>
-            <NavItem tag="li">
-              <NavLink
-                to="#"
-                className={classnames({
-                  active: activeTab === "2",
-                })}
-                onClick={() => {
-                  toggleTab("2")
-                }}
-              >
-                Archive
-              </NavLink>
-            </NavItem>
           </Nav>
 
           <TabContent className="p-4" activeTab={activeTab}>

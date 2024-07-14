@@ -1,35 +1,104 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import PropTypes from "prop-types"
 import { isEmpty } from "lodash"
 import { Col, Container, Row } from "reactstrap"
 import Breadcrumbs from "components/Common/Breadcrumb"
 import ProjectDetail from "./projectDetail"
 import TeamMembers from "./teamMembers"
 import OverviewChart from "./overviewChart"
-import AttachedFiles from "./attachedFiles"
-import Comments from "./comments"
+import axios from "axios"
+import { io } from "socket.io-client"
 
 const ProjectsOverview = () => {
   // Meta title
-  document.title = "Project Overview | Skote - React Admin & Dashboard Template"
+  document.title = "Project Overview"
 
   const { id } = useParams()
   const [projectDetail, setProjectDetail] = useState({})
   const [error, setError] = useState(null)
+  const [donators, setDonators] = useState([])
+  const [sum, setSum] = useState(0)
+  const [chartData, setChartData] = useState({ options: {}, series: [] })
+  const [user, setUser] = useState({})
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("authUser"))
+        if (!token) {
+          throw new Error("Token not found")
+        }
+        const response = await axios.post(
+          process.env.REACT_APP_DATABASEURL + "/admins/verify",
+          { token: token }
+        )
+        const profile = response.data
+        setUser(profile)
+        const socket = io("ws://localhost:3636", {
+          query: {
+            client: JSON.stringify(user),
+          },
+        })
+
+        socket.on("AddDonation", () => {
+          fetchProjectDetail(id)
+        })
+      } catch (err) {
+        console.error("Error fetching profile data", err)
+      }
+    }
+    fetchProfile()
+  }, [])
 
   const fetchProjectDetail = async projectId => {
     try {
-      const response = await fetch(
+      const projectResponse = await axios.get(
         `${process.env.REACT_APP_DATABASEURL}/projects/find-one/${projectId}`
       )
+      setProjectDetail(projectResponse.data)
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`)
+      await axios
+        .get(
+          `${process.env.REACT_APP_DATABASEURL}/project-donation/get-sum-of-donations/${projectId}`
+        )
+        .then(response => {
+          setSum(response.data.sum)
+        })
+
+      const donationResponse = await axios.get(
+        `${process.env.REACT_APP_DATABASEURL}/project-donation/find-by-project-id/${projectId}`
+      )
+      setDonators(donationResponse.data)
+
+      const chartSeries = [
+        {
+          name: "Donations",
+          data: donationResponse.data.map(donation => ({
+            x: donation.user.firstName,
+            y: donation.amount,
+          })),
+        },
+      ]
+
+      const chartOptions = {
+        chart: {
+          type: "bar",
+        },
+        xaxis: {
+          type: "category",
+        },
+        yaxis: {
+          title: {
+            text: "Amount",
+          },
+        },
+        title: {
+          text: "Donation Overview",
+          align: "left",
+        },
       }
 
-      const data = await response.json()
-      setProjectDetail(data)
+      setChartData({ options: chartOptions, series: chartSeries })
     } catch (error) {
       setError(error.message)
     }
@@ -40,9 +109,6 @@ const ProjectsOverview = () => {
       fetchProjectDetail(id)
     }
   }, [id])
-
-  const options = {} // Placeholder for chart options
-  const series = [] // Placeholder for chart series
 
   if (error) {
     return <div>Error: {error}</div>
@@ -57,25 +123,20 @@ const ProjectsOverview = () => {
             <>
               <Row>
                 <Col lg="8">
-                  <ProjectDetail project={projectDetail} />
+                  <ProjectDetail project={projectDetail} sum={sum} />
                 </Col>
 
                 <Col lg="4">
-                  <TeamMembers team={projectDetail.team} />
+                  <TeamMembers team={donators} sum={sum} />
                 </Col>
               </Row>
 
               <Row>
-                <Col lg="4">
-                  <OverviewChart options={options} series={series} />
-                </Col>
-
-                <Col lg="4">
-                  <AttachedFiles files={projectDetail.files} />
-                </Col>
-
-                <Col lg="4">
-                  <Comments comments={projectDetail.comments} />
+                <Col lg="12">
+                  <OverviewChart
+                    options={chartData.options}
+                    series={chartData.series}
+                  />
                 </Col>
               </Row>
             </>
@@ -84,10 +145,6 @@ const ProjectsOverview = () => {
       </div>
     </React.Fragment>
   )
-}
-
-ProjectsOverview.propTypes = {
-  match: PropTypes.object,
 }
 
 export default ProjectsOverview

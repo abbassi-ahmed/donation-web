@@ -17,13 +17,17 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 import * as Yup from "yup"
 import { useFormik } from "formik"
 import axios from "axios"
+import Switch from "@mui/material/Switch"
+
 import "./styles.css"
-const ProductCreate = () => {
+
+const CreateBlog = () => {
   document.title = "Create New Product "
 
   const [selectedImage, setSelectedImage] = useState(null)
   const [img, setImg] = useState(null)
   const [loader, setLoader] = useState(false)
+  const [blogPrivacy, setBlogPrivacy] = useState(false)
 
   const handleImageChange = e => {
     e.preventDefault()
@@ -41,39 +45,38 @@ const ProductCreate = () => {
 
   const validation = useFormik({
     initialValues: {
-      productName: "",
-      productPrice: "",
-      productImage: "",
-      productQuantity: "",
-      productDescription: "",
+      blogTitle: "",
+      blogContent: "",
+      blogImage: "",
     },
     validationSchema: Yup.object({
-      productName: Yup.string().required("Product Name is required"),
-      productPrice: Yup.string().required("Product Price is required"),
-      productImage: Yup.string().required("Product Image is required"),
-      productQuantity: Yup.string().required("Product Quantity is required"),
-      productDescription: Yup.string().required(
-        "Product Description is required"
-      ),
+      blogTitle: Yup.string().required("Title is required"),
+      blogContent: Yup.string().required("Content is required"),
+      blogImage: Yup.string().required("Image is required"),
     }),
     onSubmit: async values => {
       const formDat = new FormData()
       formDat.append("image", img)
-      formDat.append("name", values.productName)
-      formDat.append("price", values.productPrice)
-      formDat.append("quantity", values.productQuantity)
-      formDat.append("description", values.productDescription)
+      formDat.append("title", values.blogTitle)
+      formDat.append("content", values.blogContent)
+      formDat.append("privacy", blogPrivacy)
+
       try {
         setLoader(true)
         const response = await axios.post(
-          process.env.REACT_APP_DATABASEURL + "/products/create",
-          formDat
+          process.env.REACT_APP_DATABASEURL + "/blogs/create",
+          formDat,
+          {
+            headers: {
+              token: localStorage.getItem("token"),
+            },
+          }
         )
         if (response.data) {
           validation.resetForm()
           setSelectedImage(null)
           setImg(null)
-          toast.success("🎉 Product Created Successfully")
+          toast.success("🎉 Blog Created Successfully")
           setLoader(false)
         }
       } catch (error) {
@@ -89,7 +92,7 @@ const ProductCreate = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumbs title="Products" breadcrumbItem="Create New" />
+          <Breadcrumbs title="Blogs" breadcrumbItem="Create New" />
           <Form
             id="createcoach-form"
             onSubmit={e => {
@@ -115,7 +118,7 @@ const ProductCreate = () => {
                       id="coach-id-input"
                     />
                     <div className="mb-3">
-                      <Label className="form-label">Product Image</Label>
+                      <Label className="form-label">Blog Image</Label>
                       <div className="text-center">
                         <div className="position-relative d-inline-block">
                           <div className="position-absolute bottom-0 end-0">
@@ -163,74 +166,55 @@ const ProductCreate = () => {
                     </div>
 
                     <div className="mb-3">
-                      <Label htmlFor="productName-input">Product Name</Label>
+                      <Label htmlFor="blogTitle-input">Blog Title</Label>
                       <Input
-                        id="productName"
-                        name="productName"
+                        id="blogTitle"
+                        name="blogTitle"
                         type="text"
-                        placeholder="Enter Product Name..."
+                        placeholder="Enter Product Title..."
                         onChange={validation.handleChange}
-                        value={validation.values.productName || ""}
+                        value={validation.values.blogTitle || ""}
                       />
-                      {validation.touched.productName &&
-                      validation.errors.productName ? (
+                      {validation.touched.blogTitle &&
+                      validation.errors.blogTitle ? (
                         <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.productName}
+                          {validation.errors.blogTitle}
                         </FormFeedback>
                       ) : null}
                     </div>
                     <div className="mb-3">
-                      <Label htmlFor="productName-input">Product Price</Label>
+                      <Label htmlFor="blogContent-input">Blog Content</Label>
                       <Input
-                        id="productPrice"
-                        name="productPrice"
+                        id="blogContent"
+                        name="blogContent"
                         type="text"
-                        placeholder="Enter Product Price..."
+                        placeholder="Enter Blog Content..."
                         onChange={validation.handleChange}
-                        value={validation.values.productPrice || ""}
+                        value={validation.values.blogContent || ""}
                       />
-                      {validation.touched.productPrice &&
-                      validation.errors.productPrice ? (
+                      {validation.touched.blogContent &&
+                      validation.errors.blogContent ? (
                         <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.productPrice}
+                          {validation.errors.blogContent}
                         </FormFeedback>
                       ) : null}
                     </div>
-                    <div className="mb-3">
-                      <Label htmlFor="productQuantity-input">
-                        Product Quantity
+                    <div className="mb-3 gap-2 ">
+                      <Label className="ml-2" htmlFor="blogPrivacy-input">
+                        Blog Privacy
                       </Label>
-                      <Input
-                        id="productQuantity"
-                        name="productQuantity"
-                        type="number"
-                        placeholder="Enter product quantity..."
-                        onChange={validation.handleChange}
-                        value={validation.values.productQuantity || ""}
+                      <Switch
+                        checked={blogPrivacy}
+                        onChange={() => setBlogPrivacy(!blogPrivacy)}
+                        name="blogPrivacy"
+                        id="blogPrivacy"
+                        color="primary"
+                        inputProps={{ "aria-label": "primary checkbox" }}
                       />
-                      {validation.touched.productQuantity &&
-                      validation.errors.productQuantity ? (
+                      {validation.touched.blogPrivacy &&
+                      validation.errors.blogPrivacy ? (
                         <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.productQuantity}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                    <div className="mb-3">
-                      <Label htmlFor="productDescription-input">
-                        Product Description
-                      </Label>
-                      <Input
-                        id="productDescription"
-                        name="productDescription"
-                        type="textarea"
-                        placeholder="Enter product description..."
-                        onChange={validation.handleChange}
-                        value={validation.values.productDescription || ""}
-                      />
-                      {validation.touched.productDescription &&
-                      validation.errors.productDescription ? (
-                        <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.productDescription}
+                          {validation.errors.blogPrivacy}
                         </FormFeedback>
                       ) : null}
                     </div>
@@ -250,4 +234,4 @@ const ProductCreate = () => {
   )
 }
 
-export default ProductCreate
+export default CreateBlog

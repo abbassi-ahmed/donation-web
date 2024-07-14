@@ -81,9 +81,6 @@ const Calender = props => {
 
   useEffect(() => {
     fetchEvents()
-    new Draggable(document.getElementById("external-events"), {
-      itemSelector: ".external-event",
-    })
   }, [])
 
   useEffect(() => {
@@ -160,39 +157,27 @@ const Calender = props => {
 
     initialValues: {
       title: event?.title || "",
-      description: event?.description || "",
+      content: event?.content || "",
       startDate: event?.startDate ? event.startDate.split("T")[0] : "",
       endDate: event?.endDate ? event.endDate.split("T")[0] : "",
-      startTime: event?.startTime || "",
-      endTime: event?.endTime || "",
       image: event?.image || "",
-      location: event?.location || "",
-      category: event?.category || "",
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Please Enter Your Event Title"),
-      description: Yup.string().required("Please Enter Your Event description"),
+      content: Yup.string().required("Please Enter Your Event content"),
       startDate: Yup.date().required("Please Enter Your Event Start Date"),
       endDate: Yup.date().required("Please Enter Your Event End Date"),
-      startTime: Yup.string().required("Please Enter Your Event Start Time"),
-      endTime: Yup.string().required("Please Enter Your Event End Time"),
       image: Yup.string().required("Please Enter Your Event Image"),
-      location: Yup.string().required("Please Enter Your Event Location"),
-      category: Yup.string().required("Please Enter Your Event Category"),
     }),
     onSubmit: values => {
       if (isEdit) {
         const updateEventObj = {
           id: event.id,
           title: values.title,
-          description: values.description,
+          content: values.content,
           startDate: values.startDate,
           endDate: values.endDate,
-          startTime: values.startTime,
-          endTime: values.endTime,
           image: img ? img : values.image,
-          location: values.location,
-          category: values.category,
         }
         // update event
         updateEvent(updateEventObj)
@@ -200,14 +185,10 @@ const Calender = props => {
       } else {
         const newEventObj = {
           title: values.title,
-          description: values.description,
+          content: values.content,
           startDate: values.startDate,
           endDate: values.endDate,
-          startTime: values.startTime,
-          endTime: values.endTime,
           image: values.image,
-          location: values.location,
-          category: values.category,
         }
         // save new event
         addNewEvent(newEventObj)
@@ -243,14 +224,10 @@ const Calender = props => {
     setSelectedDay(formattedDate)
     setEvent({
       title: "",
-      description: "",
+      content: "",
       startDate: formattedDate,
       endDate: formattedDate,
-      startTime: "",
-      endTime: "",
       image: "",
-      location: "",
-      category: "",
     })
     setIsEdit(false)
     toggle()
@@ -263,29 +240,18 @@ const Calender = props => {
     const event = arg.event
     const eventId = event.id
     const eventTitle = event.title
-    const eventdescription = event.extendedProps.description
+    const eventcontent = event.extendedProps.content
     const eventStartDate = event.startStr
     const eventEndDate = event.endStr
-    const eventStartTime = event.startTime
-    const eventEndTime = event.endTime
     const eventImage = event.extendedProps.image
-    const eventLocation = event.extendedProps.location
-    const eventCategory = event.extendedProps.category
-
-    console.log("event", event)
-    console.log("event", eventStartTime)
 
     setEvent({
       id: eventId,
       title: eventTitle,
-      description: eventdescription,
+      content: eventcontent,
       startDate: eventStartDate,
       endDate: eventEndDate,
-      startTime: eventStartTime,
-      endTime: eventEndTime,
       image: eventImage,
-      location: eventLocation,
-      category: eventCategory,
     })
     setDeleteId(event.id)
     setIsEdit(true)
@@ -318,7 +284,7 @@ const Calender = props => {
         onDeleteClick={handleDeleteEvent}
         onCloseClick={() => setDeleteModal(false)}
       />
-      <div className="page-description mt-5">
+      <div className="page-content mt-5">
         <Container fluid={true}>
           {/* Render Breadcrumb */}
           <Breadcrumbs title="Calendar" breadcrumbItem="Full Calendar" />
@@ -359,11 +325,7 @@ const Calender = props => {
                         </Button>
                       </div>
 
-                      <div id="external-events" className="mt-3">
-                        <p className="text-muted"></p>
-                      </div>
-
-                      <Row className="justify-description-center mt-5">
+                      <Row className="justify-content-center mt-5">
                         <img
                           src={verification}
                           alt=""
@@ -399,7 +361,7 @@ const Calender = props => {
                           title: event.title,
                           start: event.startDate,
                           end: event.endDate,
-                          description: event.description,
+                          content: event.content,
                           image: event.image,
                         }))}
                         editable={true}
@@ -426,156 +388,12 @@ const Calender = props => {
         tabIndex="-1"
         toggle={toggle}
       >
-        <div className="modal-description">
+        <div className="modal-content">
           <ModalHeader toggle={toggle}>
             {isEdit ? "Edit Event" : "Add New Event"}
           </ModalHeader>
           <ModalBody>
             <Form onSubmit={eventValidation.handleSubmit}>
-              <Row>
-                <Col md={6}>
-                  <div className="mb-3">
-                    <Label htmlFor="validationCustom01">Event Title</Label>
-                    <Input
-                      type="text"
-                      className="form-control"
-                      id="validationCustom01"
-                      name="title"
-                      value={eventValidation.values.title}
-                      onChange={eventValidation.handleChange}
-                      invalid={!!eventValidation.errors.title}
-                    />
-                    <FormFeedback>{eventValidation.errors.title}</FormFeedback>
-                  </div>
-                </Col>
-                <Col md={6}>
-                  <div className="mb-3">
-                    <Label htmlFor="validationCustom02">
-                      Event description
-                    </Label>
-                    <Input
-                      type="text"
-                      className="form-control"
-                      id="validationCustom02"
-                      name="description"
-                      value={eventValidation.values.description}
-                      onChange={eventValidation.handleChange}
-                      invalid={!!eventValidation.errors.description}
-                    />
-                    <FormFeedback>
-                      {eventValidation.errors.description}
-                    </FormFeedback>
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col md={6}>
-                  <div className="mb-3">
-                    <Label htmlFor="validationCustom03">Start Date</Label>
-                    <Input
-                      type="date"
-                      className="form-control"
-                      id="validationCustom03"
-                      name="startDate"
-                      value={eventValidation.values.startDate}
-                      onChange={eventValidation.handleChange}
-                      invalid={!!eventValidation.errors.startDate}
-                    />
-                    <FormFeedback>
-                      {eventValidation.errors.startDate}
-                    </FormFeedback>
-                  </div>
-                </Col>
-                <Col md={6}>
-                  <div className="mb-3">
-                    <Label htmlFor="validationCustom04">End Date</Label>
-                    <Input
-                      type="date"
-                      className="form-control"
-                      id="validationCustom04"
-                      name="endDate"
-                      value={eventValidation.values.endDate}
-                      onChange={eventValidation.handleChange}
-                      invalid={!!eventValidation.errors.endDate}
-                    />
-                    <FormFeedback>
-                      {eventValidation.errors.endDate}
-                    </FormFeedback>
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col md={6}>
-                  <div className="mb-3">
-                    <Label htmlFor="validationCustom05">Start Time</Label>
-                    <Input
-                      type="time"
-                      className="form-control"
-                      id="validationCustom05"
-                      name="startTime"
-                      value={eventValidation.values.startTime}
-                      onChange={eventValidation.handleChange}
-                      invalid={!!eventValidation.errors.startTime}
-                    />
-                    <FormFeedback>
-                      {eventValidation.errors.startTime}
-                    </FormFeedback>
-                  </div>
-                </Col>
-                <Col md={6}>
-                  <div className="mb-3">
-                    <Label htmlFor="validationCustom06">End Time</Label>
-                    <Input
-                      type="time"
-                      className="form-control"
-                      id="validationCustom06"
-                      name="endTime"
-                      value={eventValidation.values.endTime}
-                      onChange={eventValidation.handleChange}
-                      invalid={!!eventValidation.errors.endTime}
-                    />
-                    <FormFeedback>
-                      {eventValidation.errors.endTime}
-                    </FormFeedback>
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col md={6}>
-                  <div className="mb-3">
-                    <Label htmlFor="validationCustom07">Event location</Label>
-                    <Input
-                      type="text"
-                      className="form-control"
-                      id="validationCustom07"
-                      name="location"
-                      value={eventValidation.values.location}
-                      onChange={eventValidation.handleChange}
-                      invalid={!!eventValidation.errors.location}
-                    />
-                    <FormFeedback>
-                      {eventValidation.errors.location}
-                    </FormFeedback>
-                  </div>
-                </Col>
-                <Col md={6}>
-                  <div className="mb-3">
-                    <Label htmlFor="validationCustom08">Event category</Label>
-                    <Input
-                      type="text"
-                      className="form-control"
-                      id="validationCustom08"
-                      name="category"
-                      value={eventValidation.values.category}
-                      onChange={eventValidation.handleChange}
-                      invalid={!!eventValidation.errors.category}
-                    />
-                    <FormFeedback>
-                      {eventValidation.errors.category}
-                    </FormFeedback>
-                  </div>
-                </Col>
-              </Row>
               <div className="mb-3">
                 <Label className="form-label">Event Image</Label>
                 <div className="text-center">
@@ -625,6 +443,76 @@ const Calender = props => {
                   ) : null}
                 </div>
               </div>
+              <Row>
+                <Col md={6}>
+                  <div className="mb-3">
+                    <Label htmlFor="validationCustom01">Event Title</Label>
+                    <Input
+                      type="text"
+                      className="form-control"
+                      id="validationCustom01"
+                      name="title"
+                      value={eventValidation.values.title}
+                      onChange={eventValidation.handleChange}
+                      invalid={!!eventValidation.errors.title}
+                    />
+                    <FormFeedback>{eventValidation.errors.title}</FormFeedback>
+                  </div>
+                </Col>
+                <Col md={6}>
+                  <div className="mb-3">
+                    <Label htmlFor="validationCustom02">Event content</Label>
+                    <Input
+                      type="text"
+                      className="form-control"
+                      id="validationCustom02"
+                      name="content"
+                      value={eventValidation.values.content}
+                      onChange={eventValidation.handleChange}
+                      invalid={!!eventValidation.errors.content}
+                    />
+                    <FormFeedback>
+                      {eventValidation.errors.content}
+                    </FormFeedback>
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={6}>
+                  <div className="mb-3">
+                    <Label htmlFor="validationCustom03">Start Date</Label>
+                    <Input
+                      type="date"
+                      className="form-control"
+                      id="validationCustom03"
+                      name="startDate"
+                      value={eventValidation.values.startDate}
+                      onChange={eventValidation.handleChange}
+                      invalid={!!eventValidation.errors.startDate}
+                    />
+                    <FormFeedback>
+                      {eventValidation.errors.startDate}
+                    </FormFeedback>
+                  </div>
+                </Col>
+                <Col md={6}>
+                  <div className="mb-3">
+                    <Label htmlFor="validationCustom04">End Date</Label>
+                    <Input
+                      type="date"
+                      className="form-control"
+                      id="validationCustom04"
+                      name="endDate"
+                      value={eventValidation.values.endDate}
+                      onChange={eventValidation.handleChange}
+                      invalid={!!eventValidation.errors.endDate}
+                    />
+                    <FormFeedback>
+                      {eventValidation.errors.endDate}
+                    </FormFeedback>
+                  </div>
+                </Col>
+              </Row>
 
               <Row className="mt-2">
                 <Col xs={6}>

@@ -7,20 +7,21 @@ import Spinners from "components/Common/Spinner"
 import { ToastContainer } from "react-toastify"
 import axios from "axios"
 
-const OfferPayments = () => {
-  document.title = "Offer Payment"
+const DonationProject = () => {
+  document.title = "Donation Donation"
 
-  const [offer, setOffer] = useState([])
+  const [projects, setProjects] = useState([])
   const [isLoading, setLoading] = useState(true)
   const [modal, setModal] = useState(false)
 
   useEffect(() => {
-    const fetchOffer = async () => {
+    const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_DATABASEURL}/users-offers/find-all`
+          `${process.env.REACT_APP_DATABASEURL}/project-donation/find-all`
         )
-        setOffer(response.data)
+        setProjects(response.data)
+        console.log("Fetched projects:", response.data)
         setLoading(false)
       } catch (error) {
         console.error("Error fetching users:", error)
@@ -28,7 +29,7 @@ const OfferPayments = () => {
       }
     }
 
-    fetchOffer()
+    fetchProducts()
   }, [])
 
   const toggle = () => {
@@ -47,7 +48,7 @@ const OfferPayments = () => {
                 <span className="avatar-title rounded-circle">
                   <img
                     src={cell.row.original.user.avatar}
-                    alt=""
+                    alt={cell.row.original.user.firstName}
                     width={40}
                     height={40}
                     style={{ objectFit: "cover", borderRadius: "50%" }}
@@ -93,31 +94,62 @@ const OfferPayments = () => {
           </Link>
         ),
       },
+
       {
-        header: "Amount",
-        accessorKey: "amount",
+        header: "#",
+        accessorKey: "projectPicture",
+        enableColumnFilter: false,
         cell: cellProps => (
-          <Link to="#" className="text-dark">
-            {cellProps.row.original.amount}
-          </Link>
+          <span
+            className="avatar-xs"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "40px",
+              height: "40px",
+              overflow: "hidden",
+              borderRadius: "50%",
+            }}
+          >
+            <img
+              src={cellProps.row.original.project.image}
+              alt={cellProps.row.original.project.name}
+              style={{
+                objectFit: "cover",
+                width: "40px",
+                height: "40px",
+              }}
+            />
+          </span>
         ),
       },
       {
-        header: "Name Abonnement",
+        header: "Name Donation",
         accessorKey: "name",
         cell: cellProps => (
           <Link to="#" className="text-dark">
-            {cellProps.row.original.offer.name}
+            {cellProps.row.original.project.name}
           </Link>
         ),
       },
 
       {
-        header: "Duration",
-        accessorKey: "duration",
+        header: "Amount",
+        accessorKey: "amount",
+
         cell: cellProps => (
           <Link to="#" className="text-dark">
-            {cellProps.row.original.offer.duration}
+            {cellProps.row.original.amount} TND
+          </Link>
+        ),
+      },
+      {
+        header: "Target",
+        accessorKey: "target",
+        cell: cellProps => (
+          <Link to="#" className="text-dark">
+            {cellProps.row.original.project.target} TND
           </Link>
         ),
       },
@@ -129,7 +161,7 @@ const OfferPayments = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumbs title="Offer" breadcrumbItem="Payments" />
+          <Breadcrumbs title="Projects" breadcrumbItem="Donations" />
           <Row>
             {isLoading ? (
               <Spinners setLoading={setLoading} />
@@ -147,7 +179,7 @@ const OfferPayments = () => {
                         Add User
                       </button> */}
                     </div>
-                    <TableContainer columns={columns} data={offer} />
+                    <TableContainer columns={columns} data={projects} />
                   </CardBody>
                 </Card>
               </Col>
@@ -161,4 +193,4 @@ const OfferPayments = () => {
   )
 }
 
-export default OfferPayments
+export default DonationProject

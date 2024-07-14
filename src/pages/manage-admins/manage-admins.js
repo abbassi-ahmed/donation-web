@@ -53,7 +53,7 @@ const ManageAdmins = () => {
     const fetchAdmins = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_DATABASEURL}/admin/find-all`
+          `${process.env.REACT_APP_DATABASEURL}/admins/find-all`
         )
         if (response.data) {
           const filteredAdmins = response.data
@@ -119,7 +119,7 @@ const ManageAdmins = () => {
       if (isEdit) {
         try {
           const response = await axios.put(
-            `${process.env.REACT_APP_DATABASEURL}/admin/update-profile/${contact.id}`,
+            `${process.env.REACT_APP_DATABASEURL}/admins/update/${contact.id}`,
             newAdmin
           )
           setAdmins(prevAdmins =>
@@ -149,7 +149,7 @@ const ManageAdmins = () => {
     if (contact?.id) {
       try {
         await axios.delete(
-          `${process.env.REACT_APP_DATABASEURL}/admin/delete/${contact.id}`
+          `${process.env.REACT_APP_DATABASEURL}/admins/delete/${contact.id}`
         )
         setAdmins(prevAdmins =>
           prevAdmins.filter(admin => admin.id !== contact.id)

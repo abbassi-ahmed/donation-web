@@ -38,9 +38,8 @@ const UserProfile = ({ history }) => {
           throw new Error("Token not found")
         }
         const response = await axios.post(
-          process.env.REACT_APP_DATABASEURL + "/admin/verify",
-          {},
-          { headers: { token: `${token}` } }
+          process.env.REACT_APP_DATABASEURL + "/admins/verify",
+          { token: token }
         )
         const profile = response.data
         setUser(profile)
@@ -82,7 +81,7 @@ const UserProfile = ({ history }) => {
 
     try {
       const response = await axios.put(
-        process.env.REACT_APP_DATABASEURL + `/admin/update/${user.id}`,
+        process.env.REACT_APP_DATABASEURL + `/admins/update/${user.id}`,
         formData,
         {
           headers: {

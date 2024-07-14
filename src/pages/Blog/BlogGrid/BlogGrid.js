@@ -54,15 +54,6 @@ const BlogGrid = () => {
                 All Post
               </NavLink>
             </NavItem>
-            <NavItem tag="li">
-              <NavLink
-                to="#"
-                className={classnames({ active: activeTab === "2" })}
-                onClick={() => toggleTab("2")}
-              >
-                Archive
-              </NavLink>
-            </NavItem>
           </Nav>
           <TabContent className="p-4" activeTab={activeTab}>
             <TabPane tabId="1">
@@ -76,7 +67,7 @@ const BlogGrid = () => {
                             <h5 className="mb-0">Blog Grid</h5>
                           </div>
                         </div>
-                        <Col xs={8}>
+                        {/* <Col xs={8}>
                           <div className="float-end">
                             <Nav
                               tag="ul"
@@ -106,7 +97,7 @@ const BlogGrid = () => {
                               </NavItem>
                             </Nav>
                           </div>
-                        </Col>
+                        </Col> */}
                       </div>
                       <hr className="mb-4" />
                       <Row>

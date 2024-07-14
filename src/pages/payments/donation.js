@@ -7,10 +7,10 @@ import Spinners from "components/Common/Spinner"
 import { ToastContainer } from "react-toastify"
 import axios from "axios"
 
-const AbonnementPayments = () => {
-  document.title = "Product Payment"
+const Donation = () => {
+  document.title = "Donation"
 
-  const [products, setProducts] = useState([])
+  const [projects, setProjects] = useState([])
   const [isLoading, setLoading] = useState(true)
   const [modal, setModal] = useState(false)
 
@@ -18,9 +18,10 @@ const AbonnementPayments = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_DATABASEURL}/users-payment/find-all`
+          `${process.env.REACT_APP_DATABASEURL}/donations/find-all`
         )
-        setProducts(response.data)
+        setProjects(response.data)
+        console.log("Fetched projects:", response.data)
         setLoading(false)
       } catch (error) {
         console.error("Error fetching users:", error)
@@ -47,7 +48,7 @@ const AbonnementPayments = () => {
                 <span className="avatar-title rounded-circle">
                   <img
                     src={cell.row.original.user.avatar}
-                    alt=""
+                    alt={cell.row.original.user.firstName}
                     width={40}
                     height={40}
                     style={{ objectFit: "cover", borderRadius: "50%" }}
@@ -93,31 +94,62 @@ const AbonnementPayments = () => {
           </Link>
         ),
       },
+
       {
-        header: "Amount",
-        accessorKey: "amount",
+        header: "#",
+        accessorKey: "projectPicture",
+        enableColumnFilter: false,
         cell: cellProps => (
-          <Link to="#" className="text-dark">
-            {cellProps.row.original.amount}
-          </Link>
+          <span
+            className="avatar-xs"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "40px",
+              height: "40px",
+              overflow: "hidden",
+              borderRadius: "50%",
+            }}
+          >
+            <img
+              src={cellProps.row.original.project.image}
+              alt={cellProps.row.original.project.name}
+              style={{
+                objectFit: "cover",
+                width: "40px",
+                height: "40px",
+              }}
+            />
+          </span>
         ),
       },
       {
-        header: "Name Abonnement",
+        header: "Name Donation",
         accessorKey: "name",
         cell: cellProps => (
           <Link to="#" className="text-dark">
-            {cellProps.row.original.abonnement.name}
+            {cellProps.row.original.project.name}
           </Link>
         ),
       },
 
       {
-        header: "Duration",
-        accessorKey: "duration",
+        header: "Amount",
+        accessorKey: "amount",
+
         cell: cellProps => (
           <Link to="#" className="text-dark">
-            {cellProps.row.original.abonnement.duration}
+            {cellProps.row.original.amount} TND
+          </Link>
+        ),
+      },
+      {
+        header: "Target",
+        accessorKey: "target",
+        cell: cellProps => (
+          <Link to="#" className="text-dark">
+            {cellProps.row.original.project.target} TND
           </Link>
         ),
       },
@@ -129,7 +161,7 @@ const AbonnementPayments = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumbs title="Abonnement" breadcrumbItem="Payments" />
+          <Breadcrumbs title="Projects" breadcrumbItem="Donations" />
           <Row>
             {isLoading ? (
               <Spinners setLoading={setLoading} />
@@ -147,7 +179,7 @@ const AbonnementPayments = () => {
                         Add User
                       </button> */}
                     </div>
-                    <TableContainer columns={columns} data={products} />
+                    <TableContainer columns={columns} data={projects} />
                   </CardBody>
                 </Card>
               </Col>
@@ -161,4 +193,4 @@ const AbonnementPayments = () => {
   )
 }
 
-export default AbonnementPayments
+export default Donation

@@ -37,7 +37,7 @@ const ManageUsers = () => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_DATABASEURL}/user/find-all`
+          `${process.env.REACT_APP_DATABASEURL}/users/find-all`
         )
         setUsers(response.data)
         setLoading(false)
@@ -92,7 +92,7 @@ const ManageUsers = () => {
       if (isEdit) {
         try {
           const response = await axios.put(
-            `${process.env.REACT_APP_DATABASEURL}/user/update-profile/${contact.id}`,
+            `${process.env.REACT_APP_DATABASEURL}/users/update/${contact.id}`,
             newUser
           )
           setUsers(prevUsers =>
@@ -122,7 +122,7 @@ const ManageUsers = () => {
     if (contact?.id) {
       try {
         await axios.delete(
-          `${process.env.REACT_APP_DATABASEURL}/user/delete/${contact.id}`
+          `${process.env.REACT_APP_DATABASEURL}/users/delete/${contact.id}`
         )
         setUsers(prevUsers => prevUsers.filter(user => user.id !== contact.id))
         toast.success("User deleted successfully")

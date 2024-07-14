@@ -72,26 +72,18 @@ const BlogDetails = () => {
                           <hr />
                           <div className="text-center">
                             <Row>
-                              <Col sm={4}>
-                                <div>
-                                  <p className="text-muted mb-2">Category</p>
-                                  <h5 className="font-size-15">
-                                    {blog.category}
-                                  </h5>
-                                </div>
-                              </Col>
-                              <Col sm={4}>
+                              <Col sm={6}>
                                 <div className="mt-4 mt-sm-0">
-                                  <p className="text-muted mb-2">Date</p>
+                                  <p className="text-muted mb-2"> Posted on</p>
                                   <h5 className="font-size-15">
                                     {new Date(blog.createdAt).toDateString()}
                                   </h5>
                                 </div>
                               </Col>
-                              <Col sm={4}>
+                              <Col sm={6}>
                                 <div className="mt-4 mt-sm-0">
                                   <p className="text-muted mb-2">Post by</p>
-                                  <h5 className="font-size-15">{`${blog.user.firstName} ${blog.user.lastName}`}</h5>
+                                  <h5 className="font-size-15">{`${blog.admin.firstName} ${blog.admin.lastName}`}</h5>
                                 </div>
                               </Col>
                             </Row>
@@ -101,8 +93,9 @@ const BlogDetails = () => {
                           <div className="my-5">
                             <img
                               src={blog.image}
-                              alt=""
-                              className="img-thumbnail mx-auto d-block"
+                              alt={blog.title}
+                              className="img-fluid mx-auto d-block"
+                              style={{ width: "80%", height: "auto" }}
                             />
                           </div>
 
