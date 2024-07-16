@@ -123,17 +123,22 @@ const BlogGrid = () => {
                                     src={blog.image}
                                     alt=""
                                     className="img-thumbnail"
+                                    style={{
+                                      width: "100%",
+                                      height: "200px",
+                                      objectFit: "contain",
+                                    }}
                                   />
                                 </div>
                                 <div className="p-3">
-                                  <ul className="list-inline">
+                                  {/* <ul className="list-inline">
                                     <li className="list-inline-item me-3">
                                       <Link to="#" className="text-muted">
                                         <i className="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>{" "}
                                         {blog.category}
                                       </Link>
                                     </li>
-                                  </ul>
+                                  </ul> */}
                                   <p>{blog.content}</p>
                                   <div>
                                     <Link
@@ -153,7 +158,8 @@ const BlogGrid = () => {
                         )}
                       </Row>
                       <hr className="my-4" />
-                      <div className="text-center">
+                      {/* pagination */}
+                      {/* <div className="text-center">
                         <ul className="pagination justify-content-center pagination-rounded">
                           <li className="page-item disabled">
                             <Link to="#" className="page-link">
@@ -191,7 +197,7 @@ const BlogGrid = () => {
                             </Link>
                           </li>
                         </ul>
-                      </div>
+                      </div> */}
                     </div>
                   </Col>
                 </Row>

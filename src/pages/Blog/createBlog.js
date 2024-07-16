@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
   Button,
   Card,
@@ -22,12 +22,13 @@ import Switch from "@mui/material/Switch"
 import "./styles.css"
 
 const CreateBlog = () => {
-  document.title = "Create New Product "
+  document.title = "Create New Blog"
 
   const [selectedImage, setSelectedImage] = useState(null)
   const [img, setImg] = useState(null)
   const [loader, setLoader] = useState(false)
   const [blogPrivacy, setBlogPrivacy] = useState(false)
+  const [token, setToken] = useState("")
 
   const handleImageChange = e => {
     e.preventDefault()
@@ -37,11 +38,17 @@ const CreateBlog = () => {
       const reader = new FileReader()
       reader.onloadend = () => {
         setSelectedImage(reader.result)
-        validation.setFieldValue("productImage", reader.result)
+        validation.setFieldValue("blogImage", reader.result)
       }
       reader.readAsDataURL(file)
     }
   }
+  useEffect(() => {
+    const token = localStorage.getItem("authUser")
+    if (token) {
+      setToken(token.replace(/"/g, ""))
+    }
+  }, [])
 
   const validation = useFormik({
     initialValues: {
@@ -55,20 +62,20 @@ const CreateBlog = () => {
       blogImage: Yup.string().required("Image is required"),
     }),
     onSubmit: async values => {
-      const formDat = new FormData()
-      formDat.append("image", img)
-      formDat.append("title", values.blogTitle)
-      formDat.append("content", values.blogContent)
-      formDat.append("privacy", blogPrivacy)
+      const formData = new FormData()
+      formData.append("image", img)
+      formData.append("title", values.blogTitle)
+      formData.append("content", values.blogContent)
+      formData.append("privacy", blogPrivacy)
 
       try {
         setLoader(true)
         const response = await axios.post(
           process.env.REACT_APP_DATABASEURL + "/blogs/create",
-          formDat,
+          formData,
           {
             headers: {
-              token: localStorage.getItem("token"),
+              token: token,
             },
           }
         )
@@ -83,8 +90,8 @@ const CreateBlog = () => {
         if (error.response.data.message) {
           toast.error(error.response.data.message)
         }
+        setLoader(false)
       }
-      setLoader(false)
     },
   })
 
@@ -98,7 +105,6 @@ const CreateBlog = () => {
             onSubmit={e => {
               e.preventDefault()
               validation.handleSubmit()
-              return false
             }}
           >
             <Row className="justify-content-center">
@@ -125,7 +131,7 @@ const CreateBlog = () => {
                             <Label
                               htmlFor="project-image-input"
                               className="mb-0"
-                              id="productImageInput"
+                              id="blogImage"
                             >
                               <div className="avatar-xs">
                                 <div className="avatar-title bg-light border rounded-circle text-muted cursor-pointer shadow font-size-16">
@@ -135,7 +141,7 @@ const CreateBlog = () => {
                             </Label>
                             <UncontrolledTooltip
                               placement="right"
-                              target="productImageInput"
+                              target="blogImage"
                             >
                               Select Image
                             </UncontrolledTooltip>
@@ -150,16 +156,16 @@ const CreateBlog = () => {
                           <div className="square-image">
                             <img
                               src={selectedImage || ""}
-                              id="projectlogo-img"
+                              id="blogImage"
                               alt=""
                               className="img-fluid h-auto rounded"
                             />
                           </div>
                         </div>
-                        {validation.touched.productImage &&
-                        validation.errors.productImage ? (
+                        {validation.touched.blogImage &&
+                        validation.errors.blogImage ? (
                           <FormFeedback type="invalid" className="d-block">
-                            {validation.errors.productImage}
+                            {validation.errors.blogImage}
                           </FormFeedback>
                         ) : null}
                       </div>
@@ -171,8 +177,9 @@ const CreateBlog = () => {
                         id="blogTitle"
                         name="blogTitle"
                         type="text"
-                        placeholder="Enter Product Title..."
+                        placeholder="Enter Blog Title..."
                         onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
                         value={validation.values.blogTitle || ""}
                       />
                       {validation.touched.blogTitle &&
@@ -190,6 +197,7 @@ const CreateBlog = () => {
                         type="text"
                         placeholder="Enter Blog Content..."
                         onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
                         value={validation.values.blogContent || ""}
                       />
                       {validation.touched.blogContent &&
@@ -199,7 +207,7 @@ const CreateBlog = () => {
                         </FormFeedback>
                       ) : null}
                     </div>
-                    <div className="mb-3 gap-2 ">
+                    <div className="mb-3 gap-2">
                       <Label className="ml-2" htmlFor="blogPrivacy-input">
                         Blog Privacy
                       </Label>
@@ -222,7 +230,7 @@ const CreateBlog = () => {
                 </Card>
                 <div className="text-end mb-4">
                   <Button type="submit" color="primary" disabled={loader}>
-                    Create Product
+                    Create Blog
                   </Button>
                 </div>
               </Col>

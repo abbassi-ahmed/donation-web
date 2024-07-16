@@ -33,3 +33,25 @@
     object-fit: contain;
 
 }
+
+.delete-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 1px solid red;
+    background: red;
+    color: white;
+    border-radius: 15%;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.delete-icon:hover {
+    background: white;
+    color: red;
+    transition: 0.3s;
+}
