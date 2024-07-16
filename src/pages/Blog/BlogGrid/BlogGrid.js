@@ -64,7 +64,7 @@ const BlogGrid = () => {
                       <div className="row align-items-center">
                         <div className="col-4">
                           <div>
-                            <h5 className="mb-0">Blog Grid</h5>
+                            <h5 className="mb-0">Blog List</h5>
                           </div>
                         </div>
                         {/* <Col xs={8}>

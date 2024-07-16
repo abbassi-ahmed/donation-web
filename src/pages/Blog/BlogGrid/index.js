@@ -9,12 +9,12 @@ import RightBar from "../BlogList/RightBar"
 
 const Index = props => {
   //meta title
-  document.title = "Blog Grid | Skote - React Admin & Dashboard Template"
+  document.title = "Blog List"
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumbs title="Blog" breadcrumbItem="Blog Grid" />
+          <Breadcrumbs title="Blog" breadcrumbItem="Blog List" />
           <Row className="justify-content-center">
             <BlogGrid />
           </Row>
