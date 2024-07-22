@@ -33,7 +33,7 @@ const ProjectDetail = ({ project, sum }) => {
           }%`}
         />
         <Row className="task-dates">
-          <Col sm="4" xs="6">
+          <Col sm="3" xs="4">
             <div className="mt-4">
               <h5 className="font-size-14">
                 <i className="bx bx-calendar me-1 text-primary" /> Start Date
@@ -43,7 +43,7 @@ const ProjectDetail = ({ project, sum }) => {
               </p>
             </div>
           </Col>
-          <Col sm="4" xs="6">
+          <Col sm="3" xs="4">
             <div className="mt-4">
               <h5 className="font-size-14">
                 <i className="bx bx-calendar-check me-1 text-primary" /> Target
@@ -54,13 +54,23 @@ const ProjectDetail = ({ project, sum }) => {
               </p>
             </div>
           </Col>
-          <Col sm="4" xs="6">
+
+          <Col sm="3" xs="4">
             <div className="mt-4">
               <h5 className="font-size-14">
                 <i className="bx bx-dollar-circle me-1 text-primary" /> Target
                 Ammount
               </h5>
               <p className="text-muted mb-0">{project.target}</p>
+            </div>
+          </Col>
+          <Col sm="3" xs="4">
+            <div className="mt-4">
+              <h5 className="font-size-14">
+                <i className="bx bx- bxs-category me-1 text-primary" />
+                Project Type
+              </h5>
+              <p className="text-muted mb-0">{project.type}</p>
             </div>
           </Col>
         </Row>

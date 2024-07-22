@@ -13,6 +13,7 @@ const Donation = () => {
   const [projects, setProjects] = useState([])
   const [isLoading, setLoading] = useState(true)
   const [modal, setModal] = useState(false)
+  const [amount, setAmount] = useState(0)
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -21,7 +22,11 @@ const Donation = () => {
           `${process.env.REACT_APP_DATABASEURL}/donations/find-all`
         )
         setProjects(response.data)
-        console.log("Fetched projects:", response.data)
+        const totalAmount = response.data.reduce(
+          (total, item) => total + item.amount,
+          0
+        )
+        setAmount(totalAmount)
         setLoading(false)
       } catch (error) {
         console.error("Error fetching users:", error)
@@ -96,60 +101,12 @@ const Donation = () => {
       },
 
       {
-        header: "#",
-        accessorKey: "projectPicture",
-        enableColumnFilter: false,
-        cell: cellProps => (
-          <span
-            className="avatar-xs"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "40px",
-              height: "40px",
-              overflow: "hidden",
-              borderRadius: "50%",
-            }}
-          >
-            <img
-              src={cellProps.row.original.project.image}
-              alt={cellProps.row.original.project.name}
-              style={{
-                objectFit: "cover",
-                width: "40px",
-                height: "40px",
-              }}
-            />
-          </span>
-        ),
-      },
-      {
-        header: "Name Donation",
-        accessorKey: "name",
-        cell: cellProps => (
-          <Link to="#" className="text-dark">
-            {cellProps.row.original.project.name}
-          </Link>
-        ),
-      },
-
-      {
         header: "Amount",
         accessorKey: "amount",
 
         cell: cellProps => (
           <Link to="#" className="text-dark">
             {cellProps.row.original.amount} TND
-          </Link>
-        ),
-      },
-      {
-        header: "Target",
-        accessorKey: "target",
-        cell: cellProps => (
-          <Link to="#" className="text-dark">
-            {cellProps.row.original.project.target} TND
           </Link>
         ),
       },
@@ -180,6 +137,7 @@ const Donation = () => {
                       </button> */}
                     </div>
                     <TableContainer columns={columns} data={projects} />
+                    <p className="mt-3">Amount of donations: {amount} TND</p>
                   </CardBody>
                 </Card>
               </Col>

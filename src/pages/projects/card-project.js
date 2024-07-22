@@ -103,6 +103,13 @@ const CardProject = ({ projects }) => {
                     Target Amount
                   </UncontrolledTooltip>
                 </li>
+                <li className="list-inline-item me-3" id="types">
+                  <i className="bx bx- bxs-category me-1" />
+                  {project.type}
+                  <UncontrolledTooltip placement="top" target="types">
+                    Project Type
+                  </UncontrolledTooltip>
+                </li>
               </ul>
             </div>
           </Card>

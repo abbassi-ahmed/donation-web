@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react"
 
 import {
   Container,
@@ -12,18 +12,55 @@ import {
   NavLink,
   TabContent,
   TabPane,
-} from "reactstrap";
-import classnames from "classnames";
+} from "reactstrap"
+import axios from "axios"
+import classnames from "classnames"
+import DeleteModal from "components/Common/DeleteModal"
 
 //Import Breadcrumb
-import Breadcrumbs from "../../components/Common/Breadcrumb";
+import Breadcrumbs from "../../components/Common/Breadcrumb"
 
 const PagesFaqs = () => {
+  document.title = "FAQs"
+  const [deleteModal, setDeleteModal] = useState(false)
+  const [faqToDelete, setFaqToDelete] = useState(null)
+  const [activeTab, setactiveTab] = useState("1")
+  const [Faq, setFaq] = useState([])
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        process.env.REACT_APP_DATABASEURL + "/faq/find-all"
+      )
+      setFaq(response.data)
+      console.log(response.data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  useEffect(() => {
+    fetchData()
+  }, [])
 
-  //meta title
-  document.title = "FAQs | Skote - React Admin & Dashboard Template";
-  
-  const [activeTab, setactiveTab] = useState("1");
+  const onClickDelete = async id => {
+    try {
+      setDeleteModal(true)
+      setFaqToDelete(id)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  const handleDeleteFaq = async () => {
+    try {
+      setDeleteModal(false)
+      await axios.delete(
+        process.env.REACT_APP_DATABASEURL + "/faq/remove/" + faqToDelete
+      )
+      fetchData()
+      toast.success("FAQ deleted successfully")
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <React.Fragment>
@@ -40,7 +77,7 @@ const PagesFaqs = () => {
                     <NavLink
                       className={classnames({ active: activeTab === "1" })}
                       onClick={() => {
-                        setactiveTab("1");
+                        setactiveTab("1")
                       }}
                     >
                       <i className="bx bx-question-mark d-block check-nav-icon mt-4 mb-2" />
@@ -51,7 +88,7 @@ const PagesFaqs = () => {
                     <NavLink
                       className={classnames({ active: activeTab === "2" })}
                       onClick={() => {
-                        setactiveTab("2");
+                        setactiveTab("2")
                       }}
                     >
                       <i className="bx bx-check-shield d-block check-nav-icon mt-4 mb-2" />
@@ -62,7 +99,7 @@ const PagesFaqs = () => {
                     <NavLink
                       className={classnames({ active: activeTab === "3" })}
                       onClick={() => {
-                        setactiveTab("3");
+                        setactiveTab("3")
                       }}
                     >
                       <i className="bx bx-support d-block check-nav-icon mt-4 mb-2" />
@@ -79,235 +116,74 @@ const PagesFaqs = () => {
                         <CardTitle className="mb-5">
                           General Questions
                         </CardTitle>
-                        <div className="faq-box d-flex mb-4">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">
-                              What is Lorem Ipsum?
-                            </h5>
-                            <p className="text-muted">
-                              New common language will be more simple and
-                              regular than the existing European languages. It
-                              will be as simple as occidental.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="faq-box d-flex mb-4">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">
-                              Where does it come from?
-                            </h5>
-                            <p className="text-muted">
-                              Everyone realizes why a new common language would
-                              be desirable one could refuse to pay expensive
-                              translators.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="faq-box d-flex mb-4">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">
-                              Where can I get some?
-                            </h5>
-                            <p className="text-muted">
-                              If several languages coalesce, the grammar of the
-                              resulting language is more simple and regular than
-                              that of the individual languages.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="faq-box d-flex mb-4">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">Why do we use it?</h5>
-                            <p className="text-muted">
-                              Their separate existence is a myth. For science,
-                              music, sport, etc, Europe uses the same
-                              vocabulary.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="d-flex faq-box">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">
-                              Where can I get some?
-                            </h5>
-                            <p className="text-muted">
-                              To an English person, it will seem like simplified
-                              English, as a skeptical Cambridge friend of mine
-                              told me what Occidental
-                            </p>
-                          </div>
-                        </div>
+                        {Faq.length > 0 ? (
+                          Faq.map(item => (
+                            <div key={item.id} className="faq-box d-flex mb-4">
+                              <div className="flex-shrink-0 me-3 faq-icon">
+                                <i className="bx bx-help-circle font-size-20 text-success" />
+                              </div>
+                              <div className="flex-grow-1">
+                                <h5 className="font-size-15">
+                                  {item.question}
+                                </h5>
+                                <p className="text-muted">{item.answer}</p>
+                              </div>
+                              <div
+                                style={{ cursor: "pointer" }}
+                                className="flex-shrink-0 ms-3"
+                                onClick={() => onClickDelete(item.id)}
+                              >
+                                <i className="bx bx-trash font-size-20 text-danger" />
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p>No FAQs available.</p>
+                        )}
                       </TabPane>
                       <TabPane tabId="2">
-                        <CardTitle className="mb-5">Privacy Policy</CardTitle>
-
-                        <div className="faq-box d-flex mb-4">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
+                        <CardTitle className="mb-5">
+                          Privacy Questions
+                        </CardTitle>
+                        {Faq.map(item => (
+                          <div key={item.id} className="faq-box d-flex mb-4">
+                            <div className="flex-shrink-0 me-3 faq-icon">
+                              <i className="bx bx-help-circle font-size-20 text-success" />
+                            </div>
+                            <div className="flex-grow-1">
+                              <h5 className="font-size-15">{item.question}</h5>
+                              <p className="text-muted">{item.answer}</p>
+                            </div>
+                            <div
+                              style={{ cursor: "pointer" }}
+                              className="flex-shrink-0 ms-3"
+                              onClick={() => onClickDelete(item.id)}
+                            >
+                              <i className="bx bx-trash font-size-20 text-danger" />
+                            </div>
                           </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">
-                              Where does it come from?
-                            </h5>
-                            <p className="text-muted">
-                              Everyone realizes why a new common language would
-                              be desirable one could refuse to pay expensive
-                              translators.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="faq-box d-flex mb-4">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">
-                              Where can I get some?
-                            </h5>
-                            <p className="text-muted">
-                              To an English person, it will seem like simplified
-                              English, as a skeptical Cambridge friend of mine
-                              told me what Occidental
-                            </p>
-                          </div>
-                        </div>
-                        <div className="faq-box d-flex mb-4">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">
-                              What is Lorem Ipsum?
-                            </h5>
-                            <p className="text-muted">
-                              New common language will be more simple and
-                              regular than the existing European languages. It
-                              will be as simple as occidental.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="faq-box d-flex mb-4">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">Why do we use it?</h5>
-                            <p className="text-muted">
-                              Their separate existence is a myth. For science,
-                              music, sport, etc, Europe uses the same
-                              vocabulary.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="d-flex faq-box">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">
-                              Where can I get some?
-                            </h5>
-                            <p className="text-muted">
-                              If several languages coalesce, the grammar of the
-                              resulting language is more simple and regular than
-                              that of the individual languages.
-                            </p>
-                          </div>
-                        </div>
+                        ))}
                       </TabPane>
                       <TabPane tabId="3">
                         <CardTitle className="mb-5">Support</CardTitle>
-
-                        <div className="faq-box d-flex mb-4">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
+                        {Faq.map(item => (
+                          <div key={item.id} className="faq-box d-flex mb-4">
+                            <div className="flex-shrink-0 me-3 faq-icon">
+                              <i className="bx bx-help-circle font-size-20 text-success" />
+                            </div>
+                            <div className="flex-grow-1">
+                              <h5 className="font-size-15">{item.question}</h5>
+                              <p className="text-muted">{item.answer}</p>
+                            </div>
+                            <div
+                              style={{ cursor: "pointer" }}
+                              className="flex-shrink-0 ms-3"
+                              onClick={() => onClickDelete(item.id)}
+                            >
+                              <i className="bx bx-trash font-size-20 text-danger" />
+                            </div>
                           </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">
-                              Where can I get some?
-                            </h5>
-                            <p className="text-muted">
-                              To an English person, it will seem like simplified
-                              English, as a skeptical Cambridge friend of mine
-                              told me what Occidental
-                            </p>
-                          </div>
-                        </div>
-                        <div className="faq-box d-flex mb-4">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">
-                              Where does it come from?
-                            </h5>
-                            <p className="text-muted">
-                              Everyone realizes why a new common language would
-                              be desirable one could refuse to pay expensive
-                              translators.
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="faq-box d-flex mb-4">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">Why do we use it?</h5>
-                            <p className="text-muted">
-                              Their separate existence is a myth. For science,
-                              music, sport, etc, Europe uses the same
-                              vocabulary.
-                            </p>
-                          </div>
-                        </div>
-                        <div className="faq-box d-flex mb-4">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">
-                              Where can I get some?
-                            </h5>
-                            <p className="text-muted">
-                              If several languages coalesce, the grammar of the
-                              resulting language is more simple and regular than
-                              that of the individual languages.
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="d-flex faq-box">
-                          <div className="flex-shrink-0 me-3 faq-icon">
-                            <i className="bx bx-help-circle font-size-20 text-success" />
-                          </div>
-                          <div className="flex-grow-1">
-                            <h5 className="font-size-15">
-                              What is Lorem Ipsum?
-                            </h5>
-                            <p className="text-muted">
-                              New common language will be more simple and
-                              regular than the existing European languages. It
-                              will be as simple as occidental.
-                            </p>
-                          </div>
-                        </div>
+                        ))}
                       </TabPane>
                     </TabContent>
                   </CardBody>
@@ -317,8 +193,13 @@ const PagesFaqs = () => {
           </div>
         </Container>
       </div>
+      <DeleteModal
+        show={deleteModal}
+        onDeleteClick={handleDeleteFaq}
+        onCloseClick={() => setDeleteModal(false)}
+      />
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default PagesFaqs;
+export default PagesFaqs

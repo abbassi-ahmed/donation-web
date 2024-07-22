@@ -31,6 +31,7 @@ import Feedback from "pages/feebacks/feedback"
 import DonationProject from "pages/payments/projectDonation"
 import Donation from "pages/payments/donation"
 import CreateBlog from "pages/Blog/createBlog"
+import CreateFaq from "pages/Utility/create-faqs"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -52,7 +53,8 @@ const authProtectedRoutes = [
   { path: "/blog-create", component: <CreateBlog /> },
   { path: "/blog-details/:id", component: <BlogDetails /> },
   //Utility
-  { path: "/pages-faqs", component: <PagesFaqs /> },
+  { path: "/faq", component: <PagesFaqs /> },
+  { path: "/faq-create", component: <CreateFaq /> },
 
   { path: "/calendar", component: <Calendar /> },
 

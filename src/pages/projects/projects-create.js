@@ -100,6 +100,7 @@ const ProjectsCreate = () => {
       targetDate: "",
       projectImage: "",
       startDate: "",
+      type: "",
     },
     validationSchema: Yup.object({
       projectname: Yup.string().required("Please Enter Your Project Name"),
@@ -107,6 +108,7 @@ const ProjectsCreate = () => {
       projecttarget: Yup.string().required("Please Enter Your Project Target"),
       targetDate: Yup.string().required("Please Enter Your Target Date"),
       projectImage: Yup.string().required("Please Select Image"),
+      projectType: Yup.string().required("Please Select Project Type"),
     }),
     onSubmit: async values => {
       const formDat = new FormData()
@@ -116,6 +118,7 @@ const ProjectsCreate = () => {
       formDat.append("targetDate", values.targetDate)
       formDat.append("startDate", values.startDate)
       formDat.append("image", img)
+      formDat.append("type", values.projectType)
       try {
         setLoader(true)
         const response = await axios.post(
@@ -277,6 +280,27 @@ const ProjectsCreate = () => {
                       validation.errors.projecttarget ? (
                         <FormFeedback type="invalid" className="d-block">
                           {validation.errors.projecttarget}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label htmlFor="projectType">Project Type</Label>
+                      <Input
+                        type="select"
+                        id="projectType"
+                        name="projectType"
+                        onChange={validation.handleChange}
+                        value={validation.values.projectType || ""}
+                      >
+                        <option value="">Select Project Type</option>
+                        <option value="Web">Web</option>
+                        <option value="Mobile">Mobile</option>
+                        <option value="Desktop">Desktop</option>
+                      </Input>
+                      {validation.touched.projectType &&
+                      validation.errors.projectType ? (
+                        <FormFeedback type="invalid" className="d-block">
+                          {validation.errors.projectType}
                         </FormFeedback>
                       ) : null}
                     </div>
