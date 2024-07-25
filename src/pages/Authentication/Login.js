@@ -34,8 +34,6 @@ const Login = ({ history }) => {
   const dispatch = useDispatch()
 
   const handleLogin = async () => {
-    console.log("yfyyuguigiuguiguiguigiu")
-
     let hasError = false
     if (email === "") {
       setEmailError(true)

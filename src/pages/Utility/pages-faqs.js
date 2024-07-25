@@ -32,7 +32,6 @@ const PagesFaqs = () => {
         process.env.REACT_APP_DATABASEURL + "/faq/find-all"
       )
       setFaq(response.data)
-      console.log(response.data)
     } catch (error) {
       console.error(error)
     }

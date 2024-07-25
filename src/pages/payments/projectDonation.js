@@ -21,7 +21,6 @@ const DonationProject = () => {
           `${process.env.REACT_APP_DATABASEURL}/project-donation/find-all`
         )
         setProjects(response.data)
-        console.log("Fetched projects:", response.data)
         setLoading(false)
       } catch (error) {
         console.error("Error fetching users:", error)
