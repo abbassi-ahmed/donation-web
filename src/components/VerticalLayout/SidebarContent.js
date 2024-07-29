@@ -259,7 +259,7 @@ const SidebarContent = props => {
             </li>
             <li>
               <Link to="/#" className="has-arrow">
-                <i className="bx bxs-detail" />
+                <i className="bx bx-help-circle" />
 
                 <span>{props.t("FAQ")}</span>
               </Link>
