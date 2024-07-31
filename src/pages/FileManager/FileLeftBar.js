@@ -1,6 +1,18 @@
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import {
+  Button,
+  Col,
+  Container,
+  Form,
+  FormFeedback,
+  Input,
+  Label,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Row,
+  UncontrolledTooltip,
   Card,
   CardBody,
   Collapse,
@@ -11,7 +23,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap"
 
-const FileRightBar = () => {
+const FileRightBar = ({ folders, fetchFolders }) => {
   const [isOpen, setIsOpen] = useState(true)
 
   const toggle = () => setIsOpen(!isOpen)
@@ -27,10 +39,15 @@ const FileRightBar = () => {
                     <i className="mdi mdi-plus me-1"></i> Create New
                   </DropdownToggle>
                   <DropdownMenu>
-                    <DropdownItem href="#">
+                    <DropdownItem onClick={togglee}>
                       <i className="bx bx-folder me-1"></i> Folder
                     </DropdownItem>
-                    <DropdownItem href="#">
+                    <DropdownItem
+                      onClick={() => {
+                        togglee()
+                        setIsFileModal(true)
+                      }}
+                    >
                       <i className="bx bx-file me-1"></i> File
                     </DropdownItem>
                   </DropdownMenu>
@@ -45,7 +62,7 @@ const FileRightBar = () => {
                       to="#"
                     >
                       <i className="mdi mdi-folder font-size-16 text-warning me-2"></i>{" "}
-                      Files{" "}
+                      Folders{" "}
                       <i
                         className={
                           isOpen
@@ -57,25 +74,26 @@ const FileRightBar = () => {
                     <Collapse isOpen={isOpen}>
                       <div className="card border-0 shadow-none ps-2 mb-0">
                         <ul className="list-unstyled mb-0">
-                          {[]?.map((item, index) => (
-                            <li key={index}>
-                              <Link
-                                to="#"
-                                className="d-flex align-items-center"
-                              >
-                                <span className="me-auto">{item.text}</span>
-                                {item.icon && (
-                                  <i className="mdi mdi-pin ms-auto"></i>
-                                )}
-                              </Link>
-                            </li>
-                          ))}
+                          {folders.length > 0 &&
+                            folders?.map((item, index) => (
+                              <li key={index} className="hover:shadow">
+                                <Link
+                                  to="#"
+                                  className="d-flex align-items-center"
+                                >
+                                  <span className="me-auto">{item.name}</span>
+                                  {item.icon && (
+                                    <i className="mdi mdi-pin ms-auto"></i>
+                                  )}
+                                </Link>
+                              </li>
+                            ))}
                         </ul>
                       </div>
                     </Collapse>
                   </div>
                 </li>
-                {[]?.map((item, index) => (
+                {/* {[]?.map((item, index) => (
                   <li key={index}>
                     <Link
                       to="#"
@@ -93,11 +111,11 @@ const FileRightBar = () => {
                       )}
                     </Link>
                   </li>
-                ))}
+                ))} */}
               </ul>
             </div>
 
-            <div className="mt-auto">
+            {/* <div className="mt-auto">
               <UncontrolledAlert
                 color="success"
                 className="alert-dismissible fade show px-3 mb-0"
@@ -118,8 +136,8 @@ const FileRightBar = () => {
                     </button>
                   </div>
                 </div>
-              </UncontrolledAlert>
-            </div>
+              </UncontrolledAlert> 
+            </div>*/}
           </div>
         </CardBody>
       </Card>

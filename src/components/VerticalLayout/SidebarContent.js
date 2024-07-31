@@ -175,12 +175,12 @@ const SidebarContent = props => {
               </Link>
             </li>
 
-            {/* <li>
+            <li>
               <Link to="/apps-filemanager">
                 <i className="bx bx-file"></i>
                 <span>{props.t("File Manager")}</span>
               </Link>
-            </li> */}
+            </li>
 
             <li>
               <Link to="/#" className="has-arrow ">

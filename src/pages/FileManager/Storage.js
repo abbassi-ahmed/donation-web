@@ -5,10 +5,10 @@ import { Card, CardBody } from "reactstrap"
 import ReactApexChart from "react-apexcharts"
 
 const Storage = props => {
-  const { options, series } = props
+  const { options, series, stats } = props
   return (
     <React.Fragment>
-      <Card className="filemanager-sidebar ms-lg-2">
+      <Card className="filemanager-sidebar ms-lg-2 h-100">
         <CardBody>
           <div className="text-center">
             <h5 className="font-size-15 mb-4">Storage</h5>
@@ -22,11 +22,33 @@ const Storage = props => {
               />
             </div>
 
-            <p className="text-muted mt-4">48.02 GB (76%) of 64 GB used</p>
+            <p className="text-muted mt-4"> {stats.total} </p>
           </div>
 
           <div className="mt-4">
-            {[]?.map((item, index) => (
+            {[
+              {
+                title: "Documents",
+                files: `${stats.docsCount} files`,
+                size: `${stats.documents}`,
+                color: "primary",
+                icon: "bx bxs-file",
+              },
+              {
+                title: "Pictures",
+                files: `${stats.imageCount} Pics`,
+                size: `${stats.image}`,
+                color: "success",
+                icon: "bx bxs-image",
+              },
+              {
+                title: "Other",
+                files: `${stats.othersCount} files`,
+                size: `${stats.others ? stats.others : 0}`,
+                color: "warning",
+                icon: "bx bxs-archive",
+              },
+            ]?.map((item, index) => (
               <Card className="border shadow-none mb-2" key={index}>
                 <Link to="#" className="text-body">
                   <div className="p-2">
