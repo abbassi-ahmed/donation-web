@@ -1,7 +1,7 @@
-import React from "react"
+import React, { useState } from "react"
 import { useDropzone } from "react-dropzone"
 
-const DropZone = ({ onDrop }) => {
+const DropZone = ({ onDrop, fileName }) => {
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
     useDropzone({
       onDrop,
@@ -26,6 +26,15 @@ const DropZone = ({ onDrop }) => {
       <input {...getInputProps()} />
       {isDragActive ? (
         <p>Drop the file here ...</p>
+      ) : fileName ? (
+        <p
+          style={{
+            fontSize: "16px",
+            marginTop: "20px",
+          }}
+        >
+          File exists: {fileName}
+        </p>
       ) : (
         <p
           style={{

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom"
 import {
   Button,
   Col,
-  Container,
   Form,
   FormFeedback,
   Input,
@@ -12,28 +11,23 @@ import {
   ModalBody,
   ModalHeader,
   Row,
-  UncontrolledTooltip,
   Card,
   CardBody,
-  Collapse,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
-  UncontrolledAlert,
   UncontrolledDropdown,
 } from "reactstrap"
-import { useDropzone } from "react-dropzone"
 
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
-import DropZone from "../../components/dropzone/dropzone"
 const FileList = ({ folders, fetchFolders }) => {
   const [modalCategory, setModalCategory] = useState(false)
-  const [isFileModal, setIsFileModal] = useState(false)
   const [isOpen, setIsOpen] = useState(true)
-  const [TheFile, setTheFile] = useState(null)
+  const navigate = useNavigate()
 
   const createNewFolder = async newFolder => {
     try {
@@ -60,28 +54,15 @@ const FileList = ({ folders, fetchFolders }) => {
       const newFolderObj = {
         name: values.title,
       }
-      // save new event
       createNewFolder(newFolderObj)
       folderValidation.resetForm()
       togglee()
     },
   })
 
-  const createNewFile = async newFile => {
-    try {
-      await axios
-        .post(`${process.env.REACT_APP_DATABASEURL}/files/create`, newFile)
-        .then(res => {
-          fetchFolders()
-        })
-    } catch (error) {
-      console.error("Error adding new event:", error)
-    }
-  }
   const togglee = () => {
     if (modalCategory) {
       setModalCategory(false)
-      setIsFileModal(false)
     } else {
       setModalCategory(true)
     }
@@ -93,15 +74,13 @@ const FileList = ({ folders, fetchFolders }) => {
         .delete(`${process.env.REACT_APP_DATABASEURL}/folders/remove/${id}`)
         .then(res => {
           fetchFolders()
+          fetchStats()
         })
     } catch (error) {
       console.error("Error deleting folder:", error)
     }
   }
 
-  const handleDrop = acceptedFiles => {
-    setTheFile(acceptedFiles[0])
-  }
   return (
     <React.Fragment>
       <div>
@@ -115,49 +94,15 @@ const FileList = ({ folders, fetchFolders }) => {
             <Form className="mt-4 mt-sm-0 float-sm-end d-flex align-items-center">
               <div className="mb-3">
                 <UncontrolledDropdown>
-                  <DropdownToggle className="btn btn-light w-100" type="button">
-                    <i className="mdi mdi-plus me-1"></i> Create New
+                  <DropdownToggle
+                    className="btn btn-light w-100"
+                    type="button"
+                    onClick={togglee}
+                  >
+                    <i className="mdi mdi-plus me-1"></i> Create New Folder
                   </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem onClick={togglee}>
-                      <i className="bx bx-folder me-1"></i> Folder
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={() => {
-                        togglee()
-                        setIsFileModal(true)
-                      }}
-                    >
-                      <i className="bx bx-file me-1"></i> File
-                    </DropdownItem>
-                  </DropdownMenu>
                 </UncontrolledDropdown>
               </div>
-              {/* <div className="search-box mb-2 me-2">
-                <div className="position-relative">
-                  <input
-                    type="text"
-                    className="form-control bg-light border-light rounded"
-                    placeholder="Search..."
-                  />
-                  <i className="bx bx-search-alt search-icon"></i>
-                </div>
-              </div> */}
-              {/* 
-              <UncontrolledDropdown className="mb-0">
-                <DropdownToggle
-                  className="btn btn-link text-muted mt-n2"
-                  tag="a"
-                >
-                  <i className="mdi mdi-dots-vertical font-size-20"></i>
-                </DropdownToggle>
-
-                <DropdownMenu className="dropdown-menu-end">
-                  <DropdownItem href="#">Share Files</DropdownItem>
-                  <DropdownItem href="#">Share with me</DropdownItem>
-                  <DropdownItem href="#">Other Actions</DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown> */}
             </Form>
           </Col>
         </Row>
@@ -180,7 +125,13 @@ const FileList = ({ folders, fetchFolders }) => {
                           </DropdownToggle>
 
                           <DropdownMenu className="dropdown-menu-end">
-                            <DropdownItem href="#">Open</DropdownItem>
+                            <DropdownItem
+                              onClick={() =>
+                                navigate(`/folder-details/${myFolders.id}`)
+                              }
+                            >
+                              Open
+                            </DropdownItem>
                             {/* <DropdownItem href="#">Edit</DropdownItem> */}
                             {/* <DropdownItem href="#">Rename</DropdownItem> */}
                             <div className="dropdown-divider"></div>
@@ -229,40 +180,26 @@ const FileList = ({ folders, fetchFolders }) => {
         toggle={toggle}
       >
         <div className="modal-content">
-          <ModalHeader toggle={togglee}>
-            {isFileModal ? "Upload New File" : "Create New Folder"}
-          </ModalHeader>
+          <ModalHeader toggle={togglee}>Create New Folder</ModalHeader>
           <ModalBody>
-            <Form onSubmit={createNewFile}>
-              {isFileModal ? (
-                <Row>
-                  <Col md={12}>
-                    <div className="mb-3">
-                      <DropZone onDrop={handleDrop} />
-                    </div>
-                  </Col>
-                </Row>
-              ) : (
-                <Row>
-                  <Col md={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="validationCustom01">Folder Title</Label>
-                      <Input
-                        type="text"
-                        className="form-control"
-                        id="validationCustom01"
-                        name="title"
-                        value={folderValidation.values.title}
-                        onChange={folderValidation.handleChange}
-                        invalid={!!folderValidation.errors.title}
-                      />
-                      <FormFeedback>
-                        {folderValidation.errors.title}
-                      </FormFeedback>
-                    </div>
-                  </Col>
-                </Row>
-              )}
+            <Form onSubmit={folderValidation.handleSubmit}>
+              <Row>
+                <Col md={12}>
+                  <div className="mb-3">
+                    <Label htmlFor="validationCustom01">Folder Title</Label>
+                    <Input
+                      type="text"
+                      className="form-control"
+                      id="validationCustom01"
+                      name="title"
+                      value={folderValidation.values.title}
+                      onChange={folderValidation.handleChange}
+                      invalid={!!folderValidation.errors.title}
+                    />
+                    <FormFeedback>{folderValidation.errors.title}</FormFeedback>
+                  </div>
+                </Col>
+              </Row>
               <Row className="mt-2">
                 <Col xs={8} className="text-end">
                   <Button

@@ -32,6 +32,7 @@ import DonationProject from "pages/payments/projectDonation"
 import Donation from "pages/payments/donation"
 import CreateBlog from "pages/Blog/createBlog"
 import CreateFaq from "pages/Utility/create-faqs"
+import FolderDetail from "pages/FileManager/folderDetail"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -47,6 +48,7 @@ const authProtectedRoutes = [
   { path: "/project-donation", component: <DonationProject /> },
   { path: "/donation", component: <Donation /> },
   { path: "/apps-filemanager", component: <Index /> },
+  { path: "/folder-details/:id", component: <FolderDetail /> },
   // { path: "/blog", component: <Blog /> },
   { path: "/blog-list", component: <BlogList /> },
   { path: "/blog-grid", component: <BlogGrid /> },

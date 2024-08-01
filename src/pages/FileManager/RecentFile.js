@@ -1,35 +1,123 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import {
-  Table,
+  Button,
+  Col,
+  Container,
+  Form,
+  FormFeedback,
+  Input,
+  Label,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Row,
+  UncontrolledTooltip,
+  Card,
+  CardBody,
+  Collapse,
+  DropdownItem,
   DropdownMenu,
   DropdownToggle,
+  UncontrolledAlert,
+  Table,
   UncontrolledDropdown,
-  DropdownItem,
 } from "reactstrap"
 import axios from "axios"
 import "./styles.css"
+import DropZone from "../../components/dropzone/dropzone"
 
-const RecentFile = ({ files, fetchFiles }) => {
+const RecentFile = ({ files, fetchFiles, fetchStats, folderId }) => {
+  const [modalCategory, setModalCategory] = useState(false)
+  const [TheFile, setTheFile] = useState(null)
+  const [fileName, setFileName] = useState("")
+  const [isOpen, setIsOpen] = useState(true)
+
   const removeFile = async id => {
     try {
       await axios
         .delete(`${process.env.REACT_APP_DATABASEURL}/documents/remove/${id}`)
         .then(res => {
           fetchFiles()
+          fetchStats()
         })
     } catch (error) {
       console.error("Error deleting file:", error)
     }
   }
+  const createNewFile = async e => {
+    e.preventDefault()
 
+    if (!TheFile) {
+      console.error("No file selected.")
+      return
+    }
+
+    const formData = new FormData()
+    formData.append("folderId", folderId)
+    formData.append("files", TheFile)
+
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_DATABASEURL}/documents/create`,
+        formData,
+
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
+      fetchFiles()
+      setTheFile(null)
+      setFileName("")
+      togglee()
+      fetchStats()
+
+      console.log("File uploaded successfully", res.data)
+    } catch (error) {
+      console.error("Error adding new file:", error)
+    }
+  }
+
+  const togglee = () => {
+    if (modalCategory) {
+      setModalCategory(false)
+    } else {
+      setModalCategory(true)
+    }
+  }
+  const toggle = () => setIsOpen(!isOpen)
+  const handleDrop = acceptedFiles => {
+    setTheFile(acceptedFiles[0])
+    setFileName(acceptedFiles[0].name)
+  }
   return (
     <React.Fragment>
-      <div className="mt-4">
-        <div className="d-flex flex-wrap">
-          <h5 className="font-size-16 me-3">Recent Files</h5>
-          <div className="ms-auto"></div>
-        </div>
+      <div>
+        <Row className="mb-3">
+          <Col xl={3} sm={6}>
+            <div className="mt-2">
+              <h5>Files List</h5>
+            </div>
+          </Col>
+          <Col xl={9} sm={6}>
+            <Form className="mt-4 mt-sm-0 float-sm-end d-flex align-items-center">
+              <div className="mb-3">
+                <UncontrolledDropdown>
+                  <DropdownToggle
+                    className="btn btn-light w-100"
+                    type="button"
+                    onClick={togglee}
+                  >
+                    <i className="mdi mdi-plus me-1"></i> Create New File
+                  </DropdownToggle>
+                </UncontrolledDropdown>
+              </div>
+            </Form>
+          </Col>
+        </Row>
+
         <hr className="mt-2" />
 
         <div className="table-responsive custom-dropdown-menu">
@@ -92,6 +180,54 @@ const RecentFile = ({ files, fetchFiles }) => {
           </Table>
         </div>
       </div>
+      <Modal
+        isOpen={modalCategory}
+        role="dialog"
+        autoFocus={true}
+        centered={true}
+        className="exampleModal"
+        tabIndex="-1"
+        toggle={toggle}
+      >
+        <div className="modal-content">
+          <ModalHeader toggle={togglee}>Upload New File</ModalHeader>
+          <ModalBody>
+            <Form
+              onSubmit={e => {
+                e.preventDefault()
+                createNewFile(e)
+              }}
+            >
+              <Row>
+                <Col md={12}>
+                  <div className="mb-3">
+                    <DropZone onDrop={handleDrop} fileName={fileName} />
+                    <button onClick={createNewFile} hidden>
+                      Upload File
+                    </button>
+                  </div>
+                </Col>
+              </Row>
+
+              <Row className="mt-2">
+                <Col xs={8} className="text-end">
+                  <Button
+                    color="light"
+                    type="button"
+                    className="me-1"
+                    onClick={togglee}
+                  >
+                    Close
+                  </Button>
+                  <Button type="submit" color="success" id="btn-save-event">
+                    Save
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </ModalBody>
+        </div>
+      </Modal>
     </React.Fragment>
   )
 }

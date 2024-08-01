@@ -12,7 +12,7 @@ const Storage = props => {
         <CardBody>
           <div className="text-center">
             <h5 className="font-size-15 mb-4">Storage</h5>
-            <div>
+            {/* <div>
               <ReactApexChart
                 options={options}
                 series={series}
@@ -20,9 +20,7 @@ const Storage = props => {
                 height={150}
                 className="apex-charts"
               />
-            </div>
-
-            <p className="text-muted mt-4"> {stats.total} </p>
+            </div> */}
           </div>
 
           <div className="mt-4">
@@ -79,6 +77,7 @@ const Storage = props => {
               </Card>
             ))}
           </div>
+          <p className="text-center"> Total Storage: {stats.totalSize}</p>
         </CardBody>
       </Card>
     </React.Fragment>
