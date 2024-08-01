@@ -1,25 +1,16 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import {
   Button,
   Col,
-  Container,
   Form,
-  FormFeedback,
-  Input,
-  Label,
   Modal,
   ModalBody,
   ModalHeader,
   Row,
-  UncontrolledTooltip,
-  Card,
-  CardBody,
-  Collapse,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
-  UncontrolledAlert,
   Table,
   UncontrolledDropdown,
 } from "reactstrap"
@@ -136,7 +127,15 @@ const RecentFile = ({ files, fetchFiles, fetchStats, folderId }) => {
                 files?.map((item, key) => (
                   <tr key={key}>
                     <td>
-                      <Link to="#" className="text-dark fw-medium">
+                      <Link
+                        to={
+                          item.mimeTypes === "image"
+                            ? item.files
+                            : `${process.env.REACT_APP_DATABASEURL}/${item.files}`
+                        }
+                        target="_blank"
+                        className="text-dark fw-medium"
+                      >
                         <i
                           className={item.icon ? item.icon : "bx bxs-file"}
                         ></i>
@@ -166,7 +165,6 @@ const RecentFile = ({ files, fetchFiles, fetchStats, folderId }) => {
                           >
                             Open
                           </DropdownItem>
-                          <DropdownItem href="#">Rename</DropdownItem>
                           <div className="dropdown-divider"></div>
                           <DropdownItem onClick={() => removeFile(item.id)}>
                             Remove

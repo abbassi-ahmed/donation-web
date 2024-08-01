@@ -151,7 +151,10 @@ const FileList = ({ folders, fetchFolders }) => {
                       <div className="d-flex">
                         <div className="overflow-hidden me-auto">
                           <h5 className="font-size-14 text-truncate mb-1">
-                            <Link to="#" className="text-body">
+                            <Link
+                              to={`/folder-details/${myFolders.id}`}
+                              className="text-body"
+                            >
                               {myFolders.name}
                             </Link>
                           </h5>
