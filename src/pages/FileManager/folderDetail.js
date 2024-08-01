@@ -5,18 +5,23 @@ import Storage from "./Storage"
 import axios from "axios"
 import { Card, CardBody, Container } from "reactstrap"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
+import Authorized from "./authorized"
 
 export default function FolderDetail() {
   const [files, setFiles] = useState({})
   const { id } = useParams()
   const [stats, setStats] = useState({})
+  const [authorizedAdmins, setAuthorizedAdmins] = useState([])
+  const [folderPrivacy, setFolderPrivacy] = useState("")
 
   const fetchFiles = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3636/documents/find-documents-by-folder/${id}`
+        `http://localhost:3636/folders/find-one/${id}`
       )
-      setFiles(response.data)
+      setFiles(response.data.documents)
+      setAuthorizedAdmins(response.data.authorized_admins)
+      setFolderPrivacy(response.data.privacy)
     } catch (error) {
       console.log(error)
     }
@@ -102,6 +107,15 @@ export default function FolderDetail() {
                         fetchStats={fetchStats}
                         folderId={id}
                       />
+                      {folderPrivacy === "private" && (
+                        <div className="mt-3">
+                          <Authorized
+                            authorizedAdmins={authorizedAdmins}
+                            folderId={id}
+                            fetchFiles={fetchFiles}
+                          />
+                        </div>
+                      )}
                     </CardBody>
                   </Card>
                 </div>
