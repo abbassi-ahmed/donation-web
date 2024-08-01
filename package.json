@@ -47,6 +47,7 @@
     "match-sorter": "^6.3.1",
     "metismenujs": "^1.4.0",
     "moment": "^2.29.4",
+    "multiselect-react-dropdown": "^2.0.25",
     "namor": "^3.0.1",
     "node-sass": "^9.0.0",
     "nouislider-react": "^3.4.1",

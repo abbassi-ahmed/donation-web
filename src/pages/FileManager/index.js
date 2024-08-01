@@ -15,10 +15,13 @@ const Index = () => {
   const [folders, setFolders] = useState({})
 
   const fetchFolders = async () => {
-    console.log("fetching folders")
     try {
       const response = await axios.get("http://localhost:3636/folders/find-all")
-      setFolders(response.data)
+      const foldersWithDocumentCount = response.data.map(folder => ({
+        ...folder,
+        documentCount: folder.documents.length,
+      }))
+      setFolders(foldersWithDocumentCount)
     } catch (error) {
       console.log(error)
     }

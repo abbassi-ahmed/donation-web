@@ -56,15 +56,7 @@ const ManageAdmins = () => {
           `${process.env.REACT_APP_DATABASEURL}/admins/find-all`
         )
         if (response.data) {
-          const filteredAdmins = response.data
-            .filter(admin => {
-              return user ? admin._id !== user._id : true
-            })
-            .map(admin => {
-              admin.id = admin._id
-              return admin
-            })
-          setAdmins(filteredAdmins)
+          setAdmins(response.data.filter(admin => admin.id !== user.id))
         }
         setLoading(false)
       } catch (error) {

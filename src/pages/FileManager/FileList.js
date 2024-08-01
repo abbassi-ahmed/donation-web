@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import {
   Button,
@@ -18,16 +18,43 @@ import {
   DropdownToggle,
   UncontrolledDropdown,
 } from "reactstrap"
+import Multiselect from "multiselect-react-dropdown"
 
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import Switch from "@mui/material/Switch"
 
 const FileList = ({ folders, fetchFolders }) => {
   const [modalCategory, setModalCategory] = useState(false)
   const [isOpen, setIsOpen] = useState(true)
+  const [folderPrivacy, setFolderPrivacy] = useState(false)
+  const [admins, setAdmins] = useState([])
   const navigate = useNavigate()
+
+  const fetchAdmins = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_DATABASEURL}/admins/find-all`
+      )
+      setAdmins(response.data)
+    } catch (error) {
+      console.error("Error fetching admins:", error)
+    }
+  }
+
+  useEffect(() => {
+    fetchAdmins()
+  }, [])
+
+  const [selectedValue, setSelectedValue] = useState([])
+  const onSelect = (selectedList, selectedItem) => {
+    setSelectedValue(selectedList)
+  }
+  const onRemove = (selectedList, removedItem) => {
+    setSelectedValue(selectedList)
+  }
 
   const createNewFolder = async newFolder => {
     try {
@@ -36,6 +63,8 @@ const FileList = ({ folders, fetchFolders }) => {
         .then(res => {
           folderValidation.resetForm()
           fetchFolders()
+          setFolderPrivacy(false)
+          setSelectedValue([])
         })
     } catch (error) {
       console.error("Error adding new event:", error)
@@ -53,6 +82,8 @@ const FileList = ({ folders, fetchFolders }) => {
     onSubmit: values => {
       const newFolderObj = {
         name: values.title,
+        privacy: folderPrivacy ? "private" : "public",
+        admins: selectedValue.map(admin => admin.id),
       }
       createNewFolder(newFolderObj)
       folderValidation.resetForm()
@@ -159,11 +190,11 @@ const FileList = ({ folders, fetchFolders }) => {
                             </Link>
                           </h5>
                           <p className="text-muted text-truncate mb-0">
-                            {myFolders.file} Files
+                            {myFolders.documentCount} Files
                           </p>
                         </div>
                         <div className="align-self-end ms-2">
-                          <p className="text-muted mb-0">{myFolders.size}</p>
+                          <p className="text-muted mb-0">{myFolders.privacy}</p>
                         </div>
                       </div>
                     </div>
@@ -202,7 +233,38 @@ const FileList = ({ folders, fetchFolders }) => {
                     <FormFeedback>{folderValidation.errors.title}</FormFeedback>
                   </div>
                 </Col>
+                <Col md={12}>
+                  <div className="mb-3">
+                    <Label htmlFor="folderPrivacy">Folder Privacy</Label>
+                    <Switch
+                      checked={folderPrivacy}
+                      onClick={() => setFolderPrivacy(!folderPrivacy)}
+                      color="primary"
+                      name="folderPrivacy"
+                      id="folderPrivacy"
+                      inputProps={{ "aria-label": "primary checkbox" }}
+                    />
+                  </div>
+                </Col>
               </Row>
+              {folderPrivacy && (
+                <Row>
+                  <Col md={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="validationCustom02">
+                        Authorized Users
+                      </Label>
+                      <Multiselect
+                        options={admins}
+                        selectedValues={selectedValue}
+                        onSelect={onSelect}
+                        onRemove={onRemove}
+                        displayValue="email"
+                      />
+                    </div>
+                  </Col>
+                </Row>
+              )}
               <Row className="mt-2">
                 <Col xs={8} className="text-end">
                   <Button
