@@ -5,7 +5,7 @@ import { Card, CardBody } from "reactstrap"
 import ReactApexChart from "react-apexcharts"
 
 const Storage = props => {
-  const { options, series, stats } = props
+  const { stats } = props
   return (
     <React.Fragment>
       <Card className="filemanager-sidebar ms-lg-2 h-100">

@@ -9,6 +9,7 @@ const DropZone = ({ onDrop, fileName }) => {
         "image/*, application/pdf, .doc, .docx, .txt, .xls, .xlsx, .ppt, .pptx, .zip, .rar",
       multiple: false,
     })
+  const backgroundColor = isDragActive || fileName ? "#e0ffe0" : "#f9f9f9"
 
   return (
     <div
@@ -19,7 +20,7 @@ const DropZone = ({ onDrop, fileName }) => {
         height: "150px",
         padding: "20px",
         textAlign: "center",
-        backgroundColor: isDragActive ? "#e0ffe0" : "#f9f9f9",
+        backgroundColor: backgroundColor,
         color: isDragReject ? "#ff0000" : "#000000",
       }}
     >

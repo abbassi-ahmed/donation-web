@@ -74,6 +74,8 @@ const RecentFile = ({ files, fetchFiles, fetchStats, folderId }) => {
   const togglee = () => {
     if (modalCategory) {
       setModalCategory(false)
+      setTheFile(null)
+      setFileName("")
     } else {
       setModalCategory(true)
     }

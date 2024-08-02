@@ -13,10 +13,24 @@ const Index = () => {
   document.title = "File Manager | Skote - React Admin & Dashboard Template"
 
   const [folders, setFolders] = useState({})
+  const [user, setUser] = useState({})
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("admin"))
+    setUser(storedUser)
+  }, [])
+
+  useEffect(() => {
+    if (user && user.id) {
+      fetchFolders()
+    }
+  }, [user])
 
   const fetchFolders = async () => {
     try {
-      const response = await axios.get("http://localhost:3636/folders/find-all")
+      const response = await axios.get(
+        `http://localhost:3636/folders/find-by-admin/${user.id}`
+      )
       const foldersWithDocumentCount = response.data.map(folder => ({
         ...folder,
         documentCount: folder.documents.length,
@@ -26,10 +40,6 @@ const Index = () => {
       console.log(error)
     }
   }
-
-  useEffect(() => {
-    fetchFolders()
-  }, [])
 
   return (
     <React.Fragment>

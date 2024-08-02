@@ -4,8 +4,10 @@ import RecentFile from "./RecentFile"
 import Storage from "./Storage"
 import axios from "axios"
 import { Card, CardBody, Container } from "reactstrap"
+
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 import Authorized from "./authorized"
+import ChildFileList from "./childFileList"
 
 export default function FolderDetail() {
   const [files, setFiles] = useState({})
@@ -28,7 +30,6 @@ export default function FolderDetail() {
   }
 
   const fetchStats = async () => {
-    console.log("fetching stats")
     try {
       const response = await axios.get(
         `http://localhost:3636/documents/get-sum-size-by-folder/${id}`
@@ -42,52 +43,8 @@ export default function FolderDetail() {
   useEffect(() => {
     fetchFiles()
     fetchStats()
-  }, [])
-  const series = [76]
-  const options = {
-    chart: {
-      height: 150,
-      type: "radialBar",
-      sparkline: {
-        enabled: true,
-      },
-    },
-    colors: ["#556ee6"],
-    plotOptions: {
-      radialBar: {
-        startAngle: -90,
-        endAngle: 90,
-        track: {
-          background: "#e7e7e7",
-          strokeWidth: "97%",
-          margin: 5, // margin is in pixels
-        },
+  }, [id])
 
-        hollow: {
-          size: "60%",
-        },
-
-        dataLabels: {
-          name: {
-            show: false,
-          },
-          value: {
-            offsetY: -2,
-            fontSize: "16px",
-          },
-        },
-      },
-    },
-    grid: {
-      padding: {
-        top: -10,
-      },
-    },
-    stroke: {
-      dashArray: 3,
-    },
-    labels: ["Storage"],
-  }
   return (
     <React.Fragment>
       <div className="page-content">
@@ -101,6 +58,7 @@ export default function FolderDetail() {
                 <div className="w-100">
                   <Card>
                     <CardBody>
+                      <ChildFileList />
                       <RecentFile
                         files={files}
                         fetchFiles={fetchFiles}
@@ -121,7 +79,7 @@ export default function FolderDetail() {
                 </div>
               </div>
             </div>
-            <Storage options={options} series={series} stats={stats} />
+            <Storage stats={stats} />
           </div>
         </Container>
       </div>

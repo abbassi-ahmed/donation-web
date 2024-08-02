@@ -33,6 +33,7 @@ import Donation from "pages/payments/donation"
 import CreateBlog from "pages/Blog/createBlog"
 import CreateFaq from "pages/Utility/create-faqs"
 import FolderDetail from "pages/FileManager/folderDetail"
+import ChildFileList from "pages/FileManager/childFileList"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -49,6 +50,8 @@ const authProtectedRoutes = [
   { path: "/donation", component: <Donation /> },
   { path: "/apps-filemanager", component: <Index /> },
   { path: "/folder-details/:id", component: <FolderDetail /> },
+  { path: "/child-folder-detail/:id", component: <ChildFileList /> },
+
   // { path: "/blog", component: <Blog /> },
   { path: "/blog-list", component: <BlogList /> },
   { path: "/blog-grid", component: <BlogGrid /> },

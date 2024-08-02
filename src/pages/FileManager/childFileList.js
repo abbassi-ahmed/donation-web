@@ -24,14 +24,34 @@ import { useFormik } from "formik"
 import * as Yup from "yup"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import Switch from "@mui/material/Switch"
 
-const FileList = ({ folders, fetchFolders }) => {
+const ChildFileList = () => {
+  const { id } = useParams()
   const [modalCategory, setModalCategory] = useState(false)
   const [isOpen, setIsOpen] = useState(true)
   const [folderPrivacy, setFolderPrivacy] = useState(false)
   const [admins, setAdmins] = useState([])
   const navigate = useNavigate()
+  const [folders, setFolders] = useState([])
+  const [user, setUser] = useState({})
+  const [isUserSet, setIsUserSet] = useState(false)
+  const fetchFolders = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3636/folders/find-childs-by-admin/${id}/${user.id}`
+      )
+      const foldersWithDocumentCount = response.data.map(folder => ({
+        ...folder,
+        documentCount: folder.documents.length,
+      }))
+      console.log("foldersWithDocumentCount", foldersWithDocumentCount)
+      setFolders(foldersWithDocumentCount)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const fetchAdmins = async () => {
     try {
@@ -43,11 +63,20 @@ const FileList = ({ folders, fetchFolders }) => {
       console.error("Error fetching admins:", error)
     }
   }
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("admin"))
+    if (storedUser) {
+      setUser(storedUser)
+      setIsUserSet(true)
+    }
+  }, [id])
 
   useEffect(() => {
-    fetchAdmins()
-  }, [])
-
+    if (isUserSet) {
+      fetchFolders()
+      fetchAdmins()
+    }
+  }, [isUserSet, id])
   const [selectedValue, setSelectedValue] = useState([])
   const onSelect = (selectedList, selectedItem) => {
     setSelectedValue(selectedList)
@@ -59,7 +88,10 @@ const FileList = ({ folders, fetchFolders }) => {
   const createNewFolder = async newFolder => {
     try {
       await axios
-        .post(`${process.env.REACT_APP_DATABASEURL}/folders/create`, newFolder)
+        .post(
+          `${process.env.REACT_APP_DATABASEURL}/folders/create-child`,
+          newFolder
+        )
         .then(res => {
           folderValidation.resetForm()
           fetchFolders()
@@ -85,6 +117,7 @@ const FileList = ({ folders, fetchFolders }) => {
         privacy: folderPrivacy ? "private" : "public",
         admins: selectedValue.map(admin => admin.id),
         createdBy: JSON.parse(localStorage.getItem("admin")).id,
+        parentFolderId: id,
       }
       createNewFolder(newFolderObj)
       folderValidation.resetForm()
@@ -159,7 +192,7 @@ const FileList = ({ folders, fetchFolders }) => {
                           <DropdownMenu className="dropdown-menu-end">
                             <DropdownItem
                               onClick={() =>
-                                navigate(`/folder-details/${myFolders.id}`)
+                                navigate(`/child-folder-detail/${myFolders.id}`)
                               }
                             >
                               Open
@@ -289,4 +322,4 @@ const FileList = ({ folders, fetchFolders }) => {
   )
 }
 
-export default FileList
+export default ChildFileList
