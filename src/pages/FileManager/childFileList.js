@@ -46,7 +46,6 @@ const ChildFileList = () => {
         ...folder,
         documentCount: folder.documents.length,
       }))
-      console.log("foldersWithDocumentCount", foldersWithDocumentCount)
       setFolders(foldersWithDocumentCount)
     } catch (error) {
       console.log(error)

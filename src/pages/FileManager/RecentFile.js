@@ -64,8 +64,6 @@ const RecentFile = ({ files, fetchFiles, fetchStats, folderId }) => {
       setFileName("")
       togglee()
       fetchStats()
-
-      console.log("File uploaded successfully", res.data)
     } catch (error) {
       console.error("Error adding new file:", error)
     }
