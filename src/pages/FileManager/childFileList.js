@@ -23,8 +23,8 @@ import Multiselect from "multiselect-react-dropdown"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
+
 import Switch from "@mui/material/Switch"
 
 const ChildFileList = () => {
@@ -151,7 +151,16 @@ const ChildFileList = () => {
         <Row className="mb-3">
           <Col xl={3} sm={6}>
             <div className="mt-2">
-              <h5>My Folders</h5>
+              <div className="arrow-back d-flex align-items-center">
+                <span
+                  onClick={() => navigate(-1)}
+                  className="text-muted"
+                  style={{ cursor: "pointer" }}
+                >
+                  <i className="bx bx-arrow-back me-2 font-size-18"></i>
+                </span>
+                <h5>My Folders</h5>
+              </div>
             </div>
           </Col>
           <Col xl={9} sm={6}>
@@ -191,7 +200,7 @@ const ChildFileList = () => {
                           <DropdownMenu className="dropdown-menu-end">
                             <DropdownItem
                               onClick={() =>
-                                navigate(`/child-folder-detail/${myFolders.id}`)
+                                navigate(`/folder-details/${myFolders.id}`)
                               }
                             >
                               Open
@@ -207,29 +216,31 @@ const ChildFileList = () => {
                           </DropdownMenu>
                         </UncontrolledDropdown>
                       </div>
-                      <div className="avatar-xs me-3 mb-3">
-                        <div className="avatar-title bg-transparent rounded">
-                          <i className="bx bxs-folder font-size-24 text-warning"></i>
+                      <Link
+                        to={`/folder-details/${myFolders.id}`}
+                        className="text-body"
+                      >
+                        <div className="avatar-xs me-3 mb-3">
+                          <div className="avatar-title bg-transparent rounded">
+                            <i className="bx bxs-folder font-size-24 text-warning"></i>
+                          </div>
                         </div>
-                      </div>
-                      <div className="d-flex">
-                        <div className="overflow-hidden me-auto">
-                          <h5 className="font-size-14 text-truncate mb-1">
-                            <Link
-                              to={`/folder-details/${myFolders.id}`}
-                              className="text-body"
-                            >
+                        <div className="d-flex">
+                          <div className="overflow-hidden me-auto">
+                            <h5 className="font-size-14 text-truncate mb-1">
                               {myFolders.name}
-                            </Link>
-                          </h5>
-                          <p className="text-muted text-truncate mb-0">
-                            {myFolders.documentCount} Files
-                          </p>
+                            </h5>
+                            <p className="text-muted text-truncate mb-0">
+                              {myFolders.documentCount} Files
+                            </p>
+                          </div>
+                          <div className="align-self-end ms-2">
+                            <p className="text-muted mb-0">
+                              {myFolders.privacy}
+                            </p>
+                          </div>
                         </div>
-                        <div className="align-self-end ms-2">
-                          <p className="text-muted mb-0">{myFolders.privacy}</p>
-                        </div>
-                      </div>
+                      </Link>
                     </div>
                   </CardBody>
                 </Card>

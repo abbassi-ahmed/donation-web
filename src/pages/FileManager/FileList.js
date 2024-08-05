@@ -175,29 +175,31 @@ const FileList = ({ folders, fetchFolders }) => {
                           </DropdownMenu>
                         </UncontrolledDropdown>
                       </div>
-                      <div className="avatar-xs me-3 mb-3">
-                        <div className="avatar-title bg-transparent rounded">
-                          <i className="bx bxs-folder font-size-24 text-warning"></i>
+                      <Link
+                        to={`/folder-details/${myFolders.id}`}
+                        className="text-body"
+                      >
+                        <div className="avatar-xs me-3 mb-3">
+                          <div className="avatar-title bg-transparent rounded">
+                            <i className="bx bxs-folder font-size-24 text-warning"></i>
+                          </div>
                         </div>
-                      </div>
-                      <div className="d-flex">
-                        <div className="overflow-hidden me-auto">
-                          <h5 className="font-size-14 text-truncate mb-1">
-                            <Link
-                              to={`/folder-details/${myFolders.id}`}
-                              className="text-body"
-                            >
+                        <div className="d-flex">
+                          <div className="overflow-hidden me-auto">
+                            <h5 className="font-size-14 text-truncate mb-1">
                               {myFolders.name}
-                            </Link>
-                          </h5>
-                          <p className="text-muted text-truncate mb-0">
-                            {myFolders.documentCount} Files
-                          </p>
+                            </h5>
+                            <p className="text-muted text-truncate mb-0">
+                              {myFolders.documentCount} Files
+                            </p>
+                          </div>
+                          <div className="align-self-end ms-2">
+                            <p className="text-muted mb-0">
+                              {myFolders.privacy}
+                            </p>
+                          </div>
                         </div>
-                        <div className="align-self-end ms-2">
-                          <p className="text-muted mb-0">{myFolders.privacy}</p>
-                        </div>
-                      </div>
+                      </Link>
                     </div>
                   </CardBody>
                 </Card>
