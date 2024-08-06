@@ -35,6 +35,8 @@ const ChildFileList = () => {
   const [admins, setAdmins] = useState([])
   const navigate = useNavigate()
   const [folders, setFolders] = useState([])
+  const [editModal, setEditModal] = useState(false)
+  const [selectedFolder, setSelectedFolder] = useState(null)
   const [user, setUser] = useState({})
   const [isUserSet, setIsUserSet] = useState(false)
   const fetchFolders = async () => {
@@ -49,6 +51,20 @@ const ChildFileList = () => {
       setFolders(foldersWithDocumentCount)
     } catch (error) {
       console.log(error)
+    }
+  }
+  const handleUpdateFolder = async e => {
+    try {
+      e.preventDefault()
+      await axios.put(
+        `${process.env.REACT_APP_DATABASEURL}/folders/update/${selectedFolder.id}`,
+        selectedFolder
+      )
+      fetchFolders()
+      setEditModal(false)
+      setSelectedFolder(null)
+    } catch (error) {
+      console.error("Error updating folder:", error)
     }
   }
 
@@ -205,7 +221,14 @@ const ChildFileList = () => {
                             >
                               Open
                             </DropdownItem>
-                            {/* <DropdownItem href="#">Edit</DropdownItem> */}
+                            <DropdownItem
+                              onClick={() => {
+                                setSelectedFolder(myFolders)
+                                setEditModal(true)
+                              }}
+                            >
+                              Edit
+                            </DropdownItem>
                             {/* <DropdownItem href="#">Rename</DropdownItem> */}
                             <div className="dropdown-divider"></div>
                             <DropdownItem
@@ -316,6 +339,101 @@ const ChildFileList = () => {
                     type="button"
                     className="me-1"
                     onClick={togglee}
+                  >
+                    Close
+                  </Button>
+                  <Button type="submit" color="success" id="btn-save-event">
+                    Save
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </ModalBody>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={editModal}
+        role="dialog"
+        autoFocus={true}
+        centered={true}
+        className="exampleModal"
+        tabIndex="-1"
+        toggle={() => setEditModal(!editModal)}
+      >
+        <div className="modal-content">
+          <ModalHeader toggle={() => setEditModal(!editModal)}>
+            Edit Folder
+          </ModalHeader>
+          <ModalBody>
+            <Form onSubmit={handleUpdateFolder}>
+              <Row>
+                <Col md={12}>
+                  <div className="mb-3">
+                    <Label htmlFor="validationCustom01">Folder Title</Label>
+                    <Input
+                      type="text"
+                      className="form-control"
+                      id="validationCustom01"
+                      name="title"
+                      value={selectedFolder?.name || ""}
+                      onChange={e =>
+                        setSelectedFolder({
+                          ...selectedFolder,
+                          name: e.target.value,
+                        })
+                      }
+                      invalid={!!folderValidation.errors.title}
+                    />
+                    <FormFeedback>{folderValidation.errors.title}</FormFeedback>
+                  </div>
+                </Col>
+                <Col md={12}>
+                  <div className="mb-3">
+                    <Label htmlFor="folderPrivacy">Folder Privacy</Label>
+                    <Switch
+                      checked={selectedFolder?.privacy === "private"}
+                      onClick={() => {
+                        setSelectedFolder({
+                          ...selectedFolder,
+                          privacy:
+                            selectedFolder?.privacy === "private"
+                              ? "public"
+                              : "private",
+                        })
+                      }}
+                      color="primary"
+                      name="folderPrivacy"
+                      id="folderPrivacy"
+                      inputProps={{ "aria-label": "primary checkbox" }}
+                    />
+                  </div>
+                </Col>
+              </Row>
+              {selectedFolder?.privacy === "private" && (
+                <Row>
+                  <Col md={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="validationCustom02">
+                        Authorized Users
+                      </Label>
+                      <Multiselect
+                        options={admins}
+                        selectedValues={selectedValue}
+                        onSelect={onSelect}
+                        onRemove={onRemove}
+                        displayValue="email"
+                      />
+                    </div>
+                  </Col>
+                </Row>
+              )}
+              <Row className="mt-2">
+                <Col xs={8} className="text-end">
+                  <Button
+                    color="light"
+                    type="button"
+                    className="me-1"
+                    onClick={() => setEditModal(!editModal)}
                   >
                     Close
                   </Button>
