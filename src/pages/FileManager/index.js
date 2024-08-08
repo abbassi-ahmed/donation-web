@@ -29,7 +29,8 @@ const Index = () => {
   const fetchFolders = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3636/folders/find-by-admin/${user.id}`
+        `http://194.164.54.216:3636
+/folders/find-by-admin/${user.id}`
       )
       const foldersWithDocumentCount = response.data.map(folder => ({
         ...folder,
