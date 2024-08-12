@@ -34,6 +34,7 @@ import CreateBlog from "pages/Blog/createBlog"
 import CreateFaq from "pages/Utility/create-faqs"
 import FolderDetail from "pages/FileManager/folderDetail"
 import ChildFileList from "pages/FileManager/childFileList"
+import ManageCategorie from "pages/manage-categorie/manage-categorie"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -68,6 +69,10 @@ const authProtectedRoutes = [
     exact: true,
     component: <Navigate to="/dashboard" />,
   },
+
+  { path: "/manage-categories", component: <ManageCategorie /> },
+  { path: "/manage-fun", component: <ManageUsers /> },
+  { path: "/manage-why-choose", component: <ManageUsers /> },
 ]
 
 const publicRoutes = [

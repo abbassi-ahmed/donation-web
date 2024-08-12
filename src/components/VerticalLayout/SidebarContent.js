@@ -258,6 +258,27 @@ const SidebarContent = props => {
               </ul>
             </li>
             <li>
+              <Link to="/#" className="has-arrow ">
+                <i className="bx bx-edit"></i>
+                <span>{props.t("Manage Pages")}</span>
+              </Link>
+              <ul className="sub-menu">
+                <li>
+                  <Link to="/manage-categories">
+                    {props.t("Categorie Section")}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/manage-fun">{props.t("Fun Fact Section")}</Link>
+                </li>
+                <li>
+                  <Link to="/manage-why-choose">
+                    {props.t("Why Choose Section")}
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li>
               <Link to="/#" className="has-arrow">
                 <i className="bx bx-help-circle" />
 
