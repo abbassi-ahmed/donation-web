@@ -20,6 +20,7 @@ import FlatPickr from "react-flatpickr"
 import * as Yup from "yup"
 import { useFormik } from "formik"
 import axios from "axios"
+import CardUploader from "./CardUploader"
 
 const ManageCategorie = () => {
   //meta title
@@ -30,30 +31,9 @@ const ManageCategorie = () => {
   const [selectedUserPic, setSelectedUserPic] = useState(null)
   const [imgUser, setImgUser] = useState(null)
   const [loader, setLoader] = useState(false)
+  const [errors, setErrors] = useState(null)
 
-  const [cards, setCards] = useState(Array(6).fill({ image: null, title: "" }))
-
-  const handleCardChange = (e, cardIndex) => {
-    e.preventDefault()
-    if (e.target.files.length) {
-      const file = e.target.files[0]
-      const newCards = [...cards]
-
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        newCards[cardIndex] = { ...newCards[cardIndex], image: reader.result }
-        setCards(newCards) // Update the state with the new image
-        validation.setFieldValue(`cardImage${cardIndex + 1}`, reader.result)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleCardTitleChange = (e, cardIndex) => {
-    const newCards = [...cards]
-    newCards[cardIndex] = { ...newCards[cardIndex], title: e.target.value }
-    setCards(newCards) // Update the state with the new title
-  }
+  const [cards, setCards] = useState(Array(6).fill({ icon: null, title: "" }))
 
   const handleImageChange = e => {
     e.preventDefault()
@@ -66,6 +46,7 @@ const ManageCategorie = () => {
         validation.setFieldValue("projectImage", reader.result)
       }
       reader.readAsDataURL(file)
+      setImg(file)
     }
   }
 
@@ -101,39 +82,47 @@ const ManageCategorie = () => {
       signature: Yup.string().required("Please Type A Signature"),
     }),
     onSubmit: async values => {
-      console.log("values", values)
       const formDat = new FormData()
-      formDat.append("taglineCategorie", values.taglineCategorie)
-      formDat.append("titleCategorie", values.titleCategorie)
-      formDat.append("categorieDescription", values.categorieDescription)
-      formDat.append("projectImage", img)
-      formDat.append("userPic", imgUser)
+      formDat.append("tagline", values.taglineCategorie)
+      formDat.append("title", values.titleCategorie)
+      formDat.append("description", values.categorieDescription)
+      formDat.append("bg", img)
+      formDat.append("categoriesUser", imgUser)
       formDat.append("signature", values.signature)
-
-      try {
-        setLoader(true)
-        const response = await axios.post(
-          process.env.REACT_APP_DATABASEURL + "/projects/create",
-          formDat,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+      formDat.append("categories", JSON.stringify(cards))
+      if (
+        ![3, 6].includes(cards.filter(card => card.icon && card.title).length)
+      ) {
+        toast.error("Please fill at least 3 or exactly 6 cards")
+        return
+      } else {
+        try {
+          setLoader(true)
+          const response = await axios.post(
+            process.env.REACT_APP_DATABASEURL + "/categories-section/create",
+            formDat,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          )
+          console.log("response", response)
+          if (response.data) {
+            validation.resetForm()
+            setSelectedImage(null)
+            setImg(null)
+            setSelectedUserPic(null)
+            setImgUser(null)
+            setImgSignature(null)
+            toast.success("🎉 Project Created Successfully")
+            setLoader(false)
           }
-        )
-        if (response.data) {
-          validation.resetForm()
-          setSelectedImage(null)
-          setImg(null)
-          setSelectedUserPic(null)
-          setImgUser(null)
-          setImgSignature(null)
-          toast.success("🎉 Project Created Successfully")
-          setLoader(false)
+        } catch (error) {
+          console.error("error", error)
         }
-      } catch (error) {
-        console.error("error", error)
       }
+
       setLoader(false)
     },
   })
@@ -391,72 +380,20 @@ const ManageCategorie = () => {
                         }}
                         className="mb-5"
                       ></div>
-                      <div className="d-flex gap-5 mb-3">
-                        {[...Array(6)].map((_, index) => (
-                          <div key={index}>
-                            <div className="position-relative d-inline-block">
-                              <div className="position-absolute bottom-0 end-0">
-                                <Label
-                                  htmlFor={`card${index + 1}-image-input`}
-                                  className="mb-0"
-                                  id={`card${index + 1}ImageInput`}
-                                >
-                                  <div className="avatar-xs">
-                                    <div className="avatar-title bg-light border rounded-circle text-muted cursor-pointer shadow font-size-16">
-                                      <i className="bx bxs-image-alt"></i>
-                                    </div>
-                                  </div>
-                                </Label>
-                                <UncontrolledTooltip
-                                  placement="right"
-                                  target={`card${index + 1}ImageInput`}
-                                >
-                                  Select Image
-                                </UncontrolledTooltip>
-                                <input
-                                  className="form-control d-none"
-                                  id={`card${index + 1}-image-input`}
-                                  type="file"
-                                  accept="image/png, image/gif, image/jpeg"
-                                  onChange={e => handleCardChange(e, index)}
-                                />
-                              </div>
-                              <div className="avatar-lg mt-3">
-                                <div className="avatar-title bg-light rounded-circle">
-                                  {cards[index].image ? (
-                                    <img
-                                      src={cards[index].image}
-                                      id={`card${index + 1}-img`}
-                                      alt="Project Logo"
-                                      className="avatar-md rounded-circle overflow-hidden"
-                                      style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        backgroundRepeat: "no-repeat",
-                                        backgroundPosition: "center",
-                                        backgroundSize: "cover",
-                                      }}
-                                    />
-                                  ) : null}
-                                </div>
-                              </div>
-                            </div>
-                            <div className="mb-3">
-                              <Label htmlFor={`card${index + 1}-title-input`}>
-                                Title
-                              </Label>
-                              <Input
-                                id={`cardTitle${index + 1}`}
-                                name={`cardTitle${index + 1}`}
-                                type="text"
-                                placeholder={`Enter Title ${index + 1}...`}
-                                onChange={e => handleCardTitleChange(e, index)}
-                                value={cards[index].title}
+                      <Container>
+                        <Row>
+                          {[...Array(6)].map((_, index) => (
+                            <Col md={4} key={index} className="mb-4">
+                              <CardUploader
+                                index={index}
+                                cards={cards}
+                                setCards={setCards}
+                                validation={validation}
                               />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                            </Col>
+                          ))}
+                        </Row>
+                      </Container>
                     </div>
                   </CardBody>
                 </Card>
