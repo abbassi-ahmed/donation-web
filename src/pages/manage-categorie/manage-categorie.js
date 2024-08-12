@@ -31,97 +31,28 @@ const ManageCategorie = () => {
   const [imgUser, setImgUser] = useState(null)
   const [loader, setLoader] = useState(false)
 
-  const [cardImage1, setCardImage1] = useState(null)
-  const [cardImage2, setCardImage2] = useState(null)
-  const [cardImage3, setCardImage3] = useState(null)
-  const [cardImage4, setCardImage4] = useState(null)
-  const [cardImage5, setCardImage5] = useState(null)
-  const [cardImage6, setCardImage6] = useState(null)
+  const [cards, setCards] = useState(Array(6).fill({ image: null, title: "" }))
 
-  const [cardTitle1, setCardTitle1] = useState("")
-  const [cardTitle2, setCardTitle2] = useState("")
-  const [cardTitle3, setCardTitle3] = useState("")
-  const [cardTitle4, setCardTitle4] = useState("")
-  const [cardTitle5, setCardTitle5] = useState("")
-  const [cardTitle6, setCardTitle6] = useState("")
-
-  const handleCardChange = (e, card) => {
+  const handleCardChange = (e, cardIndex) => {
     e.preventDefault()
     if (e.target.files.length) {
       const file = e.target.files[0]
-      if (card === 1) {
-        setCardImage1(file)
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          setCardTitle1(reader.result)
-          validation.setFieldValue("cardImage1", reader.result)
-        }
-        reader.readAsDataURL(file)
-      } else if (card === 2) {
-        setCardImage2(file)
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          setCardTitle2(reader.result)
-          validation.setFieldValue("cardImage2", reader.result)
-        }
-        reader.readAsDataURL(file)
-      } else if (card === 3) {
-        setCardImage3(file)
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          setCardTitle3(reader.result)
-          validation.setFieldValue("cardImage3", reader.result)
-        }
-        reader.readAsDataURL(file)
-      } else if (card === 4) {
-        setCardImage4(file)
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          setCardTitle4(reader.result)
-          validation.setFieldValue("cardImage4", reader.result)
-        }
-        reader.readAsDataURL(file)
-      } else if (card === 5) {
-        setCardImage5(file)
+      const newCards = [...cards]
 
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          setCardTitle5(reader.result)
-          validation.setFieldValue("cardImage5", reader.result)
-        }
-        reader.readAsDataURL(file)
-      } else if (card === 6) {
-        setCardImage6(file)
-
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          setCardTitle6(reader.result)
-          validation.setFieldValue("cardImage6", reader.result)
-        }
-        reader.readAsDataURL(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        newCards[cardIndex] = { ...newCards[cardIndex], image: reader.result }
+        setCards(newCards) // Update the state with the new image
+        validation.setFieldValue(`cardImage${cardIndex + 1}`, reader.result)
       }
+      reader.readAsDataURL(file)
     }
   }
-  const handleCardTitleChange = (e, card) => {
-    if (card === 1) {
-      setCardTitle1(e.target.value)
-      validation.setFieldValue("cardTitle1", e.target.value)
-    } else if (card === 2) {
-      setCardTitle2(e.target.value)
-      validation.setFieldValue("cardTitle2", e.target.value)
-    } else if (card === 3) {
-      setCardTitle3(e.target.value)
-      validation.setFieldValue("cardTitle3", e.target.value)
-    } else if (card === 4) {
-      setCardTitle4(e.target.value)
-      validation.setFieldValue("cardTitle4", e.target.value)
-    } else if (card === 5) {
-      setCardTitle5(e.target.value)
-      validation.setFieldValue("cardTitle5", e.target.value)
-    } else if (card === 6) {
-      setCardTitle6(e.target.value)
-      validation.setFieldValue("cardTitle6", e.target.value)
-    }
+
+  const handleCardTitleChange = (e, cardIndex) => {
+    const newCards = [...cards]
+    newCards[cardIndex] = { ...newCards[cardIndex], title: e.target.value }
+    setCards(newCards) // Update the state with the new title
   }
 
   const handleImageChange = e => {
@@ -263,19 +194,21 @@ const ManageCategorie = () => {
                             }}
                           >
                             <div className="avatar-title bg-light">
-                              <img
-                                src={selectedImage || ""}
-                                id="projectlogo-img"
-                                alt=""
-                                className="avatar-md"
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  backgroundRepeat: "no-repeat",
-                                  backgroundPosition: "center",
-                                  backgroundSize: "cover",
-                                }}
-                              />
+                              {selectedImage ? (
+                                <img
+                                  src={selectedImage || ""}
+                                  id="projectlogo-img"
+                                  alt=""
+                                  className="avatar-md"
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "center",
+                                    backgroundSize: "cover",
+                                  }}
+                                />
+                              ) : null}
                             </div>
                           </div>
                         </div>
@@ -297,7 +230,7 @@ const ManageCategorie = () => {
                           placeholder="Enter Tagline Categorie..."
                           onChange={validation.handleChange}
                           value={validation.values.taglineCategorie || ""}
-                          onBlur={validation.handleBlur} // Add onBlur to mark the field as touched
+                          onBlur={validation.handleBlur}
                         />
                         {validation.touched.taglineCategorie &&
                         validation.errors.taglineCategorie ? (
@@ -397,19 +330,21 @@ const ManageCategorie = () => {
                                     border: "none",
                                   }}
                                 >
-                                  <img
-                                    src={selectedUserPic || ""}
-                                    id="user-pic-img"
-                                    alt=""
-                                    className="avatar-md rounded-circle"
-                                    style={{
-                                      width: "100%",
-                                      height: "100%",
-                                      objectFit: "cover",
-                                      backgroundRepeat: "no-repeat",
-                                      backgroundPosition: "center",
-                                    }}
-                                  />
+                                  {selectedUserPic ? (
+                                    <img
+                                      src={selectedUserPic || ""}
+                                      id="user-pic-img"
+                                      alt=""
+                                      className="avatar-md rounded-circle"
+                                      style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "cover",
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "center",
+                                      }}
+                                    />
+                                  ) : null}
                                 </div>
                               </div>
                             </div>
@@ -448,7 +383,80 @@ const ManageCategorie = () => {
                     </div>
                     <div className="mb-3 text-center font-size-16 ">
                       <h1>Cards </h1>
-                      <div className="d-flex gap-5 mb-3"></div>
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "1px",
+                          backgroundColor: "#e9e9e9",
+                        }}
+                        className="mb-5"
+                      ></div>
+                      <div className="d-flex gap-5 mb-3">
+                        {[...Array(6)].map((_, index) => (
+                          <div key={index}>
+                            <div className="position-relative d-inline-block">
+                              <div className="position-absolute bottom-0 end-0">
+                                <Label
+                                  htmlFor={`card${index + 1}-image-input`}
+                                  className="mb-0"
+                                  id={`card${index + 1}ImageInput`}
+                                >
+                                  <div className="avatar-xs">
+                                    <div className="avatar-title bg-light border rounded-circle text-muted cursor-pointer shadow font-size-16">
+                                      <i className="bx bxs-image-alt"></i>
+                                    </div>
+                                  </div>
+                                </Label>
+                                <UncontrolledTooltip
+                                  placement="right"
+                                  target={`card${index + 1}ImageInput`}
+                                >
+                                  Select Image
+                                </UncontrolledTooltip>
+                                <input
+                                  className="form-control d-none"
+                                  id={`card${index + 1}-image-input`}
+                                  type="file"
+                                  accept="image/png, image/gif, image/jpeg"
+                                  onChange={e => handleCardChange(e, index)}
+                                />
+                              </div>
+                              <div className="avatar-lg mt-3">
+                                <div className="avatar-title bg-light rounded-circle">
+                                  {cards[index].image ? (
+                                    <img
+                                      src={cards[index].image}
+                                      id={`card${index + 1}-img`}
+                                      alt="Project Logo"
+                                      className="avatar-md rounded-circle overflow-hidden"
+                                      style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "center",
+                                        backgroundSize: "cover",
+                                      }}
+                                    />
+                                  ) : null}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mb-3">
+                              <Label htmlFor={`card${index + 1}-title-input`}>
+                                Title
+                              </Label>
+                              <Input
+                                id={`cardTitle${index + 1}`}
+                                name={`cardTitle${index + 1}`}
+                                type="text"
+                                placeholder={`Enter Title ${index + 1}...`}
+                                onChange={e => handleCardTitleChange(e, index)}
+                                value={cards[index].title}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </CardBody>
                 </Card>
