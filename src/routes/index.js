@@ -35,6 +35,7 @@ import CreateFaq from "pages/Utility/create-faqs"
 import FolderDetail from "pages/FileManager/folderDetail"
 import ChildFileList from "pages/FileManager/childFileList"
 import ManageCategorie from "pages/manage-categorie/manage-categorie"
+import FunFact from "pages/manage-fun-fact/funcFact"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -71,7 +72,7 @@ const authProtectedRoutes = [
   },
 
   { path: "/manage-categories", component: <ManageCategorie /> },
-  { path: "/manage-fun", component: <ManageUsers /> },
+  { path: "/manage-fun", component: <FunFact /> },
   { path: "/manage-why-choose", component: <ManageUsers /> },
 ]
 
