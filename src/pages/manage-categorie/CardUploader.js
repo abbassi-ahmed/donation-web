@@ -8,19 +8,22 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
       const file = e.target.files[0]
       const newCards = [...cards]
 
-      const reader = new FileReader()
-      reader.onload = () => {
-        newCards[cardIndex] = { ...newCards[cardIndex], icon: reader.result } // Change here
-        setCards(newCards) // Update the state with the new image
-        validation.setFieldValue(`cardImage${cardIndex + 1}`, file)
-      }
-      reader.readAsDataURL(file)
+      newCards[cardIndex] = { ...newCards[cardIndex], icon: file }
+      setCards(newCards)
+      validation.setFieldValue(`cardImage${cardIndex + 1}`, file)
     }
   }
+  const getImageSrc = icon => {
+    // Check if the icon is a Blob object (or any other condition to determine if you need to use URL.createObjectURL)
+    if (icon instanceof Blob) {
+      return URL.createObjectURL(icon)
+    }
+    // Otherwise, use the direct URL
+    return icon
+  }
 
-  useEffect(() => {
-    console.log("cards", cards)
-  }, [cards])
+  // Usage in your component
+  const iconSrc = getImageSrc(cards[index].icon)
 
   const handleCardTitleChange = (e, cardIndex) => {
     const newCards = [...cards]
@@ -61,7 +64,7 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
           <div className="avatar-title bg-light rounded-circle">
             {cards[index].icon ? (
               <img
-                src={cards[index].icon}
+                src={iconSrc}
                 id={`card${index + 1}-img`}
                 alt="Project Logo"
                 className="avatar-md rounded-circle overflow-hidden"

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import {
   Button,
@@ -31,8 +31,6 @@ const ManageCategorie = () => {
   const [selectedUserPic, setSelectedUserPic] = useState(null)
   const [imgUser, setImgUser] = useState(null)
   const [loader, setLoader] = useState(false)
-  const [errors, setErrors] = useState(null)
-
   const [cards, setCards] = useState(Array(6).fill({ icon: null, title: "" }))
 
   const handleImageChange = e => {
@@ -46,7 +44,6 @@ const ManageCategorie = () => {
         validation.setFieldValue("projectImage", reader.result)
       }
       reader.readAsDataURL(file)
-      setImg(file)
     }
   }
 
@@ -82,50 +79,95 @@ const ManageCategorie = () => {
       signature: Yup.string().required("Please Type A Signature"),
     }),
     onSubmit: async values => {
-      const formDat = new FormData()
-      formDat.append("tagline", values.taglineCategorie)
-      formDat.append("title", values.titleCategorie)
-      formDat.append("description", values.categorieDescription)
-      formDat.append("bg", img)
-      formDat.append("categoriesUser", imgUser)
-      formDat.append("signature", values.signature)
-      formDat.append("categories", JSON.stringify(cards))
       if (
         ![3, 6].includes(cards.filter(card => card.icon && card.title).length)
       ) {
+        console.log("cards", cards)
         toast.error("Please fill at least 3 or exactly 6 cards")
         return
       } else {
         try {
           setLoader(true)
+          await Promise.all(
+            cards.map(card =>
+              axios.post(
+                process.env.REACT_APP_DATABASEURL + "/categories-cards/",
+                {
+                  icon: card.icon,
+                  title: card.title,
+                },
+                { headers: { "Content-Type": "multipart/form-data" } }
+              )
+            )
+          )
+
+          const payload = {
+            tagline: values.taglineCategorie,
+            title: values.titleCategorie,
+            description: values.categorieDescription,
+            signature: values.signature,
+          }
+
+          if (img) payload.bg = img
+          if (imgUser) payload.categoriesUser = imgUser
+
           const response = await axios.post(
             process.env.REACT_APP_DATABASEURL + "/categories-section/create",
-            formDat,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
+            payload,
+            { headers: { "Content-Type": "multipart/form-data" } }
           )
-          console.log("response", response)
+
           if (response.data) {
-            validation.resetForm()
-            setSelectedImage(null)
-            setImg(null)
-            setSelectedUserPic(null)
-            setImgUser(null)
-            setImgSignature(null)
+            fetchDefaultOnes()
             toast.success("🎉 Project Created Successfully")
-            setLoader(false)
           }
         } catch (error) {
           console.error("error", error)
+        } finally {
+          setLoader(false)
         }
       }
-
-      setLoader(false)
     },
   })
+
+  const fetchDefaultOnes = async () => {
+    try {
+      const response = await axios.get(
+        process.env.REACT_APP_DATABASEURL + "/categories-section/find-all"
+      )
+      if (response.data[0].categories.length > 0) {
+        const data = response.data[0]
+        validation.setFieldValue("taglineCategorie", data.tagline)
+        validation.setFieldValue("titleCategorie", data.title)
+        validation.setFieldValue("categorieDescription", data.description)
+        validation.setFieldValue("signature", data.signature)
+        validation.setFieldValue("projectImage", data.bg)
+        validation.setFieldValue("userPic", data.categoriesUser)
+
+        if (data.bg) {
+          setSelectedImage(data.bg)
+          setImg(data.bg)
+        }
+        if (data.categoriesUser) {
+          setSelectedUserPic(data.categoriesUser)
+          setImgUser(data.categoriesUser)
+        }
+
+        setCards(
+          data.categories.map(card => ({
+            icon: card.icon,
+            title: card.title,
+          }))
+        )
+      }
+    } catch (error) {
+      console.error("error", error)
+    }
+  }
+
+  useEffect(() => {
+    fetchDefaultOnes()
+  }, [])
 
   return (
     <React.Fragment>
