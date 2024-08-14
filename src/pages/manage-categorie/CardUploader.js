@@ -14,11 +14,9 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
     }
   }
   const getImageSrc = icon => {
-    // Check if the icon is a Blob object (or any other condition to determine if you need to use URL.createObjectURL)
     if (icon instanceof Blob) {
       return URL.createObjectURL(icon)
     }
-    // Otherwise, use the direct URL
     return icon
   }
 
@@ -28,7 +26,7 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
   const handleCardTitleChange = (e, cardIndex) => {
     const newCards = [...cards]
     newCards[cardIndex] = { ...newCards[cardIndex], title: e.target.value }
-    setCards(newCards) // Update the state with the new title
+    setCards(newCards)
   }
 
   return (
@@ -68,6 +66,7 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
                 id={`card${index + 1}-img`}
                 alt="Project Logo"
                 className="avatar-md rounded-circle overflow-hidden"
+                loading="lazy"
                 style={{
                   width: "100%",
                   height: "100%",

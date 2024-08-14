@@ -231,6 +231,7 @@ const ManageCategorie = () => {
                                   id="projectlogo-img"
                                   alt=""
                                   className="avatar-md"
+                                  loading="lazy"
                                   style={{
                                     width: "100%",
                                     height: "100%",
@@ -366,6 +367,7 @@ const ManageCategorie = () => {
                                       src={selectedUserPic || ""}
                                       id="user-pic-img"
                                       alt=""
+                                      loading="lazy"
                                       className="avatar-md rounded-circle"
                                       style={{
                                         width: "100%",

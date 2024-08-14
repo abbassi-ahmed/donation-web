@@ -22,9 +22,9 @@ import { useFormik } from "formik"
 import axios from "axios"
 import CardUploader from "./CardUploader"
 
-const ManageCategorie = () => {
-  //meta title
-  document.title = "Manage Categorie"
+const ManageFacts = () => {
+  //meta titleo
+  document.title = "Manage Fun Fact"
 
   const [loader, setLoader] = useState(false)
   const [cards, setCards] = useState(
@@ -72,44 +72,29 @@ const ManageCategorie = () => {
     },
   })
 
-  // const fetchDefaultOnes = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       process.env.REACT_APP_DATABASEURL + "/categories-section/find-all"
-  //     )
-  //     if (response.data[0].categories.length > 0) {
-  //       const data = response.data[0]
-  //       validation.setFieldValue("taglineCategorie", data.tagline)
-  //       validation.setFieldValue("titleCategorie", data.title)
-  //       validation.setFieldValue("categorieDescription", data.description)
-  //       validation.setFieldValue("signature", data.signature)
-  //       validation.setFieldValue("projectImage", data.bg)
-  //       validation.setFieldValue("userPic", data.categoriesUser)
+  const fetchDefaultOnes = async () => {
+    try {
+      const response = await axios.get(
+        process.env.REACT_APP_DATABASEURL + "/fun-fact-section/find-all"
+      )
+      if (response.data) {
+        const data = response.data
+        setCards(
+          data.map(card => ({
+            icon: card.icon,
+            text: card.text,
+            count: card.count,
+          }))
+        )
+      }
+    } catch (error) {
+      console.error("error", error)
+    }
+  }
 
-  //       if (data.bg) {
-  //         setSelectedImage(data.bg)
-  //         setImg(data.bg)
-  //       }
-  //       if (data.categoriesUser) {
-  //         setSelectedUserPic(data.categoriesUser)
-  //         setImgUser(data.categoriesUser)
-  //       }
-
-  //       setCards(
-  //         data.categories.map(card => ({
-  //           icon: card.icon,
-  //           title: card.title,
-  //         }))
-  //       )
-  //     }
-  //   } catch (error) {
-  //     console.error("error", error)
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   fetchDefaultOnes()
-  // }, [])
+  useEffect(() => {
+    fetchDefaultOnes()
+  }, [])
 
   return (
     <React.Fragment>
@@ -171,4 +156,4 @@ const ManageCategorie = () => {
   )
 }
 
-export default ManageCategorie
+export default ManageFacts

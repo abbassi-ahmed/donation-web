@@ -36,6 +36,7 @@ import FolderDetail from "pages/FileManager/folderDetail"
 import ChildFileList from "pages/FileManager/childFileList"
 import ManageCategorie from "pages/manage-categorie/manage-categorie"
 import FunFact from "pages/manage-fun-fact/funcFact"
+import ManageWhyChoose from "pages/why-choose-section/whyChoose"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -73,7 +74,7 @@ const authProtectedRoutes = [
 
   { path: "/manage-categories", component: <ManageCategorie /> },
   { path: "/manage-fun", component: <FunFact /> },
-  { path: "/manage-why-choose", component: <ManageUsers /> },
+  { path: "/manage-why-choose", component: <ManageWhyChoose /> },
 ]
 
 const publicRoutes = [

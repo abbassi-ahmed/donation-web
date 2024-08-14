@@ -66,6 +66,7 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
           <div className="avatar-title bg-light rounded-circle">
             {cards[index].icon ? (
               <img
+                loading="lazy"
                 src={iconSrc}
                 id={`card${index + 1}-img`}
                 alt="Project Logo"
