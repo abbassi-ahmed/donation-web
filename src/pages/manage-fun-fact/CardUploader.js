@@ -1,5 +1,6 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { Input, Label, UncontrolledTooltip } from "reactstrap"
+import SuspenseImage from "../../components/SuspenseImage/ImageComponent"
 
 const CardUploader = ({ index, cards, setCards, validation }) => {
   const handleCardChange = (e, cardIndex) => {
@@ -13,6 +14,7 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
       validation.setFieldValue(`cardImage${cardIndex + 1}`, file)
     }
   }
+
   const getImageSrc = icon => {
     if (icon instanceof Blob) {
       return URL.createObjectURL(icon)
@@ -27,6 +29,7 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
     newCards[cardIndex] = { ...newCards[cardIndex], text: e.target.value }
     setCards(newCards)
   }
+
   const handleCountChange = (e, cardIndex) => {
     const newCards = [...cards]
     newCards[cardIndex] = { ...newCards[cardIndex], count: e.target.value }
@@ -65,8 +68,7 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
         <div className="avatar-lg mt-3">
           <div className="avatar-title bg-light rounded-circle">
             {cards[index].icon ? (
-              <img
-                loading="lazy"
+              <SuspenseImage
                 src={iconSrc}
                 id={`card${index + 1}-img`}
                 alt="Project Logo"

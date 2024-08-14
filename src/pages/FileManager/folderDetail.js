@@ -19,7 +19,8 @@ export default function FolderDetail() {
   const fetchFiles = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3636
+        process.env.REACT_APP_DATABASEURL +
+          `
 /folders/find-one/${id}`
       )
       setFiles(response.data.documents)
@@ -33,7 +34,8 @@ export default function FolderDetail() {
   const fetchStats = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3636
+        process.env.REACT_APP_DATABASEURL +
+          `
 /documents/get-sum-size-by-folder/${id}`
       )
       setStats(response.data)

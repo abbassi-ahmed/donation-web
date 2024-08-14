@@ -42,8 +42,8 @@ const ChildFileList = () => {
   const fetchFolders = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3636
-/folders/find-childs-by-admin/${id}/${user.id}`
+        process.env.REACT_APP_DATABASEURL +
+          `/folders/find-childs-by-admin/${id}/${user.id}`
       )
       const foldersWithDocumentCount = response.data.map(folder => ({
         ...folder,

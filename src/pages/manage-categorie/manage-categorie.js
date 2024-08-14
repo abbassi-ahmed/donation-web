@@ -21,6 +21,7 @@ import * as Yup from "yup"
 import { useFormik } from "formik"
 import axios from "axios"
 import CardUploader from "./CardUploader"
+import SuspenseImage from "../../components/SuspenseImage/ImageComponent"
 
 const ManageCategorie = () => {
   //meta title
@@ -226,12 +227,11 @@ const ManageCategorie = () => {
                           >
                             <div className="avatar-title bg-light">
                               {selectedImage ? (
-                                <img
+                                <SuspenseImage
                                   src={selectedImage || ""}
                                   id="projectlogo-img"
                                   alt=""
                                   className="avatar-md"
-                                  loading="lazy"
                                   style={{
                                     width: "100%",
                                     height: "100%",
@@ -363,7 +363,7 @@ const ManageCategorie = () => {
                                   }}
                                 >
                                   {selectedUserPic ? (
-                                    <img
+                                    <SuspenseImage
                                       src={selectedUserPic || ""}
                                       id="user-pic-img"
                                       alt=""

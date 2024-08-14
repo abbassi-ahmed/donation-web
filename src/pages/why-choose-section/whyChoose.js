@@ -20,6 +20,7 @@ import * as Yup from "yup"
 import { useFormik } from "formik"
 import axios from "axios"
 import ListPoints from "./listPoints"
+import SuspenseImage from "../../components/SuspenseImage/ImageComponent"
 
 const ManageWhyChoose = () => {
   //meta title
@@ -228,7 +229,7 @@ const ManageWhyChoose = () => {
                                 >
                                   <div className="avatar-title bg-light">
                                     {selectedImage1 ? (
-                                      <img
+                                      <SuspenseImage
                                         src={selectedImage1 || ""}
                                         id="projectlogo-img"
                                         alt=""
@@ -299,7 +300,7 @@ const ManageWhyChoose = () => {
                                 >
                                   <div className="avatar-title bg-light">
                                     {selectedImage2 ? (
-                                      <img
+                                      <SuspenseImage
                                         src={selectedImage2 || ""}
                                         id="user-pic-img"
                                         alt=""

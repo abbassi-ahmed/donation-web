@@ -1,5 +1,6 @@
 import React, { useEffect } from "react"
 import { Input, Label, UncontrolledTooltip } from "reactstrap"
+import SuspenseImage from "../../components/SuspenseImage/ImageComponent"
 
 const CardUploader = ({ index, cards, setCards, validation }) => {
   const handleCardChange = (e, cardIndex) => {
@@ -61,7 +62,7 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
         <div className="avatar-lg mt-3">
           <div className="avatar-title bg-light rounded-circle">
             {cards[index].icon ? (
-              <img
+              <SuspenseImage
                 src={iconSrc}
                 id={`card${index + 1}-img`}
                 alt="Project Logo"

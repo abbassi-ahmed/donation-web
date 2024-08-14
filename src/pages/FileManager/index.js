@@ -29,7 +29,8 @@ const Index = () => {
   const fetchFolders = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3636
+        process.env.REACT_APP_DATABASEURL +
+          `
 /folders/find-by-admin/${user.id}`
       )
       const foldersWithDocumentCount = response.data.map(folder => ({
