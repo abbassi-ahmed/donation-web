@@ -7,9 +7,8 @@
 
 # testing
 /coverage
-
 # production
-# /build
+/build
 
 # misc
 .DS_Store
@@ -26,3 +25,6 @@ yarn-error.log*
 package-lock.json
 .eslintcache
 debug.log
+
+# local env files
+.env

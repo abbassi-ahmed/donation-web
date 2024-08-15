@@ -264,6 +264,9 @@ const SidebarContent = props => {
               </Link>
               <ul className="sub-menu">
                 <li>
+                  <Link to="/manage-slider">{props.t("Slider Section")}</Link>
+                </li>
+                <li>
                   <Link to="/manage-categories">
                     {props.t("Categorie Section")}
                   </Link>

@@ -37,6 +37,7 @@ import ChildFileList from "pages/FileManager/childFileList"
 import ManageCategorie from "pages/manage-categorie/manage-categorie"
 import FunFact from "pages/manage-fun-fact/funcFact"
 import ManageWhyChoose from "pages/why-choose-section/whyChoose"
+import ManageSlider from "pages/slider-section/slider-section"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -71,7 +72,7 @@ const authProtectedRoutes = [
     exact: true,
     component: <Navigate to="/dashboard" />,
   },
-
+  { path: "/manage-slider", component: <ManageSlider /> },
   { path: "/manage-categories", component: <ManageCategorie /> },
   { path: "/manage-fun", component: <FunFact /> },
   { path: "/manage-why-choose", component: <ManageWhyChoose /> },
