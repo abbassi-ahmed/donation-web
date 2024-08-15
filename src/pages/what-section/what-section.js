@@ -7,12 +7,12 @@ import { useFormik } from "formik"
 import axios from "axios"
 import CardUploader from "./CardUploader"
 
-const ManageSlider = () => {
-  document.title = "Manage slider"
+const WhatSection = () => {
+  document.title = "Manage What they say"
 
   const [loader, setLoader] = useState(false)
   const [cards, setCards] = useState(
-    Array(1).fill({ id: 0, bg: null, text: "", title: "" })
+    Array(1).fill({ id: 0, image: null, text: "", name: "" })
   )
   const [length, setLength] = useState(1)
   const [oldCards, setOldCards] = useState([])
@@ -21,7 +21,7 @@ const ManageSlider = () => {
     initialValues: {},
     validationSchema: Yup.object({}),
     onSubmit: async values => {
-      if (cards.some(card => !card.bg || !card.text || !card.title)) {
+      if (cards.some(card => !card.image || !card.text || !card.name)) {
         toast.error("Please fill all the cards")
         return
       } else {
@@ -32,11 +32,12 @@ const ManageSlider = () => {
               .filter(card => !oldCards.some(oldCard => oldCard.id === card.id))
               .map(card =>
                 axios.post(
-                  process.env.REACT_APP_DATABASEURL + "/slider-section/create",
+                  process.env.REACT_APP_DATABASEURL +
+                    "/testimonials-section/create",
                   {
-                    bg: card.bg,
+                    image: card.image,
                     text: card.text,
-                    title: card.title,
+                    name: card.name,
                   },
                   { headers: { "Content-Type": "multipart/form-data" } }
                 )
@@ -56,16 +57,16 @@ const ManageSlider = () => {
   const fetchDefaultOnes = async () => {
     try {
       const response = await axios.get(
-        process.env.REACT_APP_DATABASEURL + "/slider-section/find-all"
+        process.env.REACT_APP_DATABASEURL + "/testimonials-section/find-all"
       )
       if (response.data) {
         const data = response.data
         setCards(
           data.map(card => ({
             id: card.id,
-            bg: card.bg,
+            image: card.image,
             text: card.text,
-            title: card.title,
+            name: card.name,
           }))
         )
         setLength(data.length)
@@ -84,7 +85,7 @@ const ManageSlider = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumbs title="Section" breadcrumbItem="Slider" />
+          <Breadcrumbs title="Section" breadcrumbItem="What they say" />
           <Form
             id="createproject-form"
             onSubmit={e => {
@@ -141,4 +142,4 @@ const ManageSlider = () => {
   )
 }
 
-export default ManageSlider
+export default WhatSection

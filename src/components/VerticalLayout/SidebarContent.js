@@ -279,6 +279,11 @@ const SidebarContent = props => {
                     {props.t("Why Choose Section")}
                   </Link>
                 </li>
+                <li>
+                  <Link to="/what-say">
+                    {props.t("What they say section ")}
+                  </Link>
+                </li>
               </ul>
             </li>
             <li>
