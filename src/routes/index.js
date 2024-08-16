@@ -39,6 +39,7 @@ import FunFact from "pages/manage-fun-fact/funcFact"
 import ManageWhyChoose from "pages/why-choose-section/whyChoose"
 import ManageSlider from "pages/slider-section/slider-section"
 import WhatSection from "pages/what-section/what-section"
+import AboutSection from "pages/manage-about/about"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -78,6 +79,7 @@ const authProtectedRoutes = [
   { path: "/manage-fun", component: <FunFact /> },
   { path: "/manage-why-choose", component: <ManageWhyChoose /> },
   { path: "/what-say", component: <WhatSection /> },
+  { path: "/about-section", component: <AboutSection /> },
 ]
 
 const publicRoutes = [
