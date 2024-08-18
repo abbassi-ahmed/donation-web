@@ -83,7 +83,6 @@ const ManageCategorie = () => {
       if (
         ![3, 6].includes(cards.filter(card => card.icon && card.title).length)
       ) {
-        console.log("cards", cards)
         toast.error("Please fill at least 3 or exactly 6 cards")
         return
       } else {
