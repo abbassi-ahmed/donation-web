@@ -11,8 +11,8 @@ const AboutSection = () => {
   document.title = "Manage What they say"
 
   const [loader, setLoader] = useState(false)
-  const [cards, setCards] = useState(
-    Array(1).fill({
+  const [cards, setCards] = useState([
+    {
       id: 0,
       thumb: null,
       tagline: "",
@@ -22,9 +22,8 @@ const AboutSection = () => {
       bottomText: "",
       item1: "",
       item2: "",
-    })
-  )
-  const [length, setLength] = useState(1)
+    },
+  ])
 
   const validation = useFormik({
     initialValues: {},
@@ -85,24 +84,38 @@ const AboutSection = () => {
       if (response.data) {
         const data = response.data
         setCards(
-          data.map(card => ({
-            id: card.id,
-            thumb: card.thumb,
-            tagline: card.tagline,
-            title: card.title,
-            count: card.count,
-            text: card.text,
-            bottomText: card.bottomText,
-            item1: card.item1,
-            item2: card.item2,
-          }))
+          data.length > 0
+            ? data.map(card => ({
+                id: card.id,
+                thumb: card.thumb,
+                tagline: card.tagline,
+                title: card.title,
+                count: card.count,
+                text: card.text,
+                bottomText: card.bottomText,
+                item1: card.item1,
+                item2: card.item2,
+              }))
+            : [
+                {
+                  id: 0,
+                  thumb: null,
+                  tagline: "",
+                  title: "",
+                  count: 0,
+                  text: "",
+                  bottomText: "",
+                  item1: "",
+                  item2: "",
+                },
+              ]
         )
-        setLength(data.length)
       }
     } catch (error) {
       console.error("error", error)
     }
   }
+
   useEffect(() => {
     fetchDefaultOnes()
   }, [])
@@ -134,7 +147,6 @@ const AboutSection = () => {
                                 cards={cards}
                                 setCards={setCards}
                                 validation={validation}
-                                length={length}
                                 fetchDefaultOnes={fetchDefaultOnes}
                               />
                             </Col>

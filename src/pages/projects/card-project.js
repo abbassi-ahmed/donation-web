@@ -8,12 +8,18 @@ const CardProject = ({ projects }) => {
     <React.Fragment>
       {(projects || []).map((project, key) => (
         <Col xl={4} sm={6} key={key}>
-          <Card>
+          <Card style={{ height: "100%" }}>
             <CardBody>
               <div className="d-flex">
                 <div className="avatar-md me-4">
-                  <span className="avatar-title rounded-circle bg-light text-danger font-size-16">
-                    <img src={project.image} alt="" height="30" />
+                  <span className="rounded-circle text-danger font-size-16">
+                    <img
+                      src={project.image}
+                      alt=""
+                      height="60"
+                      width={"60px"}
+                      style={{ borderRadius: "50%" }}
+                    />
                   </span>
                 </div>
                 <div className="flex-grow-1 overflow-hidden">

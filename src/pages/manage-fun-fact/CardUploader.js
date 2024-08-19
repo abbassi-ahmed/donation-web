@@ -22,8 +22,6 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
     return icon
   }
 
-  const iconSrc = getImageSrc(cards[index].icon)
-
   const handleCardTitleChange = (e, cardIndex) => {
     const newCards = [...cards]
     newCards[cardIndex] = { ...newCards[cardIndex], text: e.target.value }
@@ -35,6 +33,10 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
     newCards[cardIndex] = { ...newCards[cardIndex], count: e.target.value }
     setCards(newCards)
   }
+
+  // Check if the card exists at the given index and has an icon
+  const card = cards[index] || {}
+  const iconSrc = card.icon ? getImageSrc(card.icon) : null
 
   return (
     <div>
@@ -67,7 +69,7 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
         </div>
         <div className="avatar-lg mt-3">
           <div className="avatar-title bg-light rounded-circle">
-            {cards[index].icon ? (
+            {iconSrc ? (
               <SuspenseImage
                 src={iconSrc}
                 id={`card${index + 1}-img`}
@@ -93,7 +95,7 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
           type="number"
           placeholder={`Enter Count ${index + 1}...`}
           onChange={e => handleCountChange(e, index)}
-          value={cards[index].count}
+          value={card.count || ""}
         />
       </div>
       <div className="mb-3">
@@ -104,7 +106,7 @@ const CardUploader = ({ index, cards, setCards, validation }) => {
           type="text"
           placeholder={`Enter Text ${index + 1}...`}
           onChange={e => handleCardTitleChange(e, index)}
-          value={cards[index].text}
+          value={card.text || ""}
         />
       </div>
     </div>

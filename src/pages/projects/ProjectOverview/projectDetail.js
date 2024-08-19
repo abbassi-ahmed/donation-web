@@ -14,7 +14,7 @@ const ProjectDetail = ({ project, sum }) => {
               {project.name || "Project Name"}
             </h5>
             <p className="text-muted">
-              {project.description || "Project description goes here."}
+              {project.Status || "Project description goes here."}
             </p>
           </div>
         </div>
