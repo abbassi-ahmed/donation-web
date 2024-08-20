@@ -153,12 +153,21 @@ const CreateBlog = () => {
                               onChange={handleImageChange}
                             />
                           </div>
-                          <div className="square-image">
+                          <div
+                            className=""
+                            style={{ width: "400px", height: "200px" }}
+                          >
                             <img
                               src={selectedImage || ""}
                               id="blogImage"
                               alt=""
-                              className="img-fluid h-auto rounded"
+                              className="img-fluid rounded"
+                              style={{
+                                objectFit: "fill",
+                                width: "100%",
+                                height: "100%",
+                                objectPosition: "center",
+                              }}
                             />
                           </div>
                         </div>

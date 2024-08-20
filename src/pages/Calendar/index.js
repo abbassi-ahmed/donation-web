@@ -424,16 +424,31 @@ const Calender = props => {
                         onChange={handleImageChange}
                       />
                     </div>
-                    <div className="avatar-lg">
-                      <div className="avatar-title bg-light rounded-circle">
-                        <img
-                          src={selectedImage || ""}
-                          id="projectlogo-img"
-                          alt=""
-                          className="avatar-md h-auto rounded-circle"
-                        />
+                    {selectedImage ? (
+                      <div className="avatar-lg me-4">
+                        <div className="rounded-circle overflow-hidden d-inline-block">
+                          <img
+                            src={selectedImage || ""}
+                            id="projectlogo-img"
+                            alt=""
+                            height="100"
+                            width={"115px"}
+                            style={{ borderRadius: "50%" }}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="avatar-xl">
+                        <div className="avatar-title bg-light rounded-circle">
+                          <img
+                            src={""}
+                            id="projectlogo-img"
+                            alt=""
+                            className="avatar-md h-auto rounded-circle"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                   {eventValidation.touched.image &&
                   eventValidation.errors.image ? (

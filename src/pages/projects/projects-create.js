@@ -207,13 +207,19 @@ const ProjectsCreate = () => {
                               onChange={handleImageChange}
                             />
                           </div>
-                          <div className="avatar-lg">
-                            <div className="avatar-title bg-light rounded-circle">
+                          <div className="avatar-md me-4">
+                            <div className="rounded-circle">
                               <img
                                 src={selectedImage || ""}
                                 id="projectlogo-img"
                                 alt=""
-                                className="avatar-md h-auto rounded-circle"
+                                height="75"
+                                width={"95px"}
+                                style={{
+                                  borderRadius: "50%",
+                                  objectFit: "cover",
+                                  objectPosition: "center",
+                                }}
                               />
                             </div>
                           </div>

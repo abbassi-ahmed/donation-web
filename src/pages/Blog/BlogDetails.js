@@ -115,7 +115,7 @@ const BlogDetails = () => {
                           </div>
                           <hr />
 
-                          <div className="my-5">
+                          <div className="my-5" style={{ textAlign: "center" }}>
                             <img
                               src={blog.image}
                               alt={blog.title}
