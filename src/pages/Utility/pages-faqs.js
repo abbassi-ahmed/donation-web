@@ -16,6 +16,7 @@ import {
 import axios from "axios"
 import classnames from "classnames"
 import DeleteModal from "components/Common/DeleteModal"
+import NoData from "../../assets/svg/no-data.svg"
 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb"
@@ -25,20 +26,29 @@ const PagesFaqs = () => {
   const [deleteModal, setDeleteModal] = useState(false)
   const [faqToDelete, setFaqToDelete] = useState(null)
   const [activeTab, setactiveTab] = useState("1")
-  const [Faq, setFaq] = useState([])
+  const [FaqGeneral, setFaqGeneral] = useState([])
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        process.env.REACT_APP_DATABASEURL + "/faq/find-all"
+      const response = await axios.post(
+        `${process.env.REACT_APP_DATABASEURL}/faq/find-by-type`,
+        {
+          type:
+            activeTab === "1"
+              ? "General"
+              : activeTab === "2"
+              ? "Privacy"
+              : "Support",
+        }
       )
-      setFaq(response.data)
+
+      setFaqGeneral(response.data)
     } catch (error) {
       console.error(error)
     }
   }
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [activeTab])
 
   const onClickDelete = async id => {
     try {
@@ -115,8 +125,8 @@ const PagesFaqs = () => {
                         <CardTitle className="mb-5">
                           General Questions
                         </CardTitle>
-                        {Faq.length > 0 ? (
-                          Faq.map(item => (
+                        {FaqGeneral.length > 0 ? (
+                          FaqGeneral.map(item => (
                             <div key={item.id} className="faq-box d-flex mb-4">
                               <div className="flex-shrink-0 me-3 faq-icon">
                                 <i className="bx bx-help-circle font-size-20 text-success" />
@@ -137,52 +147,79 @@ const PagesFaqs = () => {
                             </div>
                           ))
                         ) : (
-                          <p>No FAQs available.</p>
+                          <div className="text-center">
+                            <img src={NoData} alt="No data" height="200" />
+                            <p className="text-muted mt-4">
+                              No FAQs available.
+                            </p>
+                          </div>
                         )}
                       </TabPane>
                       <TabPane tabId="2">
                         <CardTitle className="mb-5">
                           Privacy Questions
                         </CardTitle>
-                        {Faq.map(item => (
-                          <div key={item.id} className="faq-box d-flex mb-4">
-                            <div className="flex-shrink-0 me-3 faq-icon">
-                              <i className="bx bx-help-circle font-size-20 text-success" />
+                        {FaqGeneral.length > 0 ? (
+                          FaqGeneral.map(item => (
+                            <div key={item.id} className="faq-box d-flex mb-4">
+                              <div className="flex-shrink-0 me-3 faq-icon">
+                                <i className="bx bx-help-circle font-size-20 text-success" />
+                              </div>
+                              <div className="flex-grow-1">
+                                <h5 className="font-size-15">
+                                  {item.question}
+                                </h5>
+                                <p className="text-muted">{item.answer}</p>
+                              </div>
+                              <div
+                                style={{ cursor: "pointer" }}
+                                className="flex-shrink-0 ms-3"
+                                onClick={() => onClickDelete(item.id)}
+                              >
+                                <i className="bx bx-trash font-size-20 text-danger" />
+                              </div>
                             </div>
-                            <div className="flex-grow-1">
-                              <h5 className="font-size-15">{item.question}</h5>
-                              <p className="text-muted">{item.answer}</p>
-                            </div>
-                            <div
-                              style={{ cursor: "pointer" }}
-                              className="flex-shrink-0 ms-3"
-                              onClick={() => onClickDelete(item.id)}
-                            >
-                              <i className="bx bx-trash font-size-20 text-danger" />
-                            </div>
+                          ))
+                        ) : (
+                          <div className="text-center">
+                            <img src={NoData} alt="No data" height="200" />
+                            <p className="text-muted mt-4">
+                              No FAQs available.
+                            </p>
                           </div>
-                        ))}
+                        )}
                       </TabPane>
                       <TabPane tabId="3">
                         <CardTitle className="mb-5">Support</CardTitle>
-                        {Faq.map(item => (
-                          <div key={item.id} className="faq-box d-flex mb-4">
-                            <div className="flex-shrink-0 me-3 faq-icon">
-                              <i className="bx bx-help-circle font-size-20 text-success" />
+                        {FaqGeneral.length > 0 ? (
+                          FaqGeneral.map(item => (
+                            <div key={item.id} className="faq-box d-flex mb-4">
+                              <div className="flex-shrink-0 me-3 faq-icon">
+                                <i className="bx bx-help-circle font-size-20 text-success" />
+                              </div>
+                              <div className="flex-grow-1">
+                                <h5 className="font-size-15">
+                                  {item.question}
+                                </h5>
+                                <p className="text-muted">{item.answer}</p>
+                              </div>
+                              <div
+                                style={{ cursor: "pointer" }}
+                                className="flex-shrink-0 ms-3"
+                                onClick={() => onClickDelete(item.id)}
+                              >
+                                <i className="bx bx-trash font-size-20 text-danger" />
+                              </div>
                             </div>
-                            <div className="flex-grow-1">
-                              <h5 className="font-size-15">{item.question}</h5>
-                              <p className="text-muted">{item.answer}</p>
-                            </div>
-                            <div
-                              style={{ cursor: "pointer" }}
-                              className="flex-shrink-0 ms-3"
-                              onClick={() => onClickDelete(item.id)}
-                            >
-                              <i className="bx bx-trash font-size-20 text-danger" />
-                            </div>
+                          ))
+                        ) : (
+                          <div className="text-center">
+                            <img src={NoData} alt="No data" height="200" />
+                            <p className="text-muted mt-4">
+                              No FAQs available.
+                            </p>
                           </div>
-                        ))}
+                        )}
                       </TabPane>
                     </TabContent>
                   </CardBody>

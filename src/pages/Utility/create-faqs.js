@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import {
   Button,
   Card,
@@ -10,31 +10,30 @@ import {
   Input,
   Label,
   Row,
-  UncontrolledTooltip,
 } from "reactstrap"
 import { toast } from "react-toastify"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 import * as Yup from "yup"
 import { useFormik } from "formik"
 import axios from "axios"
-import Switch from "@mui/material/Switch"
 
 const CreateFaq = () => {
   document.title = "Create New Faq"
 
   const [loader, setLoader] = useState(false)
-  const [blogPrivacy, setBlogPrivacy] = useState(false)
 
   const validation = useFormik({
     initialValues: {
       faqQuestion: "",
       faqAnswer: "",
+      faqType: "",
     },
     validationSchema: Yup.object({
       faqQuestion: Yup.string().required("Question is required"),
       faqAnswer: Yup.string().required("Answer is required"),
+      faqType: Yup.string().required("Type is required"),
     }),
-    onSubmit: async values => {
+    onSubmit: async (values, { resetForm }) => {
       try {
         setLoader(true)
         const response = await axios.post(
@@ -42,17 +41,18 @@ const CreateFaq = () => {
           {
             question: values.faqQuestion,
             answer: values.faqAnswer,
+            type: values.faqType,
           }
         )
         if (response.data) {
-          validation.resetForm()
+          resetForm()
           toast.success("🎉 Faq Created Successfully")
-          setLoader(false)
         }
       } catch (error) {
-        if (error.response.data.message) {
+        if (error.response?.data?.message) {
           toast.error(error.response.data.message)
         }
+      } finally {
         setLoader(false)
       }
     },
@@ -65,27 +65,12 @@ const CreateFaq = () => {
           <Breadcrumbs title="Faq" breadcrumbItem="Create New" />
           <Form
             id="createFaq-form"
-            onSubmit={e => {
-              e.preventDefault()
-              validation.handleSubmit()
-            }}
+            onSubmit={validation.handleSubmit} // Pass handleSubmit directly
           >
             <Row className="justify-content-center">
               <Col lg={6}>
                 <Card>
                   <CardBody>
-                    <input
-                      type="hidden"
-                      className="form-control"
-                      id="formAction"
-                      name="formAction"
-                      defaultValue="add"
-                    />
-                    <input
-                      type="hidden"
-                      className="form-control"
-                      id="coach-id-input"
-                    />
                     <div className="mb-3">
                       <Label htmlFor="faqQuestion">Question</Label>
                       <Input
@@ -125,11 +110,35 @@ const CreateFaq = () => {
                           </FormFeedback>
                         )}
                     </div>
+
+                    <div className="mb-3">
+                      <Label htmlFor="faqType">Type</Label>
+                      <Input
+                        type="select"
+                        id="faqType"
+                        name="faqType"
+                        className="form-control"
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        value={validation.values.faqType || ""}
+                      >
+                        <option value="">Select Type</option>
+                        <option value="General">General</option>
+                        <option value="Privacy">Privacy</option>
+                        <option value="Support">Support</option>
+                      </Input>
+                      {validation.touched.faqType &&
+                        validation.errors.faqType && (
+                          <FormFeedback type="invalid" className="d-block">
+                            {validation.errors.faqType}
+                          </FormFeedback>
+                        )}
+                    </div>
                   </CardBody>
                 </Card>
                 <div className="text-end mb-4">
                   <Button type="submit" color="primary" disabled={loader}>
-                    Create Faq
+                    {loader ? "Loading..." : "Create Faq"}
                   </Button>
                 </div>
               </Col>
