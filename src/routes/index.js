@@ -40,6 +40,7 @@ import ManageWhyChoose from "pages/why-choose-section/whyChoose"
 import ManageSlider from "pages/slider-section/slider-section"
 import WhatSection from "pages/what-section/what-section"
 import AboutSection from "pages/manage-about/about"
+import ManageBrands from "pages/manage-brands/manage-brands"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -74,12 +75,15 @@ const authProtectedRoutes = [
     exact: true,
     component: <Navigate to="/dashboard" />,
   },
+
+  // Manage Section
   { path: "/manage-slider", component: <ManageSlider /> },
   { path: "/manage-categories", component: <ManageCategorie /> },
   { path: "/manage-fun", component: <FunFact /> },
   { path: "/manage-why-choose", component: <ManageWhyChoose /> },
   { path: "/what-say", component: <WhatSection /> },
   { path: "/about-section", component: <AboutSection /> },
+  { path: "/brands-section", component: <ManageBrands /> },
 ]
 
 const publicRoutes = [
