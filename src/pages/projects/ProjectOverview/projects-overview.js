@@ -34,7 +34,7 @@ const ProjectsOverview = () => {
         )
         const profile = response.data
         setUser(profile)
-        const socket = io("ws://localhost:3636", {
+        const socket = io("wss://api.olympiquemnihla.com", {
           query: {
             client: JSON.stringify(user),
           },

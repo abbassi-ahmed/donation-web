@@ -81,7 +81,7 @@ const authProtectedRoutes = [
   { path: "/manage-categories", component: <ManageCategorie /> },
   { path: "/manage-fun", component: <FunFact /> },
   { path: "/manage-why-choose", component: <ManageWhyChoose /> },
-  { path: "/what-say", component: <WhatSection /> },
+  // { path: "/what-say", component: <WhatSection /> },
   { path: "/about-section", component: <AboutSection /> },
   { path: "/brands-section", component: <ManageBrands /> },
 ]

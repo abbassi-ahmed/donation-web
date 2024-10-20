@@ -59,7 +59,7 @@ const Login = ({ history }) => {
       } else {
         localStorage.setItem("authUser", JSON.stringify(response.data.token))
         localStorage.setItem("admin", JSON.stringify(response.data.admin))
-        io("ws://localhost:3636", {
+        io("wss://api.olympiquemnihla.com", {
           query: {
             client: JSON.stringify(response.data.admin),
           },

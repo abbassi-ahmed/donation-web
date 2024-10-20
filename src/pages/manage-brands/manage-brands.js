@@ -22,6 +22,40 @@ import { useFormik } from "formik"
 import axios from "axios"
 import CardUploader from "./CardUploader"
 
+const apiBaseURL = process.env.REACT_APP_DATABASEURL
+
+const postBrandImage = image => {
+  return axios.post(
+    `${apiBaseURL}/worked-with/create`,
+    {
+      image,
+    },
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  )
+}
+
+const fetchAllBrands = async () => {
+  try {
+    const response = await axios.get(`${apiBaseURL}/worked-with/find-all`)
+    return response.data
+  } catch (error) {
+    console.error("Error fetching brands", error)
+    return []
+  }
+}
+
+const deleteBrandById = async id => {
+  try {
+    await axios.delete(`${apiBaseURL}/worked-with/remove/${id}`)
+    toast.success("Brand removed successfully")
+  } catch (error) {
+    console.error("Error removing brand", error)
+    toast.error("Failed to remove brand")
+  }
+}
+
 const ManageBrands = () => {
   document.title = "Manage Brands"
 
@@ -31,160 +65,136 @@ const ManageBrands = () => {
   const validation = useFormik({
     initialValues: {},
     validationSchema: Yup.object({}),
-    onSubmit: async values => {
-      if (brands.some(card => !card.image)) {
+    onSubmit: async () => {
+      if (brands.some(brand => !brand.image)) {
         toast.error("Please fill all the Brands")
         return
-      } else {
-        try {
-          setLoader(true)
-          await Promise.all(
-            brands.map(card =>
-              axios.post(
-                process.env.REACT_APP_DATABASEURL + "/worked-with/create",
-                {
-                  image: card.image,
-                },
-                { headers: { "Content-Type": "multipart/form-data" } }
-              )
-            )
-          )
-          toast.success("🎉 Brands Saved Successfully")
-        } catch (error) {
-          console.error("error", error)
-        } finally {
-          setLoader(false)
-        }
+      }
+
+      try {
+        setLoader(true)
+        await Promise.all(brands.map(brand => postBrandImage(brand.image)))
+        toast.success("🎉 Brands Saved Successfully")
+      } catch (error) {
+        console.error("Error saving brands", error)
+      } finally {
+        setLoader(false)
       }
     },
   })
 
-  const fetchDefaultOnes = async () => {
-    try {
-      const response = await axios.get(
-        process.env.REACT_APP_DATABASEURL + "/worked-with/find-all"
-      )
-      if (response.data) {
-        const data = response.data
-        setBrands(
-          data.map(card => ({
-            image: card.image,
-            id: card.id, // Store the unique identifier
-          }))
-        )
+  useEffect(() => {
+    const initializeBrands = async () => {
+      const data = await fetchAllBrands()
+      if (data.length) {
+        setBrands(data.map(brand => ({ id: brand.id, image: brand.image })))
       }
-    } catch (error) {
-      console.error("error", error)
     }
+    initializeBrands()
+  }, [])
+
+  const addBrand = () => {
+    setBrands(prev => [...prev, { image: null }])
   }
 
-  const removeBrand = async indexToRemove => {
-    const brandToRemove = brands[indexToRemove]
+  const removeBrand = async index => {
+    const brandToRemove = brands[index]
 
-    // Prevent removing the last brand
     if (brands.length === 1) {
       toast.error("You can't remove the last brand")
       return
     }
 
     if (brandToRemove.id) {
-      try {
-        await axios.delete(
-          process.env.REACT_APP_DATABASEURL +
-            `/worked-with/remove/${brandToRemove.id}`
-        )
-        toast.success("Brand removed successfully")
-      } catch (error) {
-        console.error("Error removing brand", error)
-        toast.error("Failed to remove brand")
-        return
-      }
+      await deleteBrandById(brandToRemove.id)
     }
 
-    setBrands(brands.filter((_, index) => index !== indexToRemove))
-  }
-  useEffect(() => {
-    fetchDefaultOnes()
-  }, [])
-
-  const addBrand = () => {
-    setBrands([...brands, { image: null }])
+    setBrands(brands.filter((_, i) => i !== index))
   }
 
   return (
-    <React.Fragment>
-      <div className="page-content">
-        <Container fluid>
-          {/* Render Breadcrumbs */}
-          <Breadcrumbs title="Section" breadcrumbItem="FunFact" />
-          <Form
-            id="createproject-form"
-            onSubmit={e => {
-              e.preventDefault()
-              validation.handleSubmit()
-              return false
-            }}
-          >
-            <Row>
-              <Col lg={12}>
-                <Card>
-                  <CardBody>
-                    <div className="mb-3 text-center font-size-16 ">
-                      <Container>
-                        <Row>
-                          {brands.map((brand, index) => (
-                            <Col md={3} key={index} className="mb-4 gap-2">
-                              <CardUploader
-                                index={index}
-                                brands={brands}
-                                setBrands={setBrands}
-                                validation={validation}
-                              />
-                              <Button
-                                color="danger"
-                                size="sm"
-                                className="mt-2"
-                                onClick={() => removeBrand(index)}
-                              >
-                                Remove Brand
-                              </Button>
-                            </Col>
-                          ))}
-                        </Row>
-                      </Container>
-                      <Button
-                        color="primary"
-                        size="sm"
-                        className="mt-3"
-                        onClick={addBrand}
-                      >
-                        Add Brand
-                      </Button>
-                    </div>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-            <Row className="mt-3">
-              <Col lg={12}>
-                <div className="hstack gap-2 justify-content-end">
+    <div className="page-content">
+      <Container fluid>
+        <Breadcrumbs title="Section" breadcrumbItem="FunFact" />
+        <Form
+          id="createproject-form"
+          onSubmit={e => {
+            e.preventDefault()
+            validation.handleSubmit()
+            return false
+          }}
+        >
+          <Row>
+            <Col lg={12}>
+              <Card>
+                <CardBody>
+                  <BrandList
+                    brands={brands}
+                    setBrands={setBrands}
+                    removeBrand={removeBrand}
+                    validation={validation}
+                  />
                   <Button
-                    type="submit"
                     color="primary"
-                    id="add-btn"
-                    className="btn btn-primary"
-                    disabled={loader}
+                    size="sm"
+                    className="mt-3"
+                    onClick={addBrand}
                   >
-                    {loader ? "Saving..." : "Save Changes"}
+                    Add
                   </Button>
-                </div>
-              </Col>
-            </Row>
-          </Form>
-        </Container>
-      </div>
-    </React.Fragment>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+          <Row className="mt-3">
+            <Col lg={12}>
+              <div className="hstack gap-2 justify-content-end">
+                <Button
+                  type="submit"
+                  color="primary"
+                  id="add-btn"
+                  disabled={loader}
+                >
+                  {loader ? "Saving..." : "Save Changes"}
+                </Button>
+              </div>
+            </Col>
+          </Row>
+        </Form>
+      </Container>
+    </div>
   )
 }
+
+const BrandList = ({ brands, setBrands, removeBrand, validation }) => (
+  <Container className="d-flex flex-row flex-wrap justify-content-center">
+    {brands.map((brand, index) => (
+      <Row key={index} className="mb-4 align-items-center d-flex">
+        <Row>
+          <Col md={3}>
+            <CardUploader
+              index={index}
+              brands={brands}
+              setBrands={setBrands}
+              validation={validation}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md={7}>
+            <Button
+              color="danger"
+              size="sm"
+              className="mt-2"
+              onClick={() => removeBrand(index)}
+            >
+              Remove This
+            </Button>
+          </Col>
+        </Row>
+      </Row>
+    ))}
+  </Container>
+)
 
 export default ManageBrands

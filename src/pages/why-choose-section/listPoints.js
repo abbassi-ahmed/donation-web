@@ -1,54 +1,42 @@
-import React, { useEffect } from "react"
-import { Input, Label, UncontrolledTooltip } from "reactstrap"
+import React from "react"
+import { Input, Label } from "reactstrap"
 
-const ListPoints = ({ index, listPoints, setListPoints }) => {
-  const handleTitleChange = (e, listPointIndex) => {
-    const newListPoints = [...listPoints]
-    newListPoints[listPointIndex] = {
-      ...newListPoints[listPointIndex],
-      title: e.target.value,
-    }
-    setListPoints(newListPoints)
+export default function ListPoints({ index, listPoints, setListPoints }) {
+  const handleInputChange = (e, field) => {
+    const { value } = e.target
+    setListPoints(prevPoints =>
+      prevPoints.map((point, i) =>
+        i === index ? { ...point, [field]: value } : point
+      )
+    )
   }
 
-  const handleTextChange = (e, listPointIndex) => {
-    const newListPoints = [...listPoints]
-    newListPoints[listPointIndex] = {
-      ...newListPoints[listPointIndex],
-      text: e.target.value,
-    }
-    setListPoints(newListPoints)
-  }
+  const currentPoint = listPoints[index]
 
   return (
-    <div>
-      <div className="mb-3">
-        <Label htmlFor={`listPoints${index + 1}-title-input`}>
-          Title {index + 1}
-        </Label>
+    <div className="space-y-4">
+      <div>
+        <Label htmlFor={`point-title-${index}`}>Title {index + 1}</Label>
         <Input
-          id={`PointTitle${index + 1}`}
-          name={`PointTitle${index + 1}`}
+          id={`point-title-${index}`}
+          name={`point-title-${index}`}
           type="text"
           placeholder={`Enter Title ${index + 1}...`}
-          onChange={e => handleTitleChange(e, index)}
-          value={listPoints[index].title}
+          onChange={e => handleInputChange(e, "title")}
+          value={currentPoint.title}
         />
       </div>
-      <div className="mb-3">
-        <Label htmlFor={`listPoints${index + 1}-text-input`}>
-          Text {index + 1}
-        </Label>
+      <div>
+        <Label htmlFor={`point-text-${index}`}>Text {index + 1}</Label>
         <Input
-          id={`PointText${index + 1}`}
-          name={`PointText${index + 1}`}
+          id={`point-text-${index}`}
+          name={`point-text-${index}`}
           type="text"
           placeholder={`Enter Text ${index + 1}...`}
-          onChange={e => handleTextChange(e, index)}
-          value={listPoints[index].text}
+          onChange={e => handleInputChange(e, "text")}
+          value={currentPoint.text}
         />
       </div>
     </div>
   )
 }
-export default ListPoints

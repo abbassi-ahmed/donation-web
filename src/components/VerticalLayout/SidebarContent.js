@@ -282,11 +282,11 @@ const SidebarContent = props => {
                 <li>
                   <Link to="/brands-section">{props.t("Brands Section")}</Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/what-say">
                     {props.t("What they say section ")}
                   </Link>
-                </li>{" "}
+                </li>{" "} */}
                 <li>
                   <Link to="/about-section">{props.t("About section ")}</Link>
                 </li>

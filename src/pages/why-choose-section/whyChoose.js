@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
+import React, { useState, useEffect, useCallback } from "react"
 import {
   Button,
   Card,
@@ -23,17 +22,35 @@ import ListPoints from "./listPoints"
 import SuspenseImage from "../../components/SuspenseImage/ImageComponent"
 
 const ManageWhyChoose = () => {
-  //meta title
-  document.title = "Manage why choose section"
+  // Meta title
+  useEffect(() => {
+    document.title = "Manage Why Choose Section"
+  }, [])
 
   const [loader, setLoader] = useState(false)
-  const [selectedImage1, setSelectedImage1] = useState(null)
-  const [img1, setImg1] = useState(null)
-  const [selectedImage2, setSelectedImage2] = useState(null)
-  const [img2, setImg2] = useState(null)
+  const [images, setImages] = useState({ img1: null, img2: null })
+  const [selectedImages, setSelectedImages] = useState({
+    img1: null,
+    img2: null,
+  })
   const [listPoints, setListPoints] = useState(
     Array(3).fill({ title: "", text: "" })
   )
+
+  // Helper for image change handling
+  const handleImageChange = (e, imgKey) => {
+    e.preventDefault()
+    if (e.target.files.length) {
+      const file = e.target.files[0]
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setSelectedImages(prev => ({ ...prev, [imgKey]: reader.result }))
+        validation.setFieldValue(imgKey, reader.result)
+      }
+      reader.readAsDataURL(file)
+      setImages(prev => ({ ...prev, [imgKey]: file }))
+    }
+  }
 
   const handleAddPoint = () => {
     setListPoints([...listPoints, { title: "", text: "" }])
@@ -42,33 +59,6 @@ const ManageWhyChoose = () => {
   const handleRemovePoint = indexToRemove => {
     if (listPoints.length > 3) {
       setListPoints(listPoints.filter((_, index) => index !== indexToRemove))
-    }
-  }
-  const handleImageChange1 = e => {
-    e.preventDefault()
-    if (e.target.files.length) {
-      const file = e.target.files[0]
-      setImg1(file)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setSelectedImage1(reader.result)
-        validation.setFieldValue("img1", reader.result)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleImageChange2 = e => {
-    e.preventDefault()
-    if (e.target.files.length) {
-      const file = e.target.files[0]
-      setImg2(file)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setSelectedImage2(reader.result)
-        validation.setFieldValue("img2", reader.result)
-      }
-      reader.readAsDataURL(file)
     }
   }
 
@@ -88,34 +78,32 @@ const ManageWhyChoose = () => {
       title2: Yup.string().required("Please Enter Title Right"),
     }),
     onSubmit: async values => {
+      const filledPoints = listPoints.filter(point => point.title && point.text)
+      if (filledPoints.length < 3) {
+        toast.error(
+          "Please ensure at least 3 points are filled out with a title and text."
+        )
+        return
+      }
+
+      setLoader(true)
+      const payload = {
+        title: values.title,
+        thumb: images.img1,
+        thumb2: images.img2,
+        tagline: values.tagline,
+        title2: values.title2,
+        items: listPoints,
+      }
+
       try {
-        const filledPoints = listPoints.filter(
-          listPoint => listPoint.title && listPoint.text
-        )
-
-        if (filledPoints.length < 3) {
-          toast.error(
-            "Please ensure at least 3 points are filled out with a title and text."
-          )
-          return
-        }
-
-        setLoader(true)
-        const payload = {
-          title: values.title,
-          thumb: img1,
-          thumb2: img2,
-          tagline: values.tagline,
-          title2: values.title2,
-          items: listPoints,
-        }
-
         const response = await axios.post(
-          process.env.REACT_APP_DATABASEURL + "/why-choose-section/create",
+          `${process.env.REACT_APP_DATABASEURL}/why-choose-section/create`,
           payload,
-          { headers: { "Content-Type": "multipart/form-data" } }
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
         )
-
         if (response.data) {
           fetchDefaultOnes()
           toast.success("🎉 Why Choose Section Updated Successfully")
@@ -128,314 +116,225 @@ const ManageWhyChoose = () => {
     },
   })
 
-  const fetchDefaultOnes = async () => {
+  const fetchDefaultOnes = useCallback(async () => {
     try {
       const response = await axios.get(
-        process.env.REACT_APP_DATABASEURL + "/why-choose-section/find-all"
+        `${process.env.REACT_APP_DATABASEURL}/why-choose-section/find-all`
       )
       if (response.data) {
-        const data = response.data
-        const defaultOne = data[0]
+        const defaultOne = response.data[0]
         validation.setFieldValue("title", defaultOne.title)
         validation.setFieldValue("tagline", defaultOne.tagline)
         validation.setFieldValue("title2", defaultOne.title2)
-        setSelectedImage1(defaultOne.thumb)
-        setSelectedImage2(defaultOne.thumb2)
+        setSelectedImages({ img1: defaultOne.thumb, img2: defaultOne.thumb2 })
         setListPoints(defaultOne.items)
       }
     } catch (error) {
       console.error("error", error)
     }
-  }
+  }, [])
 
   useEffect(() => {
     fetchDefaultOnes()
-  }, [])
+  }, [fetchDefaultOnes])
 
   return (
-    <React.Fragment>
-      <div className="page-content">
-        <Container fluid>
-          {/* Render Breadcrumbs */}
-          <Breadcrumbs title="Section" breadcrumbItem="Why Choose" />
-          <Form
-            id="createproject-form"
-            onSubmit={e => {
-              e.preventDefault()
-              validation.handleSubmit()
-              return false
-            }}
-          >
-            <Row>
-              <Col lg={12}>
-                <Card>
-                  <CardBody>
-                    <div className="mb-3">
-                      <Label htmlFor="title-input">Title</Label>
-                      <Input
-                        type="text"
-                        id="titleWhyChoose"
-                        name="title"
-                        placeholder="Enter Title Why Choose..."
-                        onChange={validation.handleChange}
-                        value={validation.values.title}
-                        onBlur={validation.handleBlur}
-                      />
-                      {validation.touched.title && validation.errors.title ? (
-                        <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.title}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                    <Container>
-                      <Row>
-                        <Col lg={6}>
-                          <div className="mb-3">
-                            <Label className="form-label">Picture Left</Label>
-                            <div className="text-center">
-                              <div className="position-relative d-inline-block">
-                                <div className="position-absolute bottom-0 end-0">
-                                  <Label
-                                    htmlFor="project-image-input"
-                                    className="mb-0"
-                                    id="projectImageInput"
-                                  >
-                                    <div className="avatar-xs">
-                                      <div className="avatar-title bg-light border rounded-circle text-muted cursor-pointer shadow font-size-16">
-                                        <i className="bx bxs-image-alt"></i>
-                                      </div>
-                                    </div>
-                                  </Label>
-                                  <UncontrolledTooltip
-                                    placement="right"
-                                    target="projectImageInput"
-                                  >
-                                    Select Image Left
-                                  </UncontrolledTooltip>
-                                  <input
-                                    className="form-control d-none"
-                                    id="project-image-input"
-                                    type="file"
-                                    accept="image/png, image/gif, image/jpeg"
-                                    onChange={handleImageChange1}
-                                  />
-                                </div>
-                                <div
-                                  className="avatar-lg"
-                                  style={{
-                                    height: "250px",
-                                    width: "450px",
-                                  }}
-                                >
-                                  <div className="avatar-title bg-light">
-                                    {selectedImage1 ? (
-                                      <SuspenseImage
-                                        src={selectedImage1 || ""}
-                                        id="projectlogo-img"
-                                        alt=""
-                                        loading="lazy"
-                                        className="avatar-md"
-                                        style={{
-                                          width: "100%",
-                                          height: "100%",
-                                          backgroundRepeat: "no-repeat",
-                                          backgroundPosition: "center",
-                                          backgroundSize: "cover",
-                                        }}
-                                      />
-                                    ) : null}
-                                  </div>
-                                </div>
-                              </div>
-                              {validation.touched.img1 &&
-                              validation.errors.img1 ? (
-                                <FormFeedback
-                                  type="invalid"
-                                  className="d-block"
-                                >
-                                  {validation.errors.img1}
-                                </FormFeedback>
-                              ) : null}
-                            </div>
-                          </div>
-                        </Col>
+    <div className="page-content">
+      <Container fluid>
+        <Breadcrumbs title="Section" breadcrumbItem="Why Choose" />
+        <Form
+          id="createproject-form"
+          onSubmit={e => {
+            e.preventDefault()
+            validation.handleSubmit()
+            return false
+          }}
+        >
+          <Row>
+            <Col lg={12}>
+              <Card>
+                <CardBody>
+                  <TextInput
+                    label="Title"
+                    id="titleWhyChoose"
+                    name="title"
+                    placeholder="Enter Title Why Choose..."
+                    validation={validation}
+                  />
 
-                        <Col lg={6}>
-                          <div className="mb-3">
-                            <Label className="form-label">Picture Right</Label>
-                            <div className="text-center">
-                              <div className="position-relative d-inline-block">
-                                <div className="position-absolute bottom-0 end-0">
-                                  <Label
-                                    htmlFor="picture-right-input"
-                                    className="mb-0"
-                                    id="pictureRightInput"
-                                  >
-                                    <div className="avatar-xs">
-                                      <div className="avatar-title bg-light border rounded-circle text-muted cursor-pointer shadow font-size-16">
-                                        <i className="bx bxs-image-alt"></i>
-                                      </div>
-                                    </div>
-                                  </Label>
-                                  <UncontrolledTooltip
-                                    placement="right"
-                                    target="pictureRightInput"
-                                  >
-                                    Select Image Right
-                                  </UncontrolledTooltip>
-                                  <input
-                                    className="form-control d-none"
-                                    id="picture-right-input"
-                                    type="file"
-                                    accept="image/png, image/gif, image/jpeg"
-                                    onChange={handleImageChange2}
-                                  />
-                                </div>
-                                <div
-                                  className="avatar-lg"
-                                  style={{
-                                    height: "250px",
-                                    width: "450px",
-                                  }}
-                                >
-                                  <div className="avatar-title bg-light">
-                                    {selectedImage2 ? (
-                                      <SuspenseImage
-                                        src={selectedImage2 || ""}
-                                        id="user-pic-img"
-                                        alt=""
-                                        loading="lazy"
-                                        className="avatar-md"
-                                        style={{
-                                          width: "100%",
-                                          height: "100%",
-                                          backgroundRepeat: "no-repeat",
-                                          backgroundPosition: "center",
-                                          backgroundSize: "cover",
-                                        }}
-                                      />
-                                    ) : null}
-                                  </div>
-                                </div>
-                              </div>
-                              {validation.touched.img2 &&
-                              validation.errors.img2 ? (
-                                <FormFeedback
-                                  type="invalid"
-                                  className="d-block"
-                                >
-                                  {validation.errors.img2}
-                                </FormFeedback>
-                              ) : null}
-                            </div>
-                          </div>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col lg={6}>
-                          <div className="mb-3">
-                            <Label htmlFor="tagline-input">Tagline</Label>
-                            <Input
-                              type="text"
-                              id="taglineWhyChoose"
-                              name="tagline"
-                              placeholder="Enter Tagline Why Choose..."
-                              onChange={validation.handleChange}
-                              value={validation.values.tagline}
-                              onBlur={validation.handleBlur}
-                            />
-                            {validation.touched.tagline &&
-                            validation.errors.tagline ? (
-                              <FormFeedback type="invalid" className="d-block">
-                                {validation.errors.tagline}
-                              </FormFeedback>
-                            ) : null}
-                          </div>
-                        </Col>
-                        <Col lg={6}>
-                          <div className="mb-3">
-                            <Label htmlFor="title2-input">Title Right</Label>
-                            <Input
-                              type="text"
-                              id="title2WhyChoose"
-                              name="title2"
-                              placeholder="Enter Title Right..."
-                              onChange={validation.handleChange}
-                              value={validation.values.title2}
-                              onBlur={validation.handleBlur}
-                            />
-                            {validation.touched.title2 &&
-                            validation.errors.title2 ? (
-                              <FormFeedback type="invalid" className="d-block">
-                                {validation.errors.title2}
-                              </FormFeedback>
-                            ) : null}
-                          </div>
-                        </Col>
-                      </Row>
-                      <div className="mb-3 text-center font-size-16 ">
-                        <h1>List Points </h1>
-                      </div>
-                      <>
-                        <Row>
-                          {listPoints.map((_, index) => (
-                            <Col md={12} key={index} className="mb-4">
-                              <div
-                                style={{
-                                  width: "100%",
-                                  height: "1px",
-                                  backgroundColor: "#e9e9e9",
-                                }}
-                                className="mb-5"
-                              ></div>
-                              <ListPoints
-                                index={index}
-                                listPoints={listPoints}
-                                setListPoints={setListPoints}
-                              />
-                              {listPoints.length > 3 && (
-                                <Button
-                                  color="danger"
-                                  onClick={() => handleRemovePoint(index)}
-                                  className="mt-3"
-                                >
-                                  Remove
-                                </Button>
-                              )}
-                            </Col>
-                          ))}
-                        </Row>
-                        <div className="mb-3 text-center font-size-16 ">
-                          <Button color="primary" onClick={handleAddPoint}>
-                            Add Point
-                          </Button>
-                        </div>
-                      </>
-                    </Container>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-            <Row className="mt-3">
-              <Col lg={12}>
-                <div className="hstack gap-2 justify-content-end">
-                  <Button
-                    type="submit"
-                    color="primary"
-                    id="add-btn"
-                    className="btn btn-primary"
-                    disabled={loader}
-                  >
-                    {loader ? "Saving..." : "Save Changes"}
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-          </Form>
-        </Container>
-      </div>
-    </React.Fragment>
+                  <Row>
+                    <ImageInput
+                      label="Picture Left"
+                      imgKey="img1"
+                      selectedImage={selectedImages.img1}
+                      onChange={e => handleImageChange(e, "img1")}
+                      validation={validation}
+                    />
+
+                    <ImageInput
+                      label="Picture Right"
+                      imgKey="img2"
+                      selectedImage={selectedImages.img2}
+                      onChange={e => handleImageChange(e, "img2")}
+                      validation={validation}
+                    />
+                  </Row>
+
+                  <Row>
+                    <TextInput
+                      label="Tagline"
+                      id="taglineWhyChoose"
+                      name="tagline"
+                      placeholder="Enter Tagline..."
+                      validation={validation}
+                    />
+                    <TextInput
+                      label="Title Right"
+                      id="title2WhyChoose"
+                      name="title2"
+                      placeholder="Enter Title Right..."
+                      validation={validation}
+                    />
+                  </Row>
+
+                  <PointsList
+                    listPoints={listPoints}
+                    setListPoints={setListPoints}
+                    handleAddPoint={handleAddPoint}
+                    handleRemovePoint={handleRemovePoint}
+                  />
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+
+          <Row className="mt-3">
+            <Col lg={12} className="d-flex justify-content-end">
+              <Button type="submit" color="primary" disabled={loader}>
+                {loader ? "Saving..." : "Save Changes"}
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+      </Container>
+    </div>
   )
 }
+
+// Reusable TextInput Component
+const TextInput = ({ label, id, name, placeholder, validation }) => (
+  <div className="mb-3">
+    <Label htmlFor={id}>{label}</Label>
+    <Input
+      type="text"
+      id={id}
+      name={name}
+      placeholder={placeholder}
+      onChange={validation.handleChange}
+      value={validation.values[name]}
+      onBlur={validation.handleBlur}
+    />
+    {validation.touched[name] && validation.errors[name] ? (
+      <FormFeedback type="invalid" className="d-block">
+        {validation.errors[name]}
+      </FormFeedback>
+    ) : null}
+  </div>
+)
+
+// Reusable ImageInput Component
+const ImageInput = ({ label, imgKey, selectedImage, onChange, validation }) => (
+  <Col lg={6}>
+    <div className="mb-3 text-center">
+      <Label className="form-label">{label}</Label>
+      <div className="position-relative d-inline-block">
+        <Label htmlFor={imgKey + "-input"} className="mb-0">
+          <div className="avatar-xs">
+            <div className="avatar-title bg-light border rounded-circle text-muted cursor-pointer shadow font-size-16">
+              <i className="bx bxs-image-alt"></i>
+            </div>
+          </div>
+        </Label>
+        <input
+          className="form-control d-none"
+          id={imgKey + "-input"}
+          type="file"
+          accept="image/png, image/gif, image/jpeg"
+          onChange={onChange}
+        />
+        <div className="avatar-lg" style={{ height: "250px", width: "450px" }}>
+          <div className="avatar-title bg-light">
+            {selectedImage ? (
+              <SuspenseImage
+                src={selectedImage || ""}
+                alt=""
+                className="avatar-md"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundSize: "cover",
+                }}
+              />
+            ) : null}
+          </div>
+        </div>
+      </div>
+      {validation.touched[imgKey] && validation.errors[imgKey] ? (
+        <FormFeedback type="invalid" className="d-block">
+          {validation.errors[imgKey]}
+        </FormFeedback>
+      ) : null}
+    </div>
+  </Col>
+)
+
+// Reusable PointsList Component
+const PointsList = ({
+  listPoints,
+  setListPoints,
+  handleAddPoint,
+  handleRemovePoint,
+}) => (
+  <>
+    <div className="mb-3 text-center font-size-16 ">
+      <h1>List Points</h1>
+    </div>
+    <Row>
+      {listPoints.map((point, index) => (
+        <Col md={12} key={index} className="mb-4">
+          <div
+            style={{ width: "100%", height: "1px", backgroundColor: "#e9e9e9" }}
+            className="mb-5"
+          ></div>
+          <ListPoints
+            index={index}
+            listPoints={listPoints}
+            setListPoints={setListPoints}
+          />
+          {listPoints.length > 3 && (
+            <div className="col-md-12 mb-3 d-flex justify-content-end">
+              <Button
+                type="button"
+                color="danger"
+                onClick={() => handleRemovePoint(index)}
+              >
+                <i className="mdi mdi-delete font-size-16 align-middle me-1"></i>{" "}
+                Remove
+              </Button>
+            </div>
+          )}
+        </Col>
+      ))}
+    </Row>
+    <div className="row justify-content-center mt-3">
+      <div className="col-md-12 mb-3 d-flex justify-content-end">
+        <Button type="button" color="primary" onClick={handleAddPoint}>
+          <i className="mdi mdi-plus-circle-outline font-size-16 align-middle me-1"></i>{" "}
+          Add
+        </Button>
+      </div>
+    </div>
+  </>
+)
 
 export default ManageWhyChoose
