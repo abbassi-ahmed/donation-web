@@ -66,14 +66,14 @@ const ManageBrands = () => {
     initialValues: {},
     validationSchema: Yup.object({}),
     onSubmit: async () => {
-      if (brands.some(brand => !brand.image)) {
-        toast.error("Please fill all the Brands")
+      const newBrands = brands.filter(brand => !brand.id && brand.image)
+      if (!newBrands.length) {
+        toast.error("Please add at least one brand")
         return
       }
-
       try {
         setLoader(true)
-        await Promise.all(brands.map(brand => postBrandImage(brand.image)))
+        await Promise.all(newBrands.map(brand => postBrandImage(brand.image)))
         toast.success("🎉 Brands Saved Successfully")
       } catch (error) {
         console.error("Error saving brands", error)

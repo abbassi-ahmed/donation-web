@@ -1,9 +1,9 @@
 /*
 Template Name: Skote - Admin & Dashboard Template
-Author: Themesbrand
+Author: INNOSYS
 Version: 4.1.0.
-Website: https://themesbrand.com/
-Contact: themesbrand@gmail.com
+Website: https://INNOSYS.com/
+Contact: INNOSYS@gmail.com
 File: Main Css File
 */
 
@@ -16,7 +16,6 @@ File: Main Css File
 @import "variables";
 @import "variables-dark";
 @import "./node_modules/bootstrap/scss/mixins.scss";
-
 
 // Structure
 @import "custom/structure/general";
@@ -71,7 +70,6 @@ File: Main Css File
 @import "custom/plugins/google-map";
 @import "custom/plugins/vector-maps";
 @import "custom/plugins/leaflet-maps";
-
 
 // Pages
 @import "custom/pages/authentication";

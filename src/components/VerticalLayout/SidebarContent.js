@@ -144,28 +144,6 @@ const SidebarContent = props => {
       <SimpleBar className="h-100" ref={ref}>
         <div id="sidebar-menu">
           <ul className="metismenu list-unstyled" id="side-menu">
-            <li className="menu-title">{props.t("Menu")} </li>
-            <li>
-              <Link to="/#" className="has-arrow">
-                <i className="bx bx-home-circle"></i>
-                <span>{props.t("Dashboards")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/dashboard">{props.t("Default")}</Link>
-                </li>
-                {/* <li>
-                  <Link to="#">{props.t("Saas")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Crypto")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Blog")}</Link>
-                </li> */}
-              </ul>
-            </li>
-
             <li className="menu-title">{props.t("Apps")}</li>
 
             <li>
@@ -271,14 +249,14 @@ const SidebarContent = props => {
                     {props.t("Categorie Section")}
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/manage-fun">{props.t("Fun Fact Section")}</Link>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <Link to="/manage-why-choose">
                     {props.t("Why Choose Section")}
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to="/brands-section">{props.t("Brands Section")}</Link>
                 </li>

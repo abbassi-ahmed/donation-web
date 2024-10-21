@@ -73,7 +73,8 @@ const BlogDetails = () => {
                       className="delete-icon"
                       onClick={() => setDeleteModal(true)}
                     >
-                      <i className="mdi mdi-delete me-1 align-middle"></i>
+                      <i className="mdi mdi-delete me-1 align-middle"></i>{" "}
+                      Delete
                     </div>
                     <Row className="justify-content-center">
                       <Col xl={8}>
@@ -137,74 +138,6 @@ const BlogDetails = () => {
                           </div>
 
                           <hr />
-
-                          <div className="mt-5">
-                            <h5 className="font-size-15">
-                              <i className="bx bx-message-dots text-muted align-middle me-1"></i>{" "}
-                              Comments :
-                            </h5>
-
-                            {/* Comments section can be added here */}
-                          </div>
-
-                          <div className="mt-4">
-                            <h5 className="font-size-16 mb-3">
-                              Leave a Message
-                            </h5>
-
-                            {/* <Form>
-                              <Row>
-                                <Col md={6}>
-                                  <div className="mb-3">
-                                    <Label htmlFor="commentname-input">
-                                      Name
-                                    </Label>
-                                    <Input
-                                      type="text"
-                                      className="form-control"
-                                      id="commentname-input"
-                                      placeholder="Enter name"
-                                    />
-                                  </div>
-                                </Col>
-                                <Col md={6}>
-                                  <div className="mb-3">
-                                    <Label htmlFor="commentemail-input">
-                                      Email
-                                    </Label>
-                                    <Input
-                                      type="email"
-                                      className="form-control"
-                                      id="commentemail-input"
-                                      placeholder="Enter email"
-                                    />
-                                  </div>
-                                </Col>
-                              </Row>
-
-                              <div className="mb-3">
-                                <Label htmlFor="commentmessage-input">
-                                  Message
-                                </Label>
-                                <Input
-                                  type="textarea"
-                                  className="form-control"
-                                  id="commentmessage-input"
-                                  placeholder="Your message..."
-                                  rows="3"
-                                />
-                              </div>
-
-                              <div className="text-end">
-                                <button
-                                  type="submit"
-                                  className="btn btn-success w-sm"
-                                >
-                                  Submit
-                                </button>
-                              </div>
-                            </Form> */}
-                          </div>
                         </div>
                       </Col>
                     </Row>

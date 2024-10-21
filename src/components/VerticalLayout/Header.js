@@ -22,7 +22,7 @@ import dropbox from "../../assets/images/brands/dropbox.png"
 import mail_chimp from "../../assets/images/brands/mail_chimp.png"
 import slack from "../../assets/images/brands/slack.png"
 
-import logo from "../../assets/images/logo.svg"
+import logo from "../../assets/images/logo.jpeg"
 import logoLightSvg from "../../assets/images/logo-light.svg"
 
 //i18n

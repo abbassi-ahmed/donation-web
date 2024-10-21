@@ -14,7 +14,7 @@ const FooterLink = () => {
           </div>
 
           <p className="mb-2">
-            {new Date().getFullYear()} © Skote. Design & Develop by Themesbrand
+            {new Date().getFullYear()} © INNOSYS. Design & Develop by INNOSYS
           </p>
           <p>
             It will be as simple as occidental in fact, it will be to an english

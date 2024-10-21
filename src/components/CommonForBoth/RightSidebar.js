@@ -634,7 +634,7 @@ const RightSidebar = props => {
 
               <div className="mb-2">
                 <Link
-                  to="//skote-v-light.react.themesbrand.com"
+                  to="//skote-v-light.react.INNOSYS.com"
                   target="_blank"
                 >
                   <img
@@ -646,7 +646,7 @@ const RightSidebar = props => {
               </div>
 
               <div className="mb-2">
-                <Link to="//skote-v-dark.react.themesbrand.com" target="_blank">
+                <Link to="//skote-v-dark.react.INNOSYS.com" target="_blank">
                   <img
                     src={layout2}
                     className="img-fluid img-thumbnail"
@@ -656,7 +656,7 @@ const RightSidebar = props => {
               </div>
 
               <div className="mb-2">
-                <Link to="//skote-v-rtl.react.themesbrand.com" target="_blank">
+                <Link to="//skote-v-rtl.react.INNOSYS.com" target="_blank">
                   <img
                     src={layout3}
                     className="img-fluid img-thumbnail"
