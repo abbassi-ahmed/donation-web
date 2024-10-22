@@ -65,7 +65,7 @@ const Login = ({ history }) => {
           },
         })
         // dispatch(loginUser(response.data.token, history))
-        navigate("/dashboard")
+        navigate("/calendar")
       }
     } catch (error) {
       if (error.response.status === 404) {
