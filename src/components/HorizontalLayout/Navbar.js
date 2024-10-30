@@ -109,40 +109,6 @@ const Navbar = props => {
               <ul className="navbar-nav">
                 <li className="nav-item dropdown">
                   <Link
-                    className="nav-link dropdown-toggle arrow-none"
-                    onClick={e => {
-                      e.preventDefault()
-                      setdashboard(!dashboard)
-                    }}
-                    to="/dashboard"
-                  >
-                    <i className="bx bx-home-circle me-2"></i>
-                    {props.t("Dashboard")} {props.menuOpen}
-                    <div className="arrow-down"></div>
-                  </Link>
-                  <div
-                    className={classname("dropdown-menu", { show: dashboard })}
-                  >
-                    <Link to="/dashboard" className="dropdown-item">
-                      {props.t("Default")}
-                    </Link>
-                    <Link to="/dashboard-saas" className="dropdown-item">
-                      {props.t("Saas")}
-                    </Link>
-                    <Link to="/dashboard-crypto" className="dropdown-item">
-                      {props.t("Crypto")}
-                    </Link>
-                    <Link to="/blog" className="dropdown-item">
-                      {props.t("Blog")}
-                    </Link>
-                    <Link to="/dashboard-job" className="dropdown-item">
-                      {props.t("Jobs")}
-                    </Link>
-                  </div>
-                </li>
-
-                <li className="nav-item dropdown">
-                  <Link
                     to="/#"
                     onClick={e => {
                       e.preventDefault()

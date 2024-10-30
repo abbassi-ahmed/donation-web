@@ -12,8 +12,6 @@ import Register from "../pages/Authentication/Register"
 import ForgetPwd from "../pages/Authentication/ForgetPassword"
 
 // Dashboard
-import Dashboard from "../pages/Dashboard/index"
-// import Blog from "pages/Dashboard-Blog/index"
 
 import ManageAdmins from "pages/manage-admins/manage-admins"
 import ManageUsers from "pages/manage-users/manage-users"
@@ -43,7 +41,6 @@ import AboutSection from "pages/manage-about/about"
 import ManageBrands from "pages/manage-brands/manage-brands"
 
 const authProtectedRoutes = [
-  { path: "/dashboard", component: <Dashboard /> },
   // //profile
   { path: "/profile", component: <UserProfile /> },
   { path: "/manage-admins", component: <ManageAdmins /> },
@@ -73,7 +70,7 @@ const authProtectedRoutes = [
   {
     path: "/",
     exact: true,
-    component: <Navigate to="/dashboard" />,
+    component: <Navigate to="/calendar" />,
   },
 
   // Manage Section

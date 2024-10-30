@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import RecentFile from "./RecentFile"
 import Storage from "./Storage"
 import axios from "axios"
@@ -12,6 +12,9 @@ import ChildFileList from "./childFileList"
 export default function FolderDetail() {
   const [files, setFiles] = useState({})
   const { id } = useParams()
+  const location = useLocation()
+  const folder = location.state?.folder
+
   const [stats, setStats] = useState({})
   const [authorizedAdmins, setAuthorizedAdmins] = useState([])
   const [folderPrivacy, setFolderPrivacy] = useState("")
@@ -48,17 +51,14 @@ export default function FolderDetail() {
     fetchFiles()
     fetchStats()
   }, [id])
-
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumbs title="Apps" breadcrumbItem="File Manager" />
+          <Breadcrumbs title="Apps" breadcrumbItem={`Folder ${folder.name}`} />
           <div className="d-xl-flex">
             <div className="w-100">
               <div className="d-md-flex">
-                {/* FileRightBar  */}
-                {/* <FileLeftBar folders={folders} fetchFolders={fetchFolders} /> */}
                 <div className="w-100">
                   <Card>
                     <CardBody>

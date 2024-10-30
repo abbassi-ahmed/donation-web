@@ -7,8 +7,8 @@ const CardProject = ({ projects }) => {
   return (
     <React.Fragment>
       {(projects || []).map((project, key) => (
-        <Col xl={4} sm={6} key={key}>
-          <Card style={{ height: "100%" }}>
+        <Col xl={4} sm={6} key={key} className="mb-4">
+          <Card style={{ height: "100%", borderRadius: "10px" }}>
             <CardBody>
               <div className="d-flex">
                 <div className="avatar-md me-4">

@@ -299,9 +299,11 @@ const ProjectsCreate = () => {
                         value={validation.values.projectType || ""}
                       >
                         <option value="">Select Project Type</option>
-                        <option value="Web">Web</option>
-                        <option value="Mobile">Mobile</option>
-                        <option value="Desktop">Desktop</option>
+                        <option value="social">Social</option>
+                        <option value="idee de projet">Idee de projet</option>
+                        <option value="Economie sociale et solidaire">
+                          Economie sociale et solidaire
+                        </option>
                       </Input>
                       {validation.touched.projectType &&
                       validation.errors.projectType ? (

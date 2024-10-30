@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
-import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types"
+import React, { useState, useEffect } from "react"
 import {
   Nav,
   NavbarToggler,
@@ -7,13 +7,13 @@ import {
   NavLink,
   Container,
   Collapse,
-} from "reactstrap";
-import { Link } from "react-router-dom";
-import ScrollspyNav from "./scrollSpy";
+} from "reactstrap"
+import { Link } from "react-router-dom"
+import ScrollspyNav from "./scrollSpy"
 
 //Import Images
-import logoDark from "../../../../assets/images/logo-dark.png";
-import logoLight from "../../../../assets/images/logo-light.png";
+import logoDark from "../../../../assets/images/logo-dark.png"
+import logoLight from "../../../../assets/images/logo-light.png"
 
 const navItems = [
   { id: 1, idnm: "home", navheading: "Home" },
@@ -23,45 +23,52 @@ const navItems = [
   { id: 4, idnm: "team", navheading: "Team" },
   { id: 5, idnm: "news", navheading: "News" },
   { id: 6, idnm: "faqs", navheading: "FAQs" },
-];
+]
 
 const Navbar_Page = props => {
-  const [isOpenMenu, setisOpenMenu] = useState(false);
-  const [navClass, setNavClass] = useState("");
+  const [isOpenMenu, setisOpenMenu] = useState(false)
+  const [navClass, setNavClass] = useState("")
 
   //Store all NavigationbaFr Id into TargetID variable(Used for Scrollspy)
   let TargetId = navItems.map(item => {
-    return item.idnm;
-  });
+    return item.idnm
+  })
 
   const scrollNavigation = () => {
-    var scrollUp = document.documentElement.scrollTop;
+    var scrollUp = document.documentElement.scrollTop
     if (scrollUp > 50) {
-      setNavClass("sticky nav-sticky");
+      setNavClass("sticky nav-sticky")
     } else {
-      setNavClass("");
+      setNavClass("")
     }
   }
 
   useEffect(() => {
-    window.addEventListener("scroll", scrollNavigation, true);
-  });
+    window.addEventListener("scroll", scrollNavigation, true)
+  })
 
   return (
     <React.Fragment>
       <nav
-        className={"navbar navbar-expand-lg navigation fixed-top sticky " + navClass}
+        className={
+          "navbar navbar-expand-lg navigation fixed-top sticky " + navClass
+        }
       >
         <Container>
-          <Link className="navbar-logo" to="/dashboard">
+          <Link className="navbar-logo" to="/calendar">
             <img src={logoDark} alt="" height="19" className="logo logo-dark" />
-            <img src={logoLight} alt="" height="19" className="logo logo-light" />
+            <img
+              src={logoLight}
+              alt=""
+              height="19"
+              className="logo logo-light"
+            />
           </Link>
 
           <NavbarToggler
             className="p-0"
             onClick={() => {
-              setisOpenMenu();
+              setisOpenMenu()
             }}
           >
             <i className="fa fa-fw fa-bars" />
@@ -95,12 +102,12 @@ const Navbar_Page = props => {
         </Container>
       </nav>
     </React.Fragment>
-  );
-};
+  )
+}
 
 Navbar_Page.propTypes = {
   imglight: PropTypes.any,
-  navClass: PropTypes.string
-};
+  navClass: PropTypes.string,
+}
 
-export default Navbar_Page;
+export default Navbar_Page

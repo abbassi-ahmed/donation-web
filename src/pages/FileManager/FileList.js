@@ -175,7 +175,9 @@ const FileList = ({ folders, fetchFolders }) => {
                           <DropdownMenu className="dropdown-menu-end">
                             <DropdownItem
                               onClick={() =>
-                                navigate(`/folder-details/${myFolders.id}`)
+                                navigate(`/folder-details/${myFolders.id}`, {
+                                  state: { folder: myFolders },
+                                })
                               }
                             >
                               Open
@@ -200,6 +202,7 @@ const FileList = ({ folders, fetchFolders }) => {
                       </div>
                       <Link
                         to={`/folder-details/${myFolders.id}`}
+                        state={{ folder: myFolders }}
                         className="text-body"
                       >
                         <div className="avatar-xs me-3 mb-3">

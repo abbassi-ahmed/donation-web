@@ -43,11 +43,9 @@ const Projects = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          {/* Render Breadcrumbs */}
           <Breadcrumbs title="Projects" breadcrumbItem="Projects" />
 
           <Row>
-            {/* Import Cards */}
             {isLoading ? (
               <Spinners setLoading={setLoading} />
             ) : (
