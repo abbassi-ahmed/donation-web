@@ -2,12 +2,29 @@ import PropTypes from "prop-types"
 import React from "react"
 import { Link } from "react-router-dom"
 import { Badge, Card, CardBody, Col, UncontrolledTooltip } from "reactstrap"
+import axios from "axios"
+import { toast } from "react-toastify"
 
-const CardProject = ({ projects }) => {
+const CardProject = ({ projects, fetchProjects }) => {
+  const handleDelete = async projectId => {
+    try {
+      await axios
+        .delete(
+          `${process.env.REACT_APP_DATABASEURL}/projects/remove/${projectId}`
+        )
+        .then(response => {
+          fetchProjects()
+          toast.success("Project deleted successfully")
+        })
+    } catch (error) {
+      console.error("Error deleting blog", error)
+    }
+  }
+
   return (
     <React.Fragment>
-      {(projects || []).map((project, key) => (
-        <Col xl={4} sm={6} key={key} className="mb-4">
+      {(projects || []).map(project => (
+        <Col xl={4} sm={6} key={project.id} className="mb-4">
           <Card style={{ height: "100%", borderRadius: "10px" }}>
             <CardBody>
               <div className="d-flex">
@@ -23,15 +40,30 @@ const CardProject = ({ projects }) => {
                   </span>
                 </div>
                 <div className="flex-grow-1 overflow-hidden">
-                  <h5 className="text-truncate font-size-15">
-                    <Link
-                      to={`/projects-overview/${project.id}`}
-                      className="text-dark"
-                    >
-                      {project.name}
-                    </Link>
-                  </h5>
-                  <p className="text-muted mb-4">{project.description}</p>
+                  <div className="d-flex justify-content-between">
+                    <div>
+                      <h5 className="text-truncate font-size-15">
+                        <Link
+                          to={`/projects-overview/${project.id}`}
+                          className="text-dark"
+                        >
+                          {project.name}
+                        </Link>
+                      </h5>
+                      <p className="text-muted mb-4">{project.description}</p>
+                    </div>
+                    <div>
+                      <div
+                        className="btn btn-primary"
+                        onClick={() => {
+                          console.log("Edit project", project.id)
+                          handleDelete(project.id)
+                        }}
+                      >
+                        <i className="mdi mdi-trash-can me-1 align-middle"></i>
+                      </div>
+                    </div>
+                  </div>
                   <div className="avatar-group">
                     {(project.donators || []).map((donator, key) =>
                       !donator.img || donator.img !== "Null" ? (

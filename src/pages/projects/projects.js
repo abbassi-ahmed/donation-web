@@ -18,20 +18,19 @@ const Projects = () => {
   const [isLoading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const perPageData = 6
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await axios.get(
-          process.env.REACT_APP_DATABASEURL + "/projects/find-all"
-        )
-        setProjects(response.data)
-        setLoading(false)
-      } catch (error) {
-        console.error("Error fetching projects:", error)
-        setLoading(false)
-      }
+  const fetchProjects = async () => {
+    try {
+      const response = await axios.get(
+        process.env.REACT_APP_DATABASEURL + "/projects/find-all"
+      )
+      setProjects(response.data)
+      setLoading(false)
+    } catch (error) {
+      console.error("Error fetching projects:", error)
+      setLoading(false)
     }
+  }
+  useEffect(() => {
     fetchProjects()
   }, [])
 
@@ -52,7 +51,10 @@ const Projects = () => {
               <>
                 {projects.length > 0 ? (
                   <>
-                    <CardProject projects={currentdata} />
+                    <CardProject
+                      projects={currentdata}
+                      fetchProjects={fetchProjects}
+                    />
                     <Row>
                       <Paginations
                         perPageData={perPageData}
