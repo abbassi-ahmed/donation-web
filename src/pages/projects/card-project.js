@@ -1,11 +1,15 @@
 import PropTypes from "prop-types"
-import React from "react"
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { Badge, Card, CardBody, Col, UncontrolledTooltip } from "reactstrap"
 import axios from "axios"
 import { toast } from "react-toastify"
+import DeleteModal from "components/Common/DeleteModal"
 
 const CardProject = ({ projects, fetchProjects }) => {
+  const [deleteModal, setDeleteModal] = useState(false)
+  const [projectId, setProjectId] = useState(null)
+
   const handleDelete = async projectId => {
     try {
       await axios
@@ -14,6 +18,8 @@ const CardProject = ({ projects, fetchProjects }) => {
         )
         .then(response => {
           fetchProjects()
+          setDeleteModal(false)
+
           toast.success("Project deleted successfully")
         })
     } catch (error) {
@@ -23,6 +29,11 @@ const CardProject = ({ projects, fetchProjects }) => {
 
   return (
     <React.Fragment>
+      <DeleteModal
+        show={deleteModal}
+        onDeleteClick={() => handleDelete(projectId)}
+        onCloseClick={() => setDeleteModal(false)}
+      />
       {(projects || []).map(project => (
         <Col xl={4} sm={6} key={project.id} className="mb-4">
           <Card style={{ height: "100%", borderRadius: "10px" }}>
@@ -56,8 +67,8 @@ const CardProject = ({ projects, fetchProjects }) => {
                       <div
                         className="btn btn-primary"
                         onClick={() => {
-                          console.log("Edit project", project.id)
-                          handleDelete(project.id)
+                          setProjectId(project.id)
+                          setDeleteModal(true)
                         }}
                       >
                         <i className="mdi mdi-trash-can me-1 align-middle"></i>
