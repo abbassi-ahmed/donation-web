@@ -124,7 +124,6 @@ const CreateFaq = () => {
                       >
                         <option value="">Select Type</option>
                         <option value="General">General</option>
-                        <option value="Privacy">Privacy</option>
                         <option value="Support">Support</option>
                       </Input>
                       {validation.touched.faqType &&

@@ -32,12 +32,7 @@ const PagesFaqs = () => {
       const response = await axios.post(
         `${process.env.REACT_APP_DATABASEURL}/faq/find-by-type`,
         {
-          type:
-            activeTab === "1"
-              ? "General"
-              : activeTab === "2"
-              ? "Privacy"
-              : "Support",
+          type: activeTab === "1" ? "General" : activeTab === "2" && "Support",
         }
       )
 
@@ -93,22 +88,12 @@ const PagesFaqs = () => {
                       <p className="font-weight-bold mb-4">General Questions</p>
                     </NavLink>
                   </NavItem>
+
                   <NavItem>
                     <NavLink
                       className={classnames({ active: activeTab === "2" })}
                       onClick={() => {
                         setactiveTab("2")
-                      }}
-                    >
-                      <i className="bx bx-check-shield d-block check-nav-icon mt-4 mb-2" />
-                      <p className="font-weight-bold mb-4">Privacy Policy</p>
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({ active: activeTab === "3" })}
-                      onClick={() => {
-                        setactiveTab("3")
                       }}
                     >
                       <i className="bx bx-support d-block check-nav-icon mt-4 mb-2" />
@@ -155,41 +140,8 @@ const PagesFaqs = () => {
                           </div>
                         )}
                       </TabPane>
+
                       <TabPane tabId="2">
-                        <CardTitle className="mb-5">
-                          Privacy Questions
-                        </CardTitle>
-                        {FaqGeneral.length > 0 ? (
-                          FaqGeneral.map(item => (
-                            <div key={item.id} className="faq-box d-flex mb-4">
-                              <div className="flex-shrink-0 me-3 faq-icon">
-                                <i className="bx bx-help-circle font-size-20 text-success" />
-                              </div>
-                              <div className="flex-grow-1">
-                                <h5 className="font-size-15">
-                                  {item.question}
-                                </h5>
-                                <p className="text-muted">{item.answer}</p>
-                              </div>
-                              <div
-                                style={{ cursor: "pointer" }}
-                                className="flex-shrink-0 ms-3"
-                                onClick={() => onClickDelete(item.id)}
-                              >
-                                <i className="bx bx-trash font-size-20 text-danger" />
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="text-center">
-                            <img src={NoData} alt="No data" height="200" />
-                            <p className="text-muted mt-4">
-                              No FAQs available.
-                            </p>
-                          </div>
-                        )}
-                      </TabPane>
-                      <TabPane tabId="3">
                         <CardTitle className="mb-5">Support</CardTitle>
                         {FaqGeneral.length > 0 ? (
                           FaqGeneral.map(item => (

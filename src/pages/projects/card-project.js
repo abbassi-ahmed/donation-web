@@ -65,7 +65,7 @@ const CardProject = ({ projects, fetchProjects }) => {
                     </div>
                     <div>
                       <div
-                        className="btn btn-primary"
+                        className="btn btn-danger"
                         onClick={() => {
                           setProjectId(project.id)
                           setDeleteModal(true)
