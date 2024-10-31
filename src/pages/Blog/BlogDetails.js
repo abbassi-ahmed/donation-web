@@ -4,6 +4,7 @@ import { Container, Card, CardBody, Col, Row } from "reactstrap"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 import DeleteModal from "components/Common/DeleteModal"
 import axios from "axios"
+import EditBlogModal from "components/Modal/editBlog"
 
 const BlogDetails = () => {
   const { id } = useParams()
@@ -11,22 +12,27 @@ const BlogDetails = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [deleteModal, setDeleteModal] = useState(false)
-
-  useEffect(() => {
-    const fetchBlog = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_DATABASEURL}/blogs/find-one/${id}`
-        )
-        const data = await response.json()
-        setBlog(data)
-      } catch (error) {
-        setError("Error fetching blog details")
-      } finally {
-        setLoading(false)
-      }
+  const [editModal, setEditModal] = useState(false)
+  const [editBlog, setEditBlog] = useState({
+    title: "",
+    content: "",
+    privacy: "",
+    image: "" || null,
+  })
+  const fetchBlog = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_DATABASEURL}/blogs/find-one/${id}`
+      )
+      const data = await response.json()
+      setBlog(data)
+    } catch (error) {
+      setError("Error fetching blog details")
+    } finally {
+      setLoading(false)
     }
-
+  }
+  useEffect(() => {
     fetchBlog()
   }, [id])
 
@@ -42,17 +48,9 @@ const BlogDetails = () => {
     }
   }
 
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
-  if (error) {
-    return <div>{error}</div>
-  }
-
-  if (!blog) {
-    return <div>Blog not found</div>
-  }
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>{error}</div>
+  if (!blog) return <div>Blog not found</div>
 
   return (
     <React.Fragment>
@@ -61,6 +59,17 @@ const BlogDetails = () => {
         onDeleteClick={handleDelete}
         onCloseClick={() => setDeleteModal(false)}
       />
+      <EditBlogModal
+        show={editModal}
+        toggle={() => setEditModal(!editModal)}
+        blog={editBlog}
+        onCloseClick={() => setEditModal(false)}
+        setEditBlog={setEditBlog}
+        onSaveFinished={() => {
+          setEditModal(false)
+          fetchBlog()
+        }}
+      />
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title="Blog" breadcrumbItem="Blog Details" />
@@ -68,13 +77,27 @@ const BlogDetails = () => {
             <Col lg={12}>
               <Card>
                 <CardBody>
-                  <div className="pt-3">
-                    <div
-                      className="delete-icon"
-                      onClick={() => setDeleteModal(true)}
-                    >
-                      <i className="mdi mdi-delete me-1 align-middle"></i>{" "}
-                      Delete
+                  <div>
+                    <div className="d-flex justify-content-between">
+                      <div>
+                        <div
+                          className="btn btn-primary"
+                          onClick={() => {
+                            setEditBlog(blog)
+                            setEditModal(true)
+                          }}
+                        >
+                          <i className="mdi mdi-pencil me-1 align-middle"></i>
+                          Edit
+                        </div>
+                      </div>
+                      <div
+                        onClick={() => setDeleteModal(true)}
+                        className="btn btn-danger"
+                      >
+                        <i className="mdi mdi-delete me-1 align-middle"></i>
+                        Delete
+                      </div>
                     </div>
                     <Row className="justify-content-center">
                       <Col xl={8}>
@@ -108,7 +131,7 @@ const BlogDetails = () => {
                                 <div className="mt-4 mt-sm-0">
                                   <p className="text-muted mb-2">Privacy </p>
                                   <h5 className="font-size-15">{`${
-                                    blog.Privacy ? "Public" : "Private"
+                                    blog.privacy ? "Public" : "Private"
                                   }`}</h5>
                                 </div>
                               </Col>

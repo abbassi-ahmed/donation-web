@@ -35,9 +35,6 @@
 }
 
 .delete-icon {
-    position: absolute;
-    top: 0;
-    right: 0;
     border: 1px solid red;
     background: red;
     color: white;

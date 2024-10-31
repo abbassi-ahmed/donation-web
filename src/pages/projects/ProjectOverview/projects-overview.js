@@ -123,7 +123,11 @@ const ProjectsOverview = () => {
             <>
               <Row>
                 <Col lg="8">
-                  <ProjectDetail project={projectDetail} sum={sum} />
+                  <ProjectDetail
+                    project={projectDetail}
+                    sum={sum}
+                    fetchProjectDetail={fetchProjectDetail}
+                  />
                 </Col>
 
                 <Col lg="4">

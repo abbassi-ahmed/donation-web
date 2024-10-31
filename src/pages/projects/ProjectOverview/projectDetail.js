@@ -1,21 +1,46 @@
-import React from "react"
+import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { Card, CardBody, Col, Row } from "reactstrap"
 import ProgressBar from "react-bootstrap/ProgressBar"
+import EditProjectModal from "components/Modal/EditProjectModal"
 
-const ProjectDetail = ({ project, sum }) => {
+const ProjectDetail = ({ project, sum, fetchProjectDetail }) => {
+  const [editModal, setEditModal] = useState(false)
   return (
     <Card>
+      <EditProjectModal
+        show={editModal}
+        toggle={() => setEditModal(!editModal)}
+        project={project}
+        onCloseClick={() => setEditModal(false)}
+        onSaveFinished={() => {
+          fetchProjectDetail(project.id)
+          setEditModal(false)
+        }}
+      />
       <CardBody>
         <div className="d-flex">
           <img src={project.image} alt="" className="avatar-sm me-4" />
           <div className="flex-grow-1 overflow-hidden">
-            <h5 className="text-truncate font-size-15">
-              {project.name || "Project Name"}
-            </h5>
-            <p className="text-muted">
-              {project.Status || "Project description goes here."}
-            </p>
+            <div className="d-flex justify-content-between">
+              <div>
+                <h5 className="text-truncate font-size-15">
+                  {project.name || "Project Name"}
+                </h5>
+                <p className="text-muted">
+                  {project.Status || "Project description goes here."}
+                </p>
+              </div>
+              <div>
+                <div
+                  className="btn btn-primary"
+                  onClick={() => setEditModal(true)}
+                >
+                  <i className="mdi mdi-pencil me-1 align-middle"></i>
+                  Edit
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <h5 className="font-size-15 mt-4">Project Details :</h5>
