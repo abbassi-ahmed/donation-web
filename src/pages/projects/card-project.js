@@ -61,7 +61,9 @@ const CardProject = ({ projects, fetchProjects }) => {
                           {project.name}
                         </Link>
                       </h5>
-                      <p className="text-muted mb-4">{project.description}</p>
+                      <p className="text-muted mb-4">
+                        {project.shortDescription}
+                      </p>
                     </div>
                     <div>
                       <div

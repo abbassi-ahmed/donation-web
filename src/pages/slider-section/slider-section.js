@@ -9,7 +9,7 @@ import CardUploader from "./CardUploader"
 
 const ManageSlider = () => {
   const [loader, setLoader] = useState(false)
-  const [cards, setCards] = useState([{ id: 0, bg: null }])
+  const [cards, setCards] = useState([{ id: 0, bg: null, title: "", text: "" }])
   const [oldCards, setOldCards] = useState([])
   useEffect(() => {
     document.title = "Manage slider"
@@ -20,15 +20,25 @@ const ManageSlider = () => {
     initialValues: {},
     validationSchema: Yup.object({}),
     onSubmit: async values => {
-      if (cards.some(card => !card.bg)) {
+      if (cards.some(card => !card.bg || !card.title || !card.text)) {
         toast.error("Please fill all the cards")
         return
       }
 
       try {
         setLoader(true)
+
         const newCards = cards.filter(
           card => !oldCards.some(oldCard => oldCard.id === card.id)
+        )
+        const updatedCards = cards.filter(card =>
+          oldCards.some(
+            oldCard =>
+              oldCard.id === card.id &&
+              (oldCard.title !== card.title ||
+                oldCard.text !== card.text ||
+                oldCard.bg !== card.bg)
+          )
         )
 
         if (newCards.length > 0) {
@@ -36,7 +46,18 @@ const ManageSlider = () => {
             newCards.map(card =>
               axios.post(
                 `${process.env.REACT_APP_DATABASEURL}/slider-section/create`,
-                { bg: card.bg },
+                { bg: card.bg, title: card.title, text: card.text },
+                { headers: { "Content-Type": "multipart/form-data" } }
+              )
+            )
+          )
+        }
+        if (updatedCards.length > 0) {
+          await Promise.all(
+            updatedCards.map(card =>
+              axios.put(
+                `${process.env.REACT_APP_DATABASEURL}/slider-section/update/${card.id}`,
+                { bg: card.bg, title: card.title, text: card.text },
                 { headers: { "Content-Type": "multipart/form-data" } }
               )
             )
@@ -60,7 +81,16 @@ const ManageSlider = () => {
         `${process.env.REACT_APP_DATABASEURL}/slider-section/find-all`
       )
       const data = response.data || []
-      setCards(data.map(card => ({ id: card.id, bg: card.bg })))
+      setCards(
+        data
+          .map(card => ({
+            id: card.id,
+            bg: card.bg,
+            title: card.title,
+            text: card.text,
+          }))
+          .sort((a, b) => a.id - b.id)
+      )
       setOldCards(data)
     } catch (error) {
       console.error("Error fetching sliders:", error)

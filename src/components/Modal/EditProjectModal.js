@@ -36,7 +36,8 @@ const EditProjectModal = ({
       const formData = new FormData()
       formData.append("image", tempProject.image)
       formData.append("name", tempProject.name)
-      formData.append("description", tempProject.description)
+      formData.append("shortDescription", tempProject.shortDescription)
+      formData.append("longDescription", tempProject.longDescription)
       formData.append("target", tempProject.target)
       formData.append("startDate", tempProject.startDate)
       formData.append("targetDate", tempProject.targetDate)
@@ -140,14 +141,31 @@ const EditProjectModal = ({
           </FormGroup>
 
           <FormGroup>
-            <Label for="description">Description</Label>
+            <Label for="shortDescription">Short Description</Label>
             <Input
-              type="textarea"
-              id="description"
-              name="description"
-              value={tempProject.description}
+              id="shortDescription"
+              name="shortDescription"
+              value={tempProject.shortDescription}
               onChange={e =>
-                setTempProject({ ...tempProject, description: e.target.value })
+                setTempProject({
+                  ...tempProject,
+                  shortDescription: e.target.value,
+                })
+              }
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="longDescription">Long Description</Label>
+            <Input
+              id="longDescription"
+              name="longDescription"
+              type="textarea"
+              value={tempProject.longDescription}
+              onChange={e =>
+                setTempProject({
+                  ...tempProject,
+                  longDescription: e.target.value,
+                })
               }
             />
           </FormGroup>
@@ -186,7 +204,6 @@ const EditProjectModal = ({
               }
             />
           </FormGroup>
-
           <FormGroup>
             <Label for="targetDate">Target Date</Label>
 

@@ -34,6 +34,17 @@ const CardUploader = ({
     return bg instanceof Blob ? URL.createObjectURL(bg) : bg
   }
 
+  const handleTextChange = (e, cardIndex) => {
+    const newCards = [...cards]
+    newCards[cardIndex] = { ...newCards[cardIndex], text: e.target.value }
+    setCards(newCards)
+  }
+
+  const handleTitleChange = (e, cardIndex) => {
+    const newCards = [...cards]
+    newCards[cardIndex] = { ...newCards[cardIndex], title: e.target.value }
+    setCards(newCards)
+  }
   const handleDeleteCard = async cardIndex => {
     if (cards.length === 1) {
       toast.error("You can't delete the last card")
@@ -59,7 +70,7 @@ const CardUploader = ({
   }
 
   const handleAddCard = () => {
-    setCards([...cards, { id: 0, bg: null }])
+    setCards([...cards, { id: 0, bg: null, title: "", text: "" }])
   }
 
   return (
@@ -122,7 +133,34 @@ const CardUploader = ({
           </div>
         </Col>
       </Row>
-
+      <Row className="mt-3">
+        <Col md={6}>
+          <div className="mb-3">
+            <Label htmlFor={`card${index + 1}-count-input`}>Title</Label>
+            <Input
+              id={`cardTitle${index + 1}`}
+              name={`cardTitle${index + 1}`}
+              type="text"
+              placeholder={`Enter Title ${index + 1}...`}
+              onChange={e => handleTitleChange(e, index)}
+              value={cards[index].title}
+            />
+          </div>
+        </Col>
+        <Col md={6}>
+          <div className="mb-3">
+            <Label htmlFor={`card${index + 1}-title-input`}>Text</Label>
+            <Input
+              id={`cardText${index + 1}`}
+              name={`cardText${index + 1}`}
+              type="text"
+              placeholder={`Enter Text ${index + 1}...`}
+              onChange={e => handleTextChange(e, index)}
+              value={cards[index].text}
+            />
+          </div>
+        </Col>
+      </Row>
       <Row className="mt-3">
         <Col md={6}>
           <Button color="danger" onClick={() => handleDeleteCard(index)}>

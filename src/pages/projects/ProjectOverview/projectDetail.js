@@ -45,7 +45,7 @@ const ProjectDetail = ({ project, sum, fetchProjectDetail }) => {
         </div>
         <h5 className="font-size-15 mt-4">Project Details :</h5>
         <p className="text-muted">
-          {project.description || "No detailed description available."}
+          {project.longDescription || "No detailed description available."}
         </p>
         <h5 className="font-size-15 mt-4">Project Progress :</h5>
         <ProgressBar

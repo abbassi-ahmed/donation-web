@@ -24,12 +24,15 @@ import CardUploader from "./CardUploader"
 
 const apiBaseURL = process.env.REACT_APP_DATABASEURL
 
-const postBrandImage = image => {
+const postBrand = async ({ image, title, link }) => {
   return axios.post(
     `${apiBaseURL}/worked-with/create`,
     {
       image,
+      title,
+      link,
     },
+
     {
       headers: { "Content-Type": "multipart/form-data" },
     }
@@ -55,28 +58,61 @@ const deleteBrandById = async id => {
     toast.error("Failed to remove brand")
   }
 }
+const updateBrandById = async (id, { image, title, link }) => {
+  return axios.put(
+    `${apiBaseURL}/worked-with/update/${id}`,
+    {
+      image,
+      title,
+      link,
+    },
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  )
+}
 
 const ManageBrands = () => {
   document.title = "Manage Brands"
 
   const [loader, setLoader] = useState(false)
-  const [brands, setBrands] = useState(Array(4).fill({ id: null, image: null }))
+  const [brands, setBrands] = useState(
+    Array(4).fill({ id: null, image: null, title: "", link: "" })
+  )
 
   const validation = useFormik({
     initialValues: {},
     validationSchema: Yup.object({}),
     onSubmit: async () => {
       const newBrands = brands.filter(brand => !brand.id && brand.image)
-      if (!newBrands.length) {
-        toast.error("Please add at least one brand")
+      const updatedBrands = brands.filter(
+        brand => brand.id && (brand.title || brand.link || brand.image)
+      )
+
+      if (!newBrands.length && !updatedBrands.length) {
+        toast.error("Please add or update at least one brand")
         return
       }
+
       try {
         setLoader(true)
-        await Promise.all(newBrands.map(brand => postBrandImage(brand.image)))
+
+        // Handle new brands
+        if (newBrands.length) {
+          await Promise.all(newBrands.map(brand => postBrand(brand)))
+        }
+
+        // Handle updates to existing brands
+        if (updatedBrands.length) {
+          await Promise.all(
+            updatedBrands.map(brand => updateBrandById(brand.id, brand))
+          )
+        }
+
         toast.success("🎉 Brands Saved Successfully")
       } catch (error) {
         console.error("Error saving brands", error)
+        toast.error("Failed to save brands")
       } finally {
         setLoader(false)
       }
@@ -87,14 +123,21 @@ const ManageBrands = () => {
     const initializeBrands = async () => {
       const data = await fetchAllBrands()
       if (data.length) {
-        setBrands(data.map(brand => ({ id: brand.id, image: brand.image })))
+        setBrands(
+          data.map(brand => ({
+            id: brand.id,
+            image: brand.image,
+            title: brand.title,
+            link: brand.link,
+          }))
+        )
       }
     }
     initializeBrands()
   }, [])
 
   const addBrand = () => {
-    setBrands(prev => [...prev, { image: null }])
+    setBrands(prev => [...prev, { image: null, title: "", link: "" }])
   }
 
   const removeBrand = async index => {

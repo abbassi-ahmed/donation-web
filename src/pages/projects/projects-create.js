@@ -93,7 +93,8 @@ const ProjectsCreate = () => {
   const validation = useFormik({
     initialValues: {
       projectname: "",
-      projectdesc: "",
+      projectShortDesc: "",
+      projectLongDesc: "",
       projecttarget: "",
       targetDate: "",
       projectImage: "",
@@ -102,7 +103,8 @@ const ProjectsCreate = () => {
     },
     validationSchema: Yup.object({
       projectname: Yup.string().required("Please Enter Your Project Name"),
-      projectdesc: Yup.string().required("Please Enter Your Project Desc"),
+      projectShortDesc: Yup.string().required("Please Enter Your Project Desc"),
+      projectLongDesc: Yup.string().required("Please Enter Your Project Desc"),
       projecttarget: Yup.string().required("Please Enter Your Project Target"),
       targetDate: Yup.string().required("Please Enter Your Target Date"),
       projectImage: Yup.string().required("Please Select Image"),
@@ -111,7 +113,8 @@ const ProjectsCreate = () => {
     onSubmit: async values => {
       const formDat = new FormData()
       formDat.append("name", values.projectname)
-      formDat.append("description", values.projectdesc)
+      formDat.append("shortDescription", values.projectShortDesc)
+      formDat.append("longDescription", values.projectLongDesc)
       formDat.append("target", values.projecttarget)
       formDat.append("targetDate", values.targetDate)
       formDat.append("startDate", values.startDate)
@@ -248,27 +251,48 @@ const ProjectsCreate = () => {
                       ) : null}
                     </div>
                     <div className="mb-3">
-                      <Label htmlFor="projectdesc-input">
+                      <Label htmlFor="projectShortDesc-input">
                         Project Description
                       </Label>
                       <Input
                         as="textarea"
-                        id="projectdesc"
+                        id="projectShortDesc"
                         rows={3}
-                        name="projectdesc"
+                        name="projectShortDesc"
                         placeholder="Enter Project Description..."
                         onChange={validation.handleChange}
-                        value={validation.values.projectdesc || ""}
+                        value={validation.values.projectShortDesc || ""}
                       />
-                      {validation.touched.projectdesc &&
-                      validation.errors.projectdesc ? (
+                      {validation.touched.projectShortDesc &&
+                      validation.errors.projectShortDesc ? (
                         <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.projectdesc}
+                          {validation.errors.projectShortDesc}
                         </FormFeedback>
                       ) : null}
                     </div>{" "}
                     <div className="mb-3">
-                      <Label htmlFor="projectdesc-input">
+                      <Label htmlFor="projectLongDesc-input">
+                        Project Long Description
+                      </Label>
+                      <Input
+                        as="textarea"
+                        type="textarea"
+                        id="projectLongDesc"
+                        rows={3}
+                        name="projectLongDesc"
+                        placeholder="Enter Project Long Description..."
+                        onChange={validation.handleChange}
+                        value={validation.values.projectLongDesc || ""}
+                      />
+                      {validation.touched.projectLongDesc &&
+                      validation.errors.projectLongDesc ? (
+                        <FormFeedback type="invalid" className="d-block">
+                          {validation.errors.projectLongDesc}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label htmlFor="projecttarget-input">
                         Project Target Amount
                       </Label>
                       <Input

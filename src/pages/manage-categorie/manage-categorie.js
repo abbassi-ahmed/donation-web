@@ -16,11 +16,9 @@ import {
 import { toast } from "react-toastify"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 import "flatpickr/dist/themes/material_blue.css"
-import FlatPickr from "react-flatpickr"
 import * as Yup from "yup"
 import { useFormik } from "formik"
 import axios from "axios"
-import CardUploader from "./CardUploader"
 import SuspenseImage from "../../components/SuspenseImage/ImageComponent"
 
 const ManageCategorie = () => {
@@ -31,9 +29,7 @@ const ManageCategorie = () => {
   const [img, setImg] = useState(null)
   const [imgUser, setImgUser] = useState(null)
   const [loader, setLoader] = useState(false)
-  const [cards, setCards] = useState(Array(3).fill({ icon: null }))
 
-  // Handle image selection and preview
   const handleImageChange = e => {
     e.preventDefault()
     if (e.target.files.length) {
@@ -66,16 +62,6 @@ const ManageCategorie = () => {
     onSubmit: async values => {
       try {
         setLoader(true)
-        // Submit each card
-        await Promise.all(
-          cards.map(card =>
-            axios.post(
-              `${process.env.REACT_APP_DATABASEURL}/categories-cards/`,
-              { icon: card.icon },
-              { headers: { "Content-Type": "multipart/form-data" } }
-            )
-          )
-        )
 
         const payload = {
           tagline: values.taglineCategorie,
@@ -111,7 +97,7 @@ const ManageCategorie = () => {
         `${process.env.REACT_APP_DATABASEURL}/categories-section/find-all`
       )
 
-      if (response.data[0].categories.length > 0) {
+      if (response.data.length > 0) {
         const data = response.data[0]
         validation.setFieldValue("taglineCategorie", data.tagline)
         validation.setFieldValue("titleCategorie", data.title)
@@ -122,16 +108,6 @@ const ManageCategorie = () => {
           setSelectedImage(data.bg)
           setImg(data.bg)
         }
-
-        if (data.categoriesUser) {
-          setImgUser(data.categoriesUser)
-        }
-
-        setCards(
-          data.categories.map(card => ({
-            icon: card.icon,
-          }))
-        )
       }
     } catch (error) {
       console.error("Error:", error)
@@ -266,7 +242,6 @@ const ManageCategorie = () => {
                       </div>
                     </div>
 
-                    {/* Description */}
                     <div className="mb-3">
                       <Label htmlFor="categorieDescription-input">
                         Description
@@ -274,6 +249,7 @@ const ManageCategorie = () => {
                       <Input
                         as="textarea"
                         id="categorieDescription"
+                        type="textarea"
                         rows={4}
                         name="categorieDescription"
                         placeholder="Enter Description Categorie..."
@@ -287,33 +263,6 @@ const ManageCategorie = () => {
                           {validation.errors.categorieDescription}
                         </FormFeedback>
                       ) : null}
-                    </div>
-
-                    {/* Cards Section */}
-                    <div className="mb-3 text-center font-size-16">
-                      <h1>Cards</h1>
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "1px",
-                          backgroundColor: "#e9e9e9",
-                        }}
-                        className="mb-5"
-                      ></div>
-                      <Container>
-                        <Row>
-                          {[...Array(3)].map((_, index) => (
-                            <Col md={4} key={index} className="mb-4">
-                              <CardUploader
-                                index={index}
-                                cards={cards}
-                                setCards={setCards}
-                                validation={validation}
-                              />
-                            </Col>
-                          ))}
-                        </Row>
-                      </Container>
                     </div>
                   </CardBody>
                 </Card>
