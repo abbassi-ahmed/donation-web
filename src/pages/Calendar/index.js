@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
-import { isEmpty, set } from "lodash"
-
+import { isEmpty } from "lodash"
 import {
   Button,
   Card,
@@ -23,21 +22,18 @@ import { useFormik } from "formik"
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import listPlugin from "@fullcalendar/list"
-import interactionPlugin, { Draggable } from "@fullcalendar/interaction"
+import interactionPlugin from "@fullcalendar/interaction"
 import BootstrapTheme from "@fullcalendar/bootstrap"
-import allLocales from "@fullcalendar/core/locales-all"
-
-//Import Breadcrumb
+import "flatpickr/dist/themes/material_blue.css"
+import moment from "moment"
+import FlatPickr from "react-flatpickr"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
-
-//import Images
 import verification from "../../assets/images/verification-img.png"
 
 import DeleteModal from "./DeleteModal"
 import axios from "axios"
 
 const Calender = props => {
-  //meta title
   document.title = "Calendar | Skote - React Admin & Dashboard Template"
 
   const [event, setEvent] = useState({})
@@ -46,7 +42,6 @@ const Calender = props => {
   const [deleteModal, setDeleteModal] = useState(false)
   const [deleteId, setDeleteId] = useState()
   const [modalCategory, setModalCategory] = useState(false)
-  const [selectedDay, setSelectedDay] = useState(0)
   const [selectedImage, setSelectedImage] = useState(null)
   const [img, setImg] = useState(null)
 
@@ -63,21 +58,6 @@ const Calender = props => {
       reader.readAsDataURL(file)
     }
   }
-
-  const [isLocal, setIsLocal] = useState({
-    code: "en-nz",
-    week: {
-      dow: 1,
-      doy: 4,
-    },
-    buttonHints: {
-      prev: "Previous $0",
-      next: "Next $0",
-      today: "This $0",
-    },
-    viewHint: "$0 view",
-    navLinkHint: "Go to $0",
-  })
 
   useEffect(() => {
     fetchEvents()
@@ -106,8 +86,16 @@ const Calender = props => {
 
   const addNewEvent = async newEvent => {
     try {
-      const data = await axios
-        .post(`${process.env.REACT_APP_DATABASEURL}/events/create`, newEvent)
+      const formData = new FormData()
+      formData.append("image", newEvent.image)
+      formData.append("title", newEvent.title)
+      formData.append("category", newEvent.category)
+      formData.append("description", newEvent.description)
+      formData.append("startDate", newEvent.startDate)
+      formData.append("endDate", newEvent.endDate)
+
+      await axios
+        .post(`${process.env.REACT_APP_DATABASEURL}/events/create`, formData)
         .then(res => {
           fetchEvents()
           eventValidation.resetForm()
@@ -123,48 +111,43 @@ const Calender = props => {
     try {
       const body = structuredClone(updateEventObj)
       delete body.id
-      const data = await axios.put(
+      const formData = new FormData()
+      formData.append("image", img)
+      formData.append("title", updateEventObj.title)
+      formData.append("category", updateEventObj.category)
+      formData.append("description", updateEventObj.description)
+      formData.append("startDate", updateEventObj.startDate)
+      formData.append("endDate", updateEventObj.endDate)
+
+      await axios.put(
         `${process.env.REACT_APP_DATABASEURL}/events/update/` +
           updateEventObj.id,
-        body
+        formData
       )
       fetchEvents()
       eventValidation.resetForm()
+      setImg(null)
+      setSelectedImage(null)
     } catch (error) {
       console.error("Error updating event:", error)
     }
   }
 
-  const deleteEvent = async eventId => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_DATABASEURL}/events/remove/${eventId}`,
-        {
-          method: "DELETE",
-        }
-      )
-      if (response.ok) {
-        fetchEvents()
-      }
-    } catch (error) {
-      console.error("Error deleting event:", error)
-    }
-  }
-
-  // event validation
   const eventValidation = useFormik({
     enableReinitialize: true,
 
     initialValues: {
       title: event?.title || "",
-      content: event?.content || "",
+      category: event?.category || "",
+      description: event?.description || "",
       startDate: event?.startDate ? event.startDate.split("T")[0] : "",
       endDate: event?.endDate ? event.endDate.split("T")[0] : "",
       image: event?.image || "",
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Please Enter Your Event Title"),
-      content: Yup.string().required("Please Enter Your Event content"),
+      category: Yup.string().required("Please Enter Your Event Category"),
+      description: Yup.string().required("Please Enter Your Event Description"),
       startDate: Yup.date().required("Please Enter Your Event Start Date"),
       endDate: Yup.date().required("Please Enter Your Event End Date"),
       image: Yup.string().required("Please Enter Your Event Image"),
@@ -174,23 +157,23 @@ const Calender = props => {
         const updateEventObj = {
           id: event.id,
           title: values.title,
-          content: values.content,
+          category: values.category,
+          description: values.description,
           startDate: values.startDate,
           endDate: values.endDate,
           image: img ? img : values.image,
         }
-        // update event
         updateEvent(updateEventObj)
         eventValidation.resetForm()
       } else {
         const newEventObj = {
           title: values.title,
-          content: values.content,
+          category: values.category,
+          description: values.description,
           startDate: values.startDate,
           endDate: values.endDate,
-          image: values.image,
+          image: img ? img : values.image,
         }
-        // save new event
         addNewEvent(newEventObj)
         eventValidation.resetForm()
       }
@@ -198,9 +181,6 @@ const Calender = props => {
     },
   })
 
-  /**
-   * Handling the modal state
-   */
   const toggle = () => {
     if (modalCategory) {
       setModalCategory(false)
@@ -211,9 +191,6 @@ const Calender = props => {
     }
   }
 
-  /**
-   * Handling date click on calendar
-   */
   const handleDateClick = arg => {
     const date = arg["date"]
     const day = date.getDate()
@@ -221,10 +198,10 @@ const Calender = props => {
     const year = date.getFullYear()
 
     const formattedDate = `${year}-${month < 10 ? "0" + month : month}-${day}`
-    setSelectedDay(formattedDate)
     setEvent({
       title: "",
-      content: "",
+      category: "",
+      description: "",
       startDate: formattedDate,
       endDate: formattedDate,
       image: "",
@@ -233,22 +210,21 @@ const Calender = props => {
     toggle()
   }
 
-  /**
-   * Handling click on event on calendar
-   */
   const handleEventClick = arg => {
     const event = arg.event
     const eventId = event.id
     const eventTitle = event.title
-    const eventcontent = event.extendedProps.content
+    const eventCategory = event.extendedProps.category
+    const eventDescription = event.extendedProps.description
     const eventStartDate = event.startStr
-    const eventEndDate = event.endStr
+    const eventEndDate = event.endStr ? event.endStr : eventStartDate
     const eventImage = event.extendedProps.image
-
+    console.log(eventImage)
     setEvent({
       id: eventId,
       title: eventTitle,
-      content: eventcontent,
+      category: eventCategory,
+      description: eventDescription,
       startDate: eventStartDate,
       endDate: eventEndDate,
       image: eventImage,
@@ -258,23 +234,23 @@ const Calender = props => {
     toggle()
   }
 
-  /**
-   * On delete event
-   */
-  const handleDeleteEvent = () => {
+  const handleDeleteEvent = async () => {
     if (deleteId) {
-      deleteEvent(deleteId)
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_DATABASEURL}/events/remove/${deleteId}`,
+          {
+            method: "DELETE",
+          }
+        )
+        if (response.ok) {
+          fetchEvents()
+        }
+      } catch (error) {
+        console.error("Error deleting event:", error)
+      }
     }
     setDeleteModal(false)
-  }
-
-  const onDrop = event => {
-    // Implement drop functionality if needed
-  }
-
-  //set the local language
-  const handleChangeLocals = value => {
-    setIsLocal(value)
   }
 
   return (
@@ -286,7 +262,6 @@ const Calender = props => {
       />
       <div className="page-content mt-5">
         <Container fluid={true}>
-          {/* Render Breadcrumb */}
           <Breadcrumbs title="Calendar" breadcrumbItem="Full Calendar" />
           <Row>
             <Col xs={12}>
@@ -294,37 +269,17 @@ const Calender = props => {
                 <Col xl={3}>
                   <Card>
                     <CardBody>
-                      <div className="d-flex gap-2">
-                        <div className="flex-grow-1">
-                          <select
-                            id="locale-selector"
-                            className="form-select"
-                            defaultValue={isLocal}
-                            onChange={event => {
-                              const selectedValue = event.target.value
-                              const selectedLocale = allLocales.find(
-                                locale => locale.code === selectedValue
-                              )
-                              handleChangeLocals(selectedLocale)
-                            }}
-                          >
-                            {(allLocales || []).map((localeCode, key) => (
-                              <option key={key} value={localeCode.code}>
-                                {localeCode.code}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                      <div style={{ width: "100%" }}>
                         <Button
                           color="primary"
                           className="font-16"
                           onClick={toggle}
+                          style={{ width: "100%" }}
                         >
                           <i className="mdi mdi-plus-circle-outline"></i> Create
                           New Event
                         </Button>
                       </div>
-
                       <Row className="justify-content-center mt-5">
                         <img
                           src={verification}
@@ -339,7 +294,6 @@ const Calender = props => {
                 <Col xl={9}>
                   <Card>
                     <CardBody>
-                      {/* fullcalendar control */}
                       <FullCalendar
                         plugins={[
                           BootstrapTheme,
@@ -355,21 +309,20 @@ const Calender = props => {
                           center: "title",
                           right: "dayGridMonth,dayGridWeek,dayGridDay,listWeek",
                         }}
-                        locale={isLocal}
                         events={events.map(event => ({
                           id: event.id,
                           title: event.title,
                           start: event.startDate,
                           end: event.endDate,
-                          content: event.content,
+                          category: event.category,
+                          description: event.description,
                           image: event.image,
                         }))}
-                        editable={true}
+                        editable={false}
                         droppable={true}
                         selectable={true}
                         dateClick={handleDateClick}
                         eventClick={handleEventClick}
-                        drop={onDrop}
                       />
                     </CardBody>
                   </Card>
@@ -424,11 +377,11 @@ const Calender = props => {
                         onChange={handleImageChange}
                       />
                     </div>
-                    {selectedImage ? (
+                    {selectedImage || event.image ? (
                       <div className="avatar-lg me-4">
                         <div className="rounded-circle overflow-hidden d-inline-block">
                           <img
-                            src={selectedImage || ""}
+                            src={selectedImage || event.image}
                             id="projectlogo-img"
                             alt=""
                             height="100"
@@ -476,35 +429,52 @@ const Calender = props => {
                 </Col>
                 <Col md={6}>
                   <div className="mb-3">
-                    <Label htmlFor="validationCustom02">Event content</Label>
+                    <Label htmlFor="validationCustom02">Event Category</Label>
                     <Input
-                      type="text"
+                      type="select"
                       className="form-control"
                       id="validationCustom02"
-                      name="content"
-                      value={eventValidation.values.content}
+                      name="category"
+                      value={eventValidation.values.category}
                       onChange={eventValidation.handleChange}
-                      invalid={!!eventValidation.errors.content}
-                    />
+                      invalid={!!eventValidation.errors.category}
+                    >
+                      <option value="">Select Category</option>
+                      <option value="social">Social</option>
+                      <option value="idee de projet">Idea de Projet</option>
+                      <option value="Economie sociale et solidaire">
+                        Economie Sociale et Solidaire
+                      </option>
+                    </Input>
                     <FormFeedback>
-                      {eventValidation.errors.content}
+                      {eventValidation.errors.category}
                     </FormFeedback>
                   </div>
                 </Col>
               </Row>
+
               <Row>
                 <Col md={6}>
                   <div className="mb-3">
                     <Label htmlFor="validationCustom03">Start Date</Label>
-                    <Input
-                      type="date"
-                      className="form-control"
-                      id="validationCustom03"
+                    <FlatPickr
+                      className="form-control d-block"
+                      id="startDate"
                       name="startDate"
-                      value={eventValidation.values.startDate}
-                      onChange={eventValidation.handleChange}
-                      invalid={!!eventValidation.errors.startDate}
+                      placeholder="Select date"
+                      options={{
+                        mode: "single",
+                        dateFormat: "d M, Y",
+                      }}
+                      value={[new Date(eventValidation.values.startDate)]}
+                      onChange={customerdate =>
+                        eventValidation.setFieldValue(
+                          "startDate",
+                          moment(customerdate[0]).format("YYYY-MM-DD")
+                        )
+                      }
                     />
+
                     <FormFeedback>
                       {eventValidation.errors.startDate}
                     </FormFeedback>
@@ -513,17 +483,47 @@ const Calender = props => {
                 <Col md={6}>
                   <div className="mb-3">
                     <Label htmlFor="validationCustom04">End Date</Label>
-                    <Input
-                      type="date"
-                      className="form-control"
-                      id="validationCustom04"
+
+                    <FlatPickr
+                      className="form-control d-block"
+                      id="endDate"
                       name="endDate"
-                      value={eventValidation.values.endDate}
-                      onChange={eventValidation.handleChange}
-                      invalid={!!eventValidation.errors.endDate}
+                      placeholder="Select date"
+                      options={{
+                        mode: "single",
+                        dateFormat: "d M, Y",
+                      }}
+                      value={[new Date(eventValidation.values.endDate)]}
+                      onChange={customerdate =>
+                        eventValidation.setFieldValue(
+                          "endDate",
+                          moment(customerdate[0]).format("YYYY-MM-DD")
+                        )
+                      }
                     />
                     <FormFeedback>
                       {eventValidation.errors.endDate}
+                    </FormFeedback>
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={12}>
+                  <div className="mb-3">
+                    <Label htmlFor="validationCustom03">
+                      Event Description
+                    </Label>
+                    <Input
+                      type="textarea"
+                      className="form-control"
+                      id="validationCustom03"
+                      name="description"
+                      value={eventValidation.values.description}
+                      onChange={eventValidation.handleChange}
+                      invalid={!!eventValidation.errors.description}
+                    />
+                    <FormFeedback>
+                      {eventValidation.errors.description}
                     </FormFeedback>
                   </div>
                 </Col>
@@ -570,7 +570,6 @@ const Calender = props => {
 
 Calender.propTypes = {
   events: PropTypes.array,
-  isLocal: PropTypes.object,
   event: PropTypes.object,
   isEdit: PropTypes.bool,
   deleteModal: PropTypes.bool,
