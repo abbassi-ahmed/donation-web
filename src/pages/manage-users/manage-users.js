@@ -1,20 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react"
 import { Link } from "react-router-dom"
 import TableContainer from "components/Common/TableContainer"
-import {
-  Card,
-  CardBody,
-  Col,
-  Container,
-  Row,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Label,
-  FormFeedback,
-  Input,
-  Form,
-} from "reactstrap"
+import { Card, CardBody, Col, Container, Row } from "reactstrap"
 import * as Yup from "yup"
 import { useFormik } from "formik"
 import Breadcrumbs from "components/Common/Breadcrumb"
@@ -22,6 +9,7 @@ import DeleteModal from "components/Common/DeleteModal"
 import Spinners from "components/Common/Spinner"
 import { ToastContainer, toast } from "react-toastify"
 import axios from "axios"
+import ContactInfoModal from "components/Modal/ContactInfoModal"
 
 const ManageUsers = () => {
   document.title = "User List | Skote - React Admin & Dashboard Template"
@@ -32,6 +20,8 @@ const ManageUsers = () => {
   const [modal, setModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [selectedUser, setSelectedUser] = useState(null)
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -60,6 +50,10 @@ const ManageUsers = () => {
     toggle()
   }
 
+  const handleViewUser = user => {
+    setSelectedUser(user)
+    setShowModal(true)
+  }
   const handleUserClicks = () => {
     setContact(null)
     setIsEdit(false)
@@ -178,10 +172,11 @@ const ManageUsers = () => {
             <Link
               to="#"
               className="text-success"
-              onClick={() => handleUserClick(cellProps.row.original)}
+              onClick={() => handleViewUser(cellProps.row.original)}
             >
-              <i className="mdi mdi-pencil font-size-18" />
+              <i className="mdi mdi-eye font-size-18" />
             </Link>
+
             <Link
               to="#"
               className="text-danger"
@@ -203,6 +198,12 @@ const ManageUsers = () => {
         onDeleteClick={handleDeleteUser}
         onCloseClick={() => setDeleteModal(false)}
       />
+      <ContactInfoModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        user={selectedUser}
+      />
+
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title="Contacts" breadcrumbItem="User List" />
@@ -235,78 +236,7 @@ const ManageUsers = () => {
           </Row>
         </Container>
       </div>
-      <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Add User</ModalHeader>
-        <ModalBody>
-          <Form onSubmit={validation.handleSubmit}>
-            <Row>
-              <Col md="6">
-                <div className="mb-3">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    placeholder="Enter First Name"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.firstName}
-                    invalid={
-                      validation.touched.firstName &&
-                      !!validation.errors.firstName
-                    }
-                  />
-                  <FormFeedback>{validation.errors.firstName}</FormFeedback>
-                </div>
-              </Col>
-              <Col md="6">
-                <div className="mb-3">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    placeholder="Enter Last Name"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.lastName}
-                    invalid={
-                      validation.touched.lastName &&
-                      !!validation.errors.lastName
-                    }
-                  />
-                  <FormFeedback>{validation.errors.lastName}</FormFeedback>
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col md="12">
-                <div className="mb-3">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Enter Email"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.email}
-                    invalid={
-                      validation.touched.email && !!validation.errors.email
-                    }
-                  />
-                  <FormFeedback>{validation.errors.email}</FormFeedback>
-                </div>
-              </Col>
-            </Row>
-            <div className="text-end">
-              <button type="submit" className="btn btn-primary">
-                {isEdit ? "Update" : "Add"}
-              </button>
-            </div>
-          </Form>
-        </ModalBody>
-      </Modal>
+
       <ToastContainer />
     </React.Fragment>
   )

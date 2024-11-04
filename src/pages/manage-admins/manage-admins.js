@@ -198,13 +198,6 @@ const ManageAdmins = () => {
           <div className="d-flex gap-3">
             <Link
               to="#"
-              className="text-success"
-              onClick={() => handleAdminClick(cellProps.row.original)}
-            >
-              <i className="mdi mdi-pencil font-size-18" />
-            </Link>
-            <Link
-              to="#"
               className="text-danger"
               onClick={() => onClickDelete(cellProps.row.original)}
             >
