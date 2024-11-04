@@ -159,13 +159,13 @@ const CreateSubscription = () => {
 
                     <div className="mb-3">
                       <Label htmlFor="subscriptionDuration-input">
-                        Subscription Duration (in Days)
+                        Subscription Duration (in Months)
                       </Label>
                       <Input
                         id="subscriptionDuration"
                         name="subscriptionDuration"
                         type="number"
-                        placeholder="Enter Duration in days..."
+                        placeholder="Enter Duration in Months..."
                         onChange={validation.handleChange}
                         onBlur={validation.handleBlur}
                         value={validation.values.subscriptionDuration || ""}

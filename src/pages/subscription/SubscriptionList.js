@@ -100,7 +100,7 @@ const SubscriptionList = () => {
                           <td>{subscription.title}</td>
                           <td>{subscription.description}</td>
                           <td>{subscription.price} TND</td>
-                          <td>{subscription.duration} Days</td>
+                          <td>{subscription.duration} Months</td>
                           <td>
                             <Button
                               color="info"
