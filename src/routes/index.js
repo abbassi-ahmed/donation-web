@@ -39,6 +39,8 @@ import ManageSlider from "pages/slider-section/slider-section"
 import WhatSection from "pages/what-section/what-section"
 import AboutSection from "pages/manage-about/about"
 import ManageBrands from "pages/manage-brands/manage-brands"
+import CreateSubscription from "pages/subscription/subscriptionCreate"
+import SubscriptionList from "pages/subscription/SubscriptionList"
 
 const authProtectedRoutes = [
   // //profile
@@ -64,6 +66,9 @@ const authProtectedRoutes = [
   //Utility
   { path: "/faq", component: <PagesFaqs /> },
   { path: "/faq-create", component: <CreateFaq /> },
+  //Subscription
+  { path: "/subscription-create", component: <CreateSubscription /> },
+  { path: "/subscriptions", component: <SubscriptionList /> },
 
   { path: "/calendar", component: <Calendar /> },
 

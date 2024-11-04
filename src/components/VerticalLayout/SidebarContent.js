@@ -159,7 +159,20 @@ const SidebarContent = props => {
                 <span>{props.t("File Manager")}</span>
               </Link>
             </li>
-
+            <li>
+              <Link to="/#" className="has-arrow ">
+                <i className="bx bx-store"></i>
+                <span>{props.t("Subscription")}</span>
+              </Link>
+              <ul className="sub-menu">
+                <li>
+                  <Link to="/subscriptions">{props.t("Subscriptions")}</Link>
+                </li>
+                <li>
+                  <Link to="/subscription-create">{props.t("Create New")}</Link>
+                </li>
+              </ul>
+            </li>
             <li>
               <Link to="/#" className="has-arrow ">
                 <i className="bx bx-book-open"></i>
