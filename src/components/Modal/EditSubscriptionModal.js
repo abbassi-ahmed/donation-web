@@ -111,7 +111,7 @@ const EditSubscriptionModal = ({
           </FormGroup>
 
           <FormGroup>
-            <Label for="duration">Duration (Days)</Label>
+            <Label for="duration">Duration (Months)</Label>
             <Input
               type="number"
               id="duration"
