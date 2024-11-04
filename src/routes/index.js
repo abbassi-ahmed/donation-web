@@ -41,6 +41,7 @@ import AboutSection from "pages/manage-about/about"
 import ManageBrands from "pages/manage-brands/manage-brands"
 import CreateSubscription from "pages/subscription/subscriptionCreate"
 import SubscriptionList from "pages/subscription/SubscriptionList"
+import SubscriptionPayments from "pages/payments/subscription"
 
 const authProtectedRoutes = [
   // //profile
@@ -53,6 +54,7 @@ const authProtectedRoutes = [
   { path: "/projects-overview/:id", component: <ProjectsOverview /> },
   { path: "/feedback", component: <Feedback /> },
   { path: "/project-donation", component: <DonationProject /> },
+  { path: "/subscription-donation", component: <DonationProject /> },
   { path: "/donation", component: <Donation /> },
   { path: "/apps-filemanager", component: <Index /> },
   { path: "/folder-details/:id", component: <FolderDetail /> },
@@ -69,6 +71,7 @@ const authProtectedRoutes = [
   //Subscription
   { path: "/subscription-create", component: <CreateSubscription /> },
   { path: "/subscriptions", component: <SubscriptionList /> },
+  { path: "/subscriptions-payments", component: <SubscriptionPayments /> },
 
   { path: "/calendar", component: <Calendar /> },
 

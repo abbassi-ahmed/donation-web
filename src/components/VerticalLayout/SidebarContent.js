@@ -231,6 +231,11 @@ const SidebarContent = props => {
                 <li>
                   <Link to="/donation">{props.t("Donation")}</Link>
                 </li>
+                <li>
+                  <Link to="/subscriptions-payments">
+                    {props.t("Subscription")}
+                  </Link>
+                </li>
               </ul>
             </li>
             <li>
