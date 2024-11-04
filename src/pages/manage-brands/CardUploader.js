@@ -1,17 +1,35 @@
 import React from "react"
-import { Input, Label, UncontrolledTooltip } from "reactstrap"
-import SuspenseImage from "../../components/SuspenseImage/ImageComponent"
+import { Input, Label } from "reactstrap"
+import imageCompression from "browser-image-compression"
 
 const CardUploader = ({ index, brands, setBrands, validation }) => {
-  const handleFileChange = e => {
+  const handleFileChange = async e => {
     if (e.target.files.length) {
       const file = e.target.files[0]
-      const updatedBrands = [...brands]
-      updatedBrands[index] = { ...updatedBrands[index], image: file }
-      setBrands(updatedBrands)
-      validation.setFieldValue(`cardImage${index + 1}`, file)
+
+      const options = {
+        maxSizeMB: 0.2,
+        maxWidthOrHeight: 800,
+        useWebWorker: true,
+      }
+
+      try {
+        const compressedFile = await imageCompression(file, options)
+
+        const updatedBrands = [...brands]
+        updatedBrands[index] = {
+          ...updatedBrands[index],
+          image: compressedFile,
+        }
+        setBrands(updatedBrands)
+
+        validation.setFieldValue(`cardImage${index + 1}`, compressedFile)
+      } catch (error) {
+        console.error("Error compressing image:", error)
+      }
     }
   }
+
   const handleTileChange = e => {
     const updatedBrands = [...brands]
     updatedBrands[index] = { ...updatedBrands[index], title: e.target.value }
