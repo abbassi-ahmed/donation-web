@@ -13,6 +13,7 @@ const BlogDetails = () => {
   const [error, setError] = useState(null)
   const [deleteModal, setDeleteModal] = useState(false)
   const [editModal, setEditModal] = useState(false)
+  const [comments, setComments] = useState([])
   const [editBlog, setEditBlog] = useState({
     title: "",
     content: "",
@@ -26,6 +27,10 @@ const BlogDetails = () => {
       )
       const data = await response.json()
       setBlog(data)
+      const commentsResponse = await axios.get(
+        `http://localhost:3636/comments/find-by-blog/${data.id}`
+      )
+      setComments(commentsResponse.data)
     } catch (error) {
       setError("Error fetching blog details")
     } finally {
@@ -157,6 +162,56 @@ const BlogDetails = () => {
                           <div className="mt-4">
                             <div className="text-muted font-size-14">
                               <p>{blog.content}</p>
+                            </div>
+                          </div>
+                          <div className="mt-5">
+                            <h5 className="font-size-15">
+                              <i className="bx bx-message-dots text-muted align-middle me-1"></i>{" "}
+                              Comments:
+                            </h5>
+                            <div className="mt-4">
+                              {comments.length > 0 ? (
+                                comments.map(comment => (
+                                  <div key={comment.id} className="mb-3 w-100">
+                                    {" "}
+                                    {/* Ensure this div takes the full width */}
+                                    <div className="d-flex align-items-center justify-content-between">
+                                      {" "}
+                                      {/* Flex container */}
+                                      <div className="d-flex align-items-center">
+                                        {" "}
+                                        {/* Nested flex container for avatar and name */}
+                                        <img
+                                          src={comment.user.avatar}
+                                          alt=""
+                                          className="img-fluid rounded-circle me-2" // Margin for spacing
+                                          style={{
+                                            width: "40px",
+                                            objectFit: "cover",
+                                            height: "40px",
+                                          }}
+                                        />
+                                        <h5 className="font-size-15 mb-1">
+                                          {comment.user.firstName +
+                                            " " +
+                                            comment.user.lastName}
+                                        </h5>
+                                      </div>
+                                      <small className="text-muted">
+                                        {new Date(
+                                          comment.createdAt
+                                        ).toLocaleString()}{" "}
+                                      </small>
+                                    </div>
+                                    <p className="text-muted mt-3">
+                                      {comment.content}
+                                    </p>{" "}
+                                    <hr />{" "}
+                                  </div>
+                                ))
+                              ) : (
+                                <p className="text-muted">No comments yet.</p>
+                              )}
                             </div>
                           </div>
 
