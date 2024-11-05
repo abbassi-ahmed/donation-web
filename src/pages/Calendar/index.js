@@ -29,6 +29,7 @@ import moment from "moment"
 import FlatPickr from "react-flatpickr"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 import verification from "../../assets/images/verification-img.png"
+import imageCompression from "browser-image-compression"
 
 import DeleteModal from "./DeleteModal"
 import axios from "axios"
@@ -45,17 +46,30 @@ const Calender = props => {
   const [selectedImage, setSelectedImage] = useState(null)
   const [img, setImg] = useState(null)
 
-  const handleImageChange = e => {
+  const handleImageChange = async e => {
     e.preventDefault()
     if (e.target.files.length) {
       const file = e.target.files[0]
-      setImg(file)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setSelectedImage(reader.result)
-        eventValidation.setFieldValue("image", reader.result)
+
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 800,
+        useWebWorker: true,
       }
-      reader.readAsDataURL(file)
+
+      try {
+        const compressedFile = await imageCompression(file, options)
+        setImg(compressedFile)
+
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          setSelectedImage(reader.result)
+          eventValidation.setFieldValue("image", reader.result)
+        }
+        reader.readAsDataURL(compressedFile)
+      } catch (error) {
+        console.error("Error compressing image:", error)
+      }
     }
   }
 
@@ -112,7 +126,8 @@ const Calender = props => {
       const body = structuredClone(updateEventObj)
       delete body.id
       const formData = new FormData()
-      formData.append("image", img)
+
+      formData.append("image", img || updateEventObj.image)
       formData.append("title", updateEventObj.title)
       formData.append("category", updateEventObj.category)
       formData.append("description", updateEventObj.description)
@@ -381,11 +396,11 @@ const Calender = props => {
                       <div className="avatar-lg me-4">
                         <div className="rounded-circle overflow-hidden d-inline-block">
                           <img
-                            src={selectedImage || event.image}
+                            src={selectedImage || img || event.image || ""}
                             id="projectlogo-img"
                             alt=""
                             height="100"
-                            width={"115px"}
+                            width="115px"
                             style={{ borderRadius: "50%" }}
                           />
                         </div>
