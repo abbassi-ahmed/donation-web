@@ -2,63 +2,60 @@ import React, { useEffect, useState } from "react"
 import { Container, Row } from "reactstrap"
 import axios from "axios"
 
-// Import Breadcrumb
 import Breadcrumbs from "components/Common/Breadcrumb"
 
-// Import Cards
-import CardProject from "./card-project"
+import CardDerigant from "./card-derigant"
 import Spinners from "components/Common/Spinner"
 import Paginations from "components/Common/Pagination"
 
-const Projects = () => {
-  // Meta title
-  document.title = "Projects Grid"
+const Derigants = () => {
+  document.title = "Derigants Grid"
 
-  const [projects, setProjects] = useState([])
+  const [derigants, setDerigants] = useState([])
   const [isLoading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const perPageData = 6
-  const fetchProjects = async () => {
+  const fetchDerigants = async () => {
     try {
       const response = await axios.get(
-        process.env.REACT_APP_DATABASEURL + "/projects/find-all"
+        process.env.REACT_APP_DATABASEURL + "/derigant/find-all"
       )
-      setProjects(response.data)
+      setDerigants(response.data)
       setLoading(false)
     } catch (error) {
-      console.error("Error fetching projects:", error)
+      console.error("Error fetching derigants:", error)
       setLoading(false)
     }
   }
   useEffect(() => {
-    fetchProjects()
+    fetchDerigants()
   }, [])
 
   const indexOfLast = currentPage * perPageData
   const indexOfFirst = indexOfLast - perPageData
-  const currentdata = projects.slice(indexOfFirst, indexOfLast)
+  const currentdata = derigants.slice(indexOfFirst, indexOfLast)
 
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumbs title="Projects" breadcrumbItem="Projects" />
+          <Breadcrumbs title="Derigants" breadcrumbItem="Derigants" />
 
           <Row>
             {isLoading ? (
               <Spinners setLoading={setLoading} />
             ) : (
               <>
-                {projects.length > 0 ? (
+                {derigants.length > 0 ? (
                   <>
-                    <CardProject
-                      projects={currentdata}
-                      fetchProjects={fetchProjects}
+                    <CardDerigant
+                      derigants={currentdata}
+                      fetchDerigants={fetchDerigants}
                     />
                     <Row>
                       <Paginations
                         perPageData={perPageData}
-                        data={projects}
+                        data={derigants}
                         currentPage={currentPage}
                         setCurrentPage={setCurrentPage}
                         isShowingPageLength={false}
@@ -68,7 +65,7 @@ const Projects = () => {
                     </Row>
                   </>
                 ) : (
-                  <p>No projects available.</p>
+                  <p>No derigants available.</p>
                 )}
               </>
             )}
@@ -79,4 +76,4 @@ const Projects = () => {
   )
 }
 
-export default Projects
+export default Derigants

@@ -42,6 +42,8 @@ import ManageBrands from "pages/manage-brands/manage-brands"
 import CreateSubscription from "pages/subscription/subscriptionCreate"
 import SubscriptionList from "pages/subscription/SubscriptionList"
 import SubscriptionPayments from "pages/payments/subscription"
+import DerigantsCreate from "pages/derigant/derigant-create"
+import Derigants from "pages/derigant/derigants"
 
 const authProtectedRoutes = [
   // //profile
@@ -72,6 +74,9 @@ const authProtectedRoutes = [
   { path: "/subscription-create", component: <CreateSubscription /> },
   { path: "/subscriptions", component: <SubscriptionList /> },
   { path: "/subscriptions-payments", component: <SubscriptionPayments /> },
+  // derigant
+  { path: "/derigants", component: <Derigants /> },
+  { path: "/derigants-create", component: <DerigantsCreate /> },
 
   { path: "/calendar", component: <Calendar /> },
 

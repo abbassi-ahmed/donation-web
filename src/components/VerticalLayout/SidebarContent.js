@@ -187,6 +187,20 @@ const SidebarContent = props => {
                 </li>
               </ul>
             </li>
+            <li>
+              <Link to="/#" className="has-arrow ">
+                <i className="bx  bx-user"></i>
+                <span>{props.t("Derigants")}</span>
+              </Link>
+              <ul className="sub-menu">
+                <li>
+                  <Link to="/derigants">{props.t("Derigants")}</Link>
+                </li>
+                <li>
+                  <Link to="/derigants-create">{props.t("Create New")}</Link>
+                </li>
+              </ul>
+            </li>
             {/* 
             <li>
               <Link to="/#" className="has-arrow ">
