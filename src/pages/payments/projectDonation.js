@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify"
 import axios from "axios"
 
 const DonationProject = () => {
-  document.title = "Donation Donation"
+  document.title = "Donation"
 
   const [projects, setProjects] = useState([])
   const [isLoading, setLoading] = useState(true)

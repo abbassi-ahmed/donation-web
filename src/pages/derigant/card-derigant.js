@@ -50,7 +50,7 @@ const CardDerigant = ({ derigants, fetchDerigants }) => {
 
       {(derigants || []).map(derigant => (
         <div key={derigant.id} className="col-xl-3 col-sm-6 mb-4">
-          <div className="card h-100 shadow-sm" style={{ maxWidth: "270px" }}>
+          <div className="card h-100 shadow-sm" style={{ maxWidth: "280px" }}>
             <div className="card-body text-center">
               <img
                 src={derigant.avatar}
