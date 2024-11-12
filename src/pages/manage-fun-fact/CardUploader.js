@@ -1,17 +1,29 @@
 import React from "react"
 import { Input, Label, UncontrolledTooltip } from "reactstrap"
+import imageCompression from "browser-image-compression"
 import SuspenseImage from "../../components/SuspenseImage/ImageComponent"
 
 const CardUploader = ({ index, cards, setCards, validation }) => {
-  const handleCardChange = (e, cardIndex) => {
+  const handleCardChange = async (e, cardIndex) => {
     e.preventDefault()
     if (e.target.files.length) {
       const file = e.target.files[0]
-      const newCards = [...cards]
+      const options = {
+        maxSizeMB: 0.2,
+        maxWidthOrHeight: 800,
+        useWebWorker: true,
+      }
 
-      newCards[cardIndex] = { ...newCards[cardIndex], icon: file }
-      setCards(newCards)
-      validation.setFieldValue(`cardImage${cardIndex + 1}`, file)
+      try {
+        const compressedFile = await imageCompression(file, options)
+
+        const newCards = [...cards]
+        newCards[cardIndex] = { ...newCards[cardIndex], icon: compressedFile }
+        setCards(newCards)
+        validation.setFieldValue(`cardImage${cardIndex + 1}`, compressedFile)
+      } catch (error) {
+        console.error("Image compression failed:", error)
+      }
     }
   }
 

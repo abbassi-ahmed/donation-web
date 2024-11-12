@@ -281,9 +281,9 @@ const SidebarContent = props => {
                     {props.t("Categorie Section")}
                   </Link>
                 </li>
-                {/* <li>
+                <li>
                   <Link to="/manage-fun">{props.t("Fun Fact Section")}</Link>
-                </li> */}
+                </li>
                 {/* <li>
                   <Link to="/manage-why-choose">
                     {props.t("Why Choose Section")}

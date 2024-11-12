@@ -10,6 +10,7 @@ import {
 } from "reactstrap"
 import SuspenseImage from "../../components/SuspenseImage/ImageComponent"
 import axios from "axios"
+import imageCompression from "browser-image-compression"
 import { toast } from "react-toastify"
 
 const CardUploader = ({
@@ -19,14 +20,27 @@ const CardUploader = ({
   validation,
   fetchDefaultOnes,
 }) => {
-  const handleCardChange = (e, cardIndex) => {
-    const file = e.target.files[0]
-    if (file) {
-      const updatedCards = cards.map((card, idx) =>
-        idx === cardIndex ? { ...card, bg: file } : card
-      )
-      setCards(updatedCards)
-      validation.setFieldValue(`cardImage${cardIndex + 1}`, file)
+  const handleCardChange = async (e, cardIndex) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0]
+      const options = {
+        maxSizeMB: 0.2,
+        maxWidthOrHeight: 800,
+        useWebWorker: true,
+      }
+
+      try {
+        const compressedFile = await imageCompression(file, options)
+
+        const updatedCards = cards.map((card, idx) =>
+          idx === cardIndex ? { ...card, bg: compressedFile } : card
+        )
+
+        setCards(updatedCards)
+        validation.setFieldValue(`cardImage${cardIndex + 1}`, compressedFile)
+      } catch (error) {
+        console.error("Image compression failed:", error)
+      }
     }
   }
 

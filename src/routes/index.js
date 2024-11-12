@@ -89,7 +89,7 @@ const authProtectedRoutes = [
   // Manage Section
   { path: "/manage-slider", component: <ManageSlider /> },
   { path: "/manage-categories", component: <ManageCategorie /> },
-  // { path: "/manage-fun", component: <FunFact /> },
+  { path: "/manage-fun", component: <FunFact /> },
   // { path: "/manage-why-choose", component: <ManageWhyChoose /> },
   // { path: "/what-say", component: <WhatSection /> },
   { path: "/about-section", component: <AboutSection /> },

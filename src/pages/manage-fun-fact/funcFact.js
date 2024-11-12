@@ -58,14 +58,14 @@ const ManageFacts = () => {
                   },
                   { headers: { "Content-Type": "multipart/form-data" } }
                 )
-                .then(response => {
-                  toast.success("🎉 Project Created Successfully")
-                })
+                .then(response => {})
             )
           )
         } catch (error) {
           console.error("error", error)
         } finally {
+          toast.success("🎉 Project Created Successfully")
+
           setLoader(false)
         }
       }
