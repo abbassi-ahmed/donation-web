@@ -17,10 +17,21 @@ const SubscriptionProject = () => {
     const fetchSubscriptions = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_DATABASEURL}/subscription/get-subscriptions`
+          `${process.env.REACT_APP_DATABASEURL}/users/history-payments`
         )
 
-        setSubscriptions(response.data)
+        const flattenedData = response.data.flatMap(user =>
+          user.paymentHistory.map(history => ({
+            email: user.email,
+            subscriptionTitle: history.subscriptionTitle,
+            subscriptionPrice: history.subscriptionPrice,
+            paymentDate: history.dateStart,
+            duration: history.duration,
+            endDate: history.dateEnd,
+          }))
+        )
+
+        setSubscriptions(flattenedData)
         setLoading(false)
       } catch (error) {
         console.error("Error fetching subscriptions:", error)
@@ -34,69 +45,49 @@ const SubscriptionProject = () => {
   const columns = useMemo(
     () => [
       {
-        header: "Title",
-        accessorKey: "title",
-        cell: cellProps => (
-          <Link to="#" className="text-dark">
-            {cellProps.getValue()}
-          </Link>
-        ),
-      },
-      {
-        header: "Price (TND)",
-        accessorKey: "price",
+        header: "Email",
+        accessorKey: "email",
         cell: cellProps => (
           <span className="text-dark">{cellProps.getValue()}</span>
         ),
       },
       {
-        header: "User First Name",
-        accessorKey: "users.firstName",
-        cell: cellProps => {
-          const users = cellProps.row.original.users || []
-          return (
-            <Link to="#" className="text-dark">
-              {users.length > 0 ? users[0].firstName : "N/A"}
-            </Link>
-          )
-        },
+        header: "Subscription Title",
+        accessorKey: "subscriptionTitle",
+        cell: cellProps => (
+          <span className="text-dark">{cellProps.getValue()}</span>
+        ),
       },
       {
-        header: "User Last Name",
-        accessorKey: "users.lastName",
-        cell: cellProps => {
-          const users = cellProps.row.original.users || []
-          return (
-            <Link to="#" className="text-dark">
-              {users.length > 0 ? users[0].lastName : "N/A"}
-            </Link>
-          )
-        },
+        header: "Subscription Price (TND)",
+        accessorKey: "subscriptionPrice",
+        cell: cellProps => (
+          <span className="text-dark">{cellProps.getValue()}</span>
+        ),
       },
       {
-        header: "Start Date",
-        accessorKey: "users.dateStart",
-        cell: cellProps => {
-          const users = cellProps.row.original.users || []
-          return (
-            <span className="text-dark">
-              {users.length > 0
-                ? new Date(users[0].dateStart).toLocaleDateString()
-                : "N/A"}
-            </span>
-          )
-        },
+        header: "Payment Date",
+        accessorKey: "paymentDate",
+        cell: cellProps => (
+          <span className="text-dark">
+            {new Date(cellProps.getValue()).toLocaleDateString()}
+          </span>
+        ),
       },
+
       {
         header: "End Date",
-        accessorKey: "users.dateEnd",
+        accessorKey: "paymentDate",
         cell: cellProps => {
-          const users = cellProps.row.original.users || []
+          const paymentDate = new Date(cellProps.getValue())
+          const duration = cellProps.row.original.duration
+
+          const adjustedDate = new Date(paymentDate)
+          adjustedDate.setDate(adjustedDate.getDate() + duration)
+
           return (
             <span className="text-dark">
-              {users.length > 0
-                ? new Date(users[0].dateEnd).toLocaleDateString()
-                : "N/A"}
+              {adjustedDate.toLocaleDateString()}
             </span>
           )
         },
