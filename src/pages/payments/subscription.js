@@ -77,20 +77,12 @@ const SubscriptionProject = () => {
 
       {
         header: "End Date",
-        accessorKey: "paymentDate",
-        cell: cellProps => {
-          const paymentDate = new Date(cellProps.getValue())
-          const duration = cellProps.row.original.duration
-
-          const adjustedDate = new Date(paymentDate)
-          adjustedDate.setDate(adjustedDate.getDate() + duration)
-
-          return (
-            <span className="text-dark">
-              {adjustedDate.toLocaleDateString()}
-            </span>
-          )
-        },
+        accessorKey: "endDate",
+        cell: cellProps => (
+          <span className="text-dark">
+            {new Date(cellProps.getValue()).toLocaleDateString()}
+          </span>
+        ),
       },
     ],
     []
