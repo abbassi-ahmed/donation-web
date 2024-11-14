@@ -23,22 +23,39 @@ const ContactInfoModal = ({ show, onHide, user }) => {
               </div>
             </div>
             <div>
-              {user.subscription ? (
-                <div className="mt-3">
+              {user.userSubscriptions && user.userSubscriptions.length > 0 ? (
+                <div
+                  className="mt-3"
+                  style={{ maxHeight: "200px", overflowY: "auto" }}
+                >
                   <h5>Subscription Details</h5>
-                  <p>
-                    <strong>Title:</strong> {user.subscription.title}
-                  </p>
-                  <p>
-                    <strong>Description:</strong>{" "}
-                    {user.subscription.description}
-                  </p>
-                  <p>
-                    <strong>Price:</strong> ${user.subscription.price}
-                  </p>
-                  <p>
-                    <strong>Duration:</strong> {user.subscription.duration} days
-                  </p>
+                  {user.userSubscriptions.map((subscriptionItem, index) => (
+                    <div key={index} className="mb-3">
+                      <p>
+                        <strong>Title:</strong>{" "}
+                        {subscriptionItem.subscription.title}
+                      </p>
+                      <p>
+                        <strong>Description:</strong>{" "}
+                        {subscriptionItem.subscription.description}
+                      </p>
+                      <p>
+                        <strong>Price:</strong> ${" "}
+                        {subscriptionItem.subscription.price}
+                      </p>
+                      <p>
+                        <strong>Duration:</strong>{" "}
+                        {subscriptionItem.subscription.duration} days
+                      </p>
+                      <p>
+                        <strong>Ends:</strong>{" "}
+                        {new Date(
+                          subscriptionItem.dateEnd
+                        ).toLocaleDateString()}
+                      </p>
+                      <hr />
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <p className="text-muted">No active subscription</p>

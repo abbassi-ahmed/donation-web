@@ -53,6 +53,7 @@ const ManageUsers = () => {
   const handleViewUser = user => {
     setSelectedUser(user)
     setShowModal(true)
+    console.log(user)
   }
   const handleUserClicks = () => {
     setContact(null)
