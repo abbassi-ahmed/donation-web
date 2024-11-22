@@ -253,6 +253,12 @@ const SidebarContent = props => {
               </ul>
             </li>
             <li>
+              <Link to="/contact">
+                <i className="bx bx-envelope"></i>
+                <span>{props.t("Contact")}</span>
+              </Link>
+            </li>
+            <li>
               <Link to="/#" className="has-arrow">
                 <i className="bx bxs-detail" />
 
