@@ -28,7 +28,7 @@ const BlogDetails = () => {
       const data = await response.json()
       setBlog(data)
       const commentsResponse = await axios.get(
-        `http://localhost:3636/comments/find-by-blog/${data.id}`
+        `https://api.olympiquemnihla.com/comments/find-by-blog/${data.id}`
       )
       setComments(commentsResponse.data)
     } catch (error) {
