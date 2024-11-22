@@ -5,7 +5,7 @@
 */
 
 /*!
- * ApexCharts v3.54.1
+ * ApexCharts v3.49.1
  * (c) 2018-2024 ApexCharts
  * Released under the MIT License.
  */
@@ -297,23 +297,6 @@
 
 /**
  * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
- * @license
  * Lodash <https://lodash.com/>
  * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
  * Released under MIT license <https://lodash.com/license>
@@ -389,7 +372,7 @@
  */
 
 /**
- * @remix-run/router v1.20.0
+ * @remix-run/router v1.16.1
  *
  * Copyright (c) Remix Software Inc.
  *
@@ -400,7 +383,7 @@
  */
 
 /**
- * React Router DOM v6.27.0
+ * React Router DOM v6.23.1
  *
  * Copyright (c) Remix Software Inc.
  *
@@ -411,7 +394,7 @@
  */
 
 /**
- * React Router v6.27.0
+ * React Router v6.23.1
  *
  * Copyright (c) Remix Software Inc.
  *
