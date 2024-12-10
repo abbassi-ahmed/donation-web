@@ -5,8 +5,7 @@ const MultipleDropZone = ({ onDrop, fileNames }) => {
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
     useDropzone({
       onDrop,
-      accept:
-        "image/*, application/pdf, .doc, .docx, .txt, .xls, .xlsx, .ppt, .pptx, .zip, .rar",
+      accept: "image/*",
       multiple: true,
     })
 
@@ -27,7 +26,7 @@ const MultipleDropZone = ({ onDrop, fileNames }) => {
         overflowY: "auto",
       }}
     >
-      <input {...getInputProps()} />
+      <input {...getInputProps()} accept="image/*" multiple />
       {isDragActive ? (
         <p>Drop the files here...</p>
       ) : fileNames.length > 0 ? (

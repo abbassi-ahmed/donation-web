@@ -1,15 +1,17 @@
 import React, { useEffect, useState, useMemo } from "react"
 import { Link } from "react-router-dom"
-import TableContainer from "components/Common/TableContainer"
-import { Card, CardBody, Col, Container, Row } from "reactstrap"
-import * as Yup from "yup"
-import { useFormik } from "formik"
+import {
+  Card,
+  CardBody,
+  Col,
+  Container,
+  Row,
+  Pagination,
+} from "react-bootstrap"
 import Breadcrumbs from "components/Common/Breadcrumb"
-import DeleteModal from "components/Common/DeleteModal"
 import Spinners from "components/Common/Spinner"
-import { ToastContainer, toast } from "react-toastify"
+import { ToastContainer } from "react-toastify"
 import axios from "axios"
-import ContactInfoModal from "components/Modal/ContactInfoModal"
 import MessageModal from "components/Modal/messageModal"
 
 const Contact = () => {
@@ -17,44 +19,39 @@ const Contact = () => {
 
   const [contacts, setContacts] = useState([])
   const [isLoading, setLoading] = useState(true)
-  const [contact, setContact] = useState(null)
-  const [modal, setModal] = useState(false)
-  const [isEdit, setIsEdit] = useState(false)
-  const [deleteModal, setDeleteModal] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [selectedContact, setSelectedContact] = useState(null)
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const [totalRecords, setTotalRecords] = useState(0)
+
   useEffect(() => {
-    const fetchContacts = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_DATABASEURL}/contact/find-all`
-        )
-        setContacts(response.data)
-        setLoading(false)
-      } catch (error) {
-        console.error("Error fetching contacts:", error)
-        setLoading(false)
-      }
+    fetchContacts(currentPage, pageSize)
+  }, [currentPage, pageSize])
+
+  const fetchContacts = async (page, size) => {
+    setLoading(true)
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_DATABASEURL}/contact/find-all?page=${page}&pageSize=${size}`
+      )
+      setContacts(response.data.data)
+      setTotalRecords(response.data.total)
+      setLoading(false)
+    } catch (error) {
+      console.error("Error fetching contacts:", error)
+      setLoading(false)
     }
-
-    fetchContacts()
-  }, [])
-
-  const toggle = () => {
-    setModal(!modal)
-  }
-
-  const handleContactClick = contact => {
-    setContact(contact)
-    setIsEdit(true)
-    toggle()
   }
 
   const handleViewContact = contact => {
     setSelectedContact(contact)
     setShowModal(true)
-    console.log(contact)
+  }
+
+  const handlePageChange = pageNumber => {
+    setCurrentPage(pageNumber)
   }
 
   const columns = useMemo(
@@ -84,7 +81,6 @@ const Contact = () => {
           </div>
         ),
       },
-
       {
         header: "Action",
         cell: cellProps => (
@@ -102,6 +98,35 @@ const Contact = () => {
     ],
     []
   )
+
+  const renderPagination = () => {
+    const totalPages = Math.ceil(totalRecords / pageSize)
+    let items = []
+    for (let number = 1; number <= totalPages; number++) {
+      items.push(
+        <Pagination.Item
+          key={number}
+          active={number === currentPage}
+          onClick={() => handlePageChange(number)}
+        >
+          {number}
+        </Pagination.Item>
+      )
+    }
+    return (
+      <Pagination>
+        <Pagination.Prev
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        />
+        {items}
+        <Pagination.Next
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        />
+      </Pagination>
+    )
+  }
 
   return (
     <React.Fragment>
@@ -123,19 +148,35 @@ const Contact = () => {
                   <CardBody>
                     <div className="d-flex justify-content-between">
                       <h4 className="card-title">Contact List</h4>
-                      {/* <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={handleContactClicks}
-                      >
-                        Add Contact
-                      </button> */}
                     </div>
-                    <TableContainer
-                      columns={columns}
-                      data={contacts}
-                      onEditClick={handleContactClick}
-                    />
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          {columns.map(column => (
+                            <th key={column.accessorKey}>{column.header}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {contacts.map((contact, index) => (
+                          <tr key={index}>
+                            {columns.map(column => (
+                              <td key={column.accessorKey}>
+                                {column.cell
+                                  ? column.cell({ row: { original: contact } })
+                                  : contact[column.accessorKey]}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <div className="d-flex justify-content-between align-items-center mt-4">
+                      <div>
+                        Showing {contacts.length} of {totalRecords} Results
+                      </div>
+                      {renderPagination()}
+                    </div>
                   </CardBody>
                 </Card>
               </Col>
