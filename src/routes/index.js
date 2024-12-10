@@ -45,6 +45,7 @@ import SubscriptionPayments from "pages/payments/subscription"
 import DerigantsCreate from "pages/derigant/derigant-create"
 import Derigants from "pages/derigant/derigants"
 import Contact from "pages/contact"
+import Gallery from "pages/gallery/gallery"
 
 const authProtectedRoutes = [
   // //profile
@@ -81,6 +82,9 @@ const authProtectedRoutes = [
 
   { path: "/calendar", component: <Calendar /> },
   { path: "/contact", component: <Contact /> },
+
+  // gallery
+  { path: "/gallery", component: <Gallery /> },
 
   {
     path: "/",

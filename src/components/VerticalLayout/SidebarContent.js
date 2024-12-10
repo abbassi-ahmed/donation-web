@@ -259,6 +259,12 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
+              <Link to="/gallery">
+                <i className="bx bx-image"></i>
+                <span>{props.t("Gallery")}</span>
+              </Link>
+            </li>
+            <li>
               <Link to="/#" className="has-arrow">
                 <i className="bx bxs-detail" />
 
