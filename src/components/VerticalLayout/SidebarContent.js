@@ -258,12 +258,7 @@ const SidebarContent = props => {
                 <span>{props.t("Contact")}</span>
               </Link>
             </li>
-            <li>
-              <Link to="/gallery">
-                <i className="bx bx-image"></i>
-                <span>{props.t("Gallery")}</span>
-              </Link>
-            </li>
+
             <li>
               <Link to="/#" className="has-arrow">
                 <i className="bx bxs-detail" />
@@ -295,6 +290,9 @@ const SidebarContent = props => {
                 </li>
                 <li>
                   <Link to="/manage-fun">{props.t("Fun Fact Section")}</Link>
+                </li>
+                <li>
+                  <Link to="/gallery">{props.t("Gallery")}</Link>
                 </li>
                 {/* <li>
                   <Link to="/manage-why-choose">
