@@ -74,6 +74,8 @@ const DonationProject = () => {
             {cellProps.row.original.user.firstName}
           </Link>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Last Name",
@@ -83,6 +85,8 @@ const DonationProject = () => {
             {cellProps.row.original.user.lastName}
           </Link>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Email",
@@ -92,6 +96,8 @@ const DonationProject = () => {
             {cellProps.row.original.user.email}
           </Link>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
 
       {
@@ -131,6 +137,8 @@ const DonationProject = () => {
             {cellProps.row.original.project.name}
           </Link>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
 
       {
@@ -142,6 +150,8 @@ const DonationProject = () => {
             {cellProps.row.original.amount} TND
           </Link>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Target",
@@ -151,6 +161,8 @@ const DonationProject = () => {
             {cellProps.row.original.project.target} TND
           </Link>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
     ],
     []

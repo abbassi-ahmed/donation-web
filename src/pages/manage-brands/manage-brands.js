@@ -24,7 +24,7 @@ import CardUploader from "./CardUploader"
 
 const apiBaseURL = process.env.REACT_APP_DATABASEURL
 
-const postBrand = async ({ image, title, link }) => {
+const postPartner = async ({ image, title, link }) => {
   return axios.post(
     `${apiBaseURL}/worked-with/create`,
     {
@@ -39,26 +39,26 @@ const postBrand = async ({ image, title, link }) => {
   )
 }
 
-const fetchAllBrands = async () => {
+const fetchAllPartners = async () => {
   try {
     const response = await axios.get(`${apiBaseURL}/worked-with/find-all`)
     return response.data
   } catch (error) {
-    console.error("Error fetching brands", error)
+    console.error("Error fetching partners", error)
     return []
   }
 }
 
-const deleteBrandById = async id => {
+const deletePartnerById = async id => {
   try {
     await axios.delete(`${apiBaseURL}/worked-with/remove/${id}`)
-    toast.success("Brand removed successfully")
+    toast.success("Partner removed successfully")
   } catch (error) {
-    console.error("Error removing brand", error)
-    toast.error("Failed to remove brand")
+    console.error("Error removing partner", error)
+    toast.error("Failed to remove partner")
   }
 }
-const updateBrandById = async (id, { image, title, link }) => {
+const updatePartnerById = async (id, { image, title, link }) => {
   return axios.put(
     `${apiBaseURL}/worked-with/update/${id}`,
     {
@@ -72,11 +72,11 @@ const updateBrandById = async (id, { image, title, link }) => {
   )
 }
 
-const ManageBrands = () => {
-  document.title = "Manage Brands"
+const ManagePartners = () => {
+  document.title = "Manage Partners"
 
   const [loader, setLoader] = useState(false)
-  const [brands, setBrands] = useState(
+  const [partners, setPartners] = useState(
     Array(4).fill({ id: null, image: null, title: "", link: "" })
   )
 
@@ -84,35 +84,40 @@ const ManageBrands = () => {
     initialValues: {},
     validationSchema: Yup.object({}),
     onSubmit: async () => {
-      const newBrands = brands.filter(brand => !brand.id && brand.image)
-      const updatedBrands = brands.filter(
-        brand => brand.id && (brand.title || brand.link || brand.image)
+      const newPartners = partners.filter(
+        partner => !partner.id && partner.image
+      )
+      const updatedPartners = partners.filter(
+        partner =>
+          partner.id && (partner.title || partner.link || partner.image)
       )
 
-      if (!newBrands.length && !updatedBrands.length) {
-        toast.error("Please add or update at least one brand")
+      if (!newPartners.length && !updatedPartners.length) {
+        toast.error("Please add or update at least one partner")
         return
       }
 
       try {
         setLoader(true)
 
-        // Handle new brands
-        if (newBrands.length) {
-          await Promise.all(newBrands.map(brand => postBrand(brand)))
+        // Handle new partners
+        if (newPartners.length) {
+          await Promise.all(newPartners.map(partner => postPartner(partner)))
         }
 
-        // Handle updates to existing brands
-        if (updatedBrands.length) {
+        // Handle updates to existing partners
+        if (updatedPartners.length) {
           await Promise.all(
-            updatedBrands.map(brand => updateBrandById(brand.id, brand))
+            updatedPartners.map(partner =>
+              updatePartnerById(partner.id, partner)
+            )
           )
         }
 
-        toast.success("🎉 Brands Saved Successfully")
+        toast.success("🎉 Partners Saved Successfully")
       } catch (error) {
-        console.error("Error saving brands", error)
-        toast.error("Failed to save brands")
+        console.error("Error saving partners", error)
+        toast.error("Failed to save partners")
       } finally {
         setLoader(false)
       }
@@ -120,45 +125,45 @@ const ManageBrands = () => {
   })
 
   useEffect(() => {
-    const initializeBrands = async () => {
-      const data = await fetchAllBrands()
+    const initializePartners = async () => {
+      const data = await fetchAllPartners()
       if (data.length) {
-        setBrands(
-          data.map(brand => ({
-            id: brand.id,
-            image: brand.image,
-            title: brand.title,
-            link: brand.link,
+        setPartners(
+          data.map(partner => ({
+            id: partner.id,
+            image: partner.image,
+            title: partner.title,
+            link: partner.link,
           }))
         )
       }
     }
-    initializeBrands()
+    initializePartners()
   }, [])
 
-  const addBrand = () => {
-    setBrands(prev => [...prev, { image: null, title: "", link: "" }])
+  const addPartner = () => {
+    setPartners(prev => [...prev, { image: null, title: "", link: "" }])
   }
 
-  const removeBrand = async index => {
-    const brandToRemove = brands[index]
+  const removePartner = async index => {
+    const partnerToRemove = partners[index]
 
-    if (brands.length === 1) {
-      toast.error("You can't remove the last brand")
+    if (partners.length === 1) {
+      toast.error("You can't remove the last partner")
       return
     }
 
-    if (brandToRemove.id) {
-      await deleteBrandById(brandToRemove.id)
+    if (partnerToRemove.id) {
+      await deletePartnerById(partnerToRemove.id)
     }
 
-    setBrands(brands.filter((_, i) => i !== index))
+    setPartners(partners.filter((_, i) => i !== index))
   }
 
   return (
     <div className="page-content">
       <Container fluid>
-        <Breadcrumbs title="Section" breadcrumbItem="FunFact" />
+        <Breadcrumbs title="Section" breadcrumbItem="Partners" />
         <Form
           id="createproject-form"
           onSubmit={e => {
@@ -171,17 +176,17 @@ const ManageBrands = () => {
             <Col lg={12}>
               <Card>
                 <CardBody>
-                  <BrandList
-                    brands={brands}
-                    setBrands={setBrands}
-                    removeBrand={removeBrand}
+                  <PartnerList
+                    partners={partners}
+                    setPartners={setPartners}
+                    removePartner={removePartner}
                     validation={validation}
                   />
                   <Button
                     color="primary"
                     size="sm"
                     className="mt-3"
-                    onClick={addBrand}
+                    onClick={addPartner}
                   >
                     Add
                   </Button>
@@ -209,16 +214,16 @@ const ManageBrands = () => {
   )
 }
 
-const BrandList = ({ brands, setBrands, removeBrand, validation }) => (
+const PartnerList = ({ partners, setPartners, removePartner, validation }) => (
   <Container className="d-flex flex-row flex-wrap justify-content-center">
-    {brands.map((brand, index) => (
+    {partners.map((partner, index) => (
       <Row key={index} className="mb-4 align-items-center d-flex">
         <Row>
           <Col md={3}>
             <CardUploader
               index={index}
-              brands={brands}
-              setBrands={setBrands}
+              partners={partners}
+              setPartners={setPartners}
               validation={validation}
             />
           </Col>
@@ -229,7 +234,7 @@ const BrandList = ({ brands, setBrands, removeBrand, validation }) => (
               color="danger"
               size="sm"
               className="mt-2"
-              onClick={() => removeBrand(index)}
+              onClick={() => removePartner(index)}
             >
               Remove This
             </Button>
@@ -240,4 +245,4 @@ const BrandList = ({ brands, setBrands, removeBrand, validation }) => (
   </Container>
 )
 
-export default ManageBrands
+export default ManagePartners

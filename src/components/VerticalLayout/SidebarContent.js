@@ -1,142 +1,205 @@
-import React, { useEffect, useRef, useCallback } from "react"
-import { useLocation } from "react-router-dom"
+import React, { useEffect, useRef, useState } from "react"
+import { Link, useLocation } from "react-router-dom"
 import PropTypes from "prop-types"
-
-// //Import Scrollbar
 import SimpleBar from "simplebar-react"
-
-// MetisMenu
-import MetisMenu from "metismenujs"
+import { Collapse } from "react-bootstrap"
 import withRouter from "components/Common/withRouter"
-import { Link } from "react-router-dom"
-
-//i18n
 import { withTranslation } from "react-i18next"
+import classNames from "classnames"
 
 const SidebarContent = props => {
   const ref = useRef()
-  const activateParentDropdown = useCallback(item => {
-    item.classList.add("active")
-    const parent = item.parentElement
-    const parent2El = parent.childNodes[1]
+  const [permissions, setPermissions] = useState([])
+  const [openMenus, setOpenMenus] = useState({})
+  const location = useLocation()
 
-    if (parent2El && parent2El.id !== "side-menu") {
-      parent2El.classList.add("mm-show")
-    }
-
-    if (parent) {
-      parent.classList.add("mm-active")
-      const parent2 = parent.parentElement
-
-      if (parent2) {
-        parent2.classList.add("mm-show") // ul tag
-
-        const parent3 = parent2.parentElement // li tag
-
-        if (parent3) {
-          parent3.classList.add("mm-active") // li
-          parent3.childNodes[0].classList.add("mm-active") //a
-          const parent4 = parent3.parentElement // ul
-          if (parent4) {
-            parent4.classList.add("mm-show") // ul
-            const parent5 = parent4.parentElement
-            if (parent5) {
-              parent5.classList.add("mm-show") // li
-              parent5.childNodes[0].classList.add("mm-active") // a tag
-            }
-          }
-        }
-      }
-      scrollElement(item)
-      return false
-    }
-    scrollElement(item)
-    return false
-  }, [])
-
-  const removeActivation = items => {
-    for (var i = 0; i < items.length; ++i) {
-      var item = items[i]
-      const parent = items[i].parentElement
-
-      if (item && item.classList.contains("active")) {
-        item.classList.remove("active")
-      }
-      if (parent) {
-        const parent2El =
-          parent.childNodes && parent.childNodes.lenght && parent.childNodes[1]
-            ? parent.childNodes[1]
-            : null
-        if (parent2El && parent2El.id !== "side-menu") {
-          parent2El.classList.remove("mm-show")
-        }
-
-        parent.classList.remove("mm-active")
-        const parent2 = parent.parentElement
-
-        if (parent2) {
-          parent2.classList.remove("mm-show")
-
-          const parent3 = parent2.parentElement
-          if (parent3) {
-            parent3.classList.remove("mm-active") // li
-            parent3.childNodes[0].classList.remove("mm-active")
-
-            const parent4 = parent3.parentElement // ul
-            if (parent4) {
-              parent4.classList.remove("mm-show") // ul
-              const parent5 = parent4.parentElement
-              if (parent5) {
-                parent5.classList.remove("mm-show") // li
-                parent5.childNodes[0].classList.remove("mm-active") // a tag
-              }
-            }
-          }
-        }
-      }
+  const fetchPermissions = () => {
+    try {
+      const permissions = JSON.parse(
+        localStorage.getItem("userPermissions") || "[]"
+      )
+      setPermissions(permissions)
+    } catch (error) {
+      console.error("Error fetching permissions", error)
     }
   }
 
-  const path = useLocation()
-  const activeMenu = useCallback(() => {
-    const pathName = path.pathname
-    let matchingMenuItem = null
-    const ul = document.getElementById("side-menu")
-    const items = ul.getElementsByTagName("a")
-    removeActivation(items)
-
-    for (let i = 0; i < items.length; ++i) {
-      if (pathName === items[i].pathname) {
-        matchingMenuItem = items[i]
-        break
-      }
-    }
-    if (matchingMenuItem) {
-      activateParentDropdown(matchingMenuItem)
-    }
-  }, [path.pathname, activateParentDropdown])
-
   useEffect(() => {
-    ref.current.recalculate()
+    fetchPermissions()
   }, [])
 
-  useEffect(() => {
-    new MetisMenu("#side-menu")
-    activeMenu()
-  }, [])
+  const menuItems = [
+    {
+      path: "/action",
+      icon: "bx bx-calendar",
+      label: "Action",
+      permission: "action",
+    },
+    {
+      path: "/apps-filemanager",
+      icon: "bx bx-file",
+      label: "File Manager",
+      permission: "file manager",
+    },
+    {
+      label: "Subscription",
+      icon: "bx bx-store",
+      permission: "subscription",
+      subMenu: [
+        { path: "/subscriptions", label: "Subscriptions" },
+        { path: "/subscription-create", label: "Create New" },
+      ],
+    },
+    {
+      label: "Projects",
+      icon: "bx bx-book-open",
+      permission: "projects",
+      subMenu: [
+        { path: "/projects", label: "Projects" },
+        { path: "/projects-create", label: "Create New" },
+      ],
+    },
+    {
+      label: "Derigants",
+      icon: "bx bx-user",
+      permission: "derigants",
+      subMenu: [
+        { path: "/derigants", label: "Derigants" },
+        { path: "/derigants-create", label: "Create New" },
+      ],
+    },
+    {
+      label: "Manage Users",
+      icon: "bx bxs-user-detail",
+      permission: "manage users",
+      subMenu: [
+        { path: "/manage-admins", label: "Admins List" },
+        { path: "/manage-users", label: "Users List" },
+      ],
+    },
+    {
+      label: "Donations",
+      icon: "bx bx-dollar",
+      permission: "donations",
+      subMenu: [
+        { path: "/project-donation", label: "Project Donations" },
+        { path: "/donation", label: "Donation" },
+        { path: "/subscriptions-payments", label: "Subscription" },
+      ],
+    },
+    {
+      path: "/contact",
+      icon: "bx bx-envelope",
+      label: "Contact",
+      permission: "contact",
+    },
+    {
+      label: "Blog",
+      icon: "bx bxs-detail",
+      permission: "blog",
+      subMenu: [
+        { path: "/blog-grid", label: "Blogs" },
+        { path: "/blog-create", label: "Blog Create" },
+      ],
+    },
+    {
+      label: "Manage Pages",
+      icon: "bx bx-edit",
+      permission: "manage pages",
+      subMenu: [
+        { path: "/manage-slider", label: "Slider Section" },
+        { path: "/manage-categories", label: "Categorie Section" },
+        { path: "/manage-fun", label: "Fun Fact Section" },
+        { path: "/gallery", label: "Gallery" },
+        { path: "/partner-section", label: "Partner Section" },
+        { path: "/info-section", label: "Information Section" },
+        { path: "/about-section", label: "About Section" },
+      ],
+    },
+    {
+      label: "FAQ",
+      icon: "bx bx-help-circle",
+      permission: "faq",
+      subMenu: [
+        { path: "/faq", label: "FAQ" },
+        { path: "/faq-create", label: "Faq Create" },
+      ],
+    },
+  ]
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-    activeMenu()
-  }, [activeMenu])
+  const filteredMenuItems = menuItems.filter(item =>
+    permissions.includes(item.permission)
+  )
 
-  function scrollElement(item) {
-    if (item) {
-      const currentPosition = item.offsetTop
-      if (currentPosition > window.innerHeight) {
-        ref.current.getScrollElement().scrollTop = currentPosition - 300
+  const toggleSubMenu = label => {
+    setOpenMenus(prevState => ({
+      ...prevState,
+      [label]: !prevState[label],
+    }))
+  }
+
+  const renderMenuItems = items => {
+    return items.map(item => {
+      const isActive = location.pathname === item.path
+
+      if (item.subMenu) {
+        const isOpen = openMenus[item.label]
+        return (
+          <li key={item.label} className={classNames({ "mm-active": isOpen })}>
+            <Link
+              to="#"
+              className={classNames("has-arrow", { "mm-active": isOpen })}
+              onClick={() => toggleSubMenu(item.label)}
+            >
+              <i
+                className={classNames(item.icon, { "text-primary": isActive })}
+              ></i>
+              <span className={classNames({ "text-primary": isActive })}>
+                {props.t(item.label)}
+              </span>
+            </Link>
+            <Collapse in={isOpen}>
+              <ul className="sub-menu">
+                {item.subMenu.map(subItem => {
+                  const isSubItemActive = location.pathname === subItem.path
+                  return (
+                    <li
+                      key={subItem.label}
+                      className={classNames({ "mm-active": isSubItemActive })}
+                    >
+                      <Link
+                        to={subItem.path}
+                        className={classNames({
+                          "text-primary": isSubItemActive,
+                        })}
+                      >
+                        {props.t(subItem.label)}
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </Collapse>
+          </li>
+        )
       }
-    }
+
+      return (
+        <li key={item.label} className={classNames({ "mm-active": isActive })}>
+          <Link
+            to={item.path}
+            className={classNames({ "text-white": isActive })}
+          >
+            <i
+              className={classNames(item.icon, { "text-white": isActive })}
+            ></i>
+            <span className={classNames({ "text-white": isActive })}>
+              {props.t(item.label)}
+            </span>
+          </Link>
+        </li>
+      )
+    })
   }
 
   return (
@@ -144,261 +207,7 @@ const SidebarContent = props => {
       <SimpleBar className="h-100" ref={ref}>
         <div id="sidebar-menu">
           <ul className="metismenu list-unstyled" id="side-menu">
-            <li className="menu-title">{props.t("Apps")}</li>
-
-            <li>
-              <Link to="/calendar">
-                <i className="bx bx-calendar"></i>
-                <span>{props.t("Calendar")}</span>
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/apps-filemanager">
-                <i className="bx bx-file"></i>
-                <span>{props.t("File Manager")}</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/#" className="has-arrow ">
-                <i className="bx bx-store"></i>
-                <span>{props.t("Subscription")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/subscriptions">{props.t("Subscriptions")}</Link>
-                </li>
-                <li>
-                  <Link to="/subscription-create">{props.t("Create New")}</Link>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <Link to="/#" className="has-arrow ">
-                <i className="bx bx-book-open"></i>
-                <span>{props.t("Projects")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/projects">{props.t("Projects")}</Link>
-                </li>
-                <li>
-                  <Link to="/projects-create">{props.t("Create New")}</Link>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <Link to="/#" className="has-arrow ">
-                <i className="bx  bx-user"></i>
-                <span>{props.t("Derigants")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/derigants">{props.t("Derigants")}</Link>
-                </li>
-                <li>
-                  <Link to="/derigants-create">{props.t("Create New")}</Link>
-                </li>
-              </ul>
-            </li>
-            {/* 
-            <li>
-              <Link to="/#" className="has-arrow ">
-                <i className="bx bx-cart"></i>
-                <span>{props.t("products")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/products">{props.t("Products")}</Link>
-                </li>
-                <li>
-                  <Link to="/products-create">{props.t("Create New")}</Link>
-                </li>
-              </ul>
-            </li> */}
-
-            <li>
-              <Link to="/#" className="has-arrow ">
-                <i className="bx bxs-user-detail"></i>
-                <span>{props.t("Manage Users")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/manage-admins">{props.t("Admins List")}</Link>
-                </li>
-                <li>
-                  <Link to="/manage-users">{props.t("Users List")}</Link>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <Link to="/#" className="has-arrow ">
-                <i className="bx bx-dollar"></i>
-                <span>{props.t("Donations")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/project-donation">
-                    {props.t("Project Donations")}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/donation">{props.t("Donation")}</Link>
-                </li>
-                <li>
-                  <Link to="/subscriptions-payments">
-                    {props.t("Subscription")}
-                  </Link>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <Link to="/contact">
-                <i className="bx bx-envelope"></i>
-                <span>{props.t("Contact")}</span>
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/#" className="has-arrow">
-                <i className="bx bxs-detail" />
-
-                <span>{props.t("Blog")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/blog-grid">{props.t("Blogs")}</Link>
-                </li>
-                <li>
-                  <Link to="/blog-create">{props.t("Blog Create")}</Link>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <Link to="/#" className="has-arrow ">
-                <i className="bx bx-edit"></i>
-                <span>{props.t("Manage Pages")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/manage-slider">{props.t("Slider Section")}</Link>
-                </li>
-                <li>
-                  <Link to="/manage-categories">
-                    {props.t("Categorie Section")}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/manage-fun">{props.t("Fun Fact Section")}</Link>
-                </li>
-                <li>
-                  <Link to="/gallery">{props.t("Gallery")}</Link>
-                </li>
-                {/* <li>
-                  <Link to="/manage-why-choose">
-                    {props.t("Why Choose Section")}
-                  </Link>
-                </li> */}
-                <li>
-                  <Link to="/brands-section">{props.t("Brands Section")}</Link>
-                </li>
-                {/* <li>
-                  <Link to="/what-say">
-                    {props.t("What they say section ")}
-                  </Link>
-                </li>{" "} */}
-                <li>
-                  <Link to="/about-section">{props.t("About section ")}</Link>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <Link to="/#" className="has-arrow">
-                <i className="bx bx-help-circle" />
-
-                <span>{props.t("FAQ")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/faq">{props.t("FAQ")}</Link>
-                </li>
-                <li>
-                  <Link to="/faq-create">{props.t("Faq Create")}</Link>
-                </li>
-              </ul>
-            </li>
-            {/* <li>
-              <Link to="/feedback">
-                <i className="bx bxs-comment-detail"></i>
-                <span>{props.t("Feedback")}</span>
-              </Link>
-            </li> */}
-
-            {/* <li className="menu-title">Pages</li>
-            <li>
-              <Link to="/#" className="has-arrow">
-                <i className="bx bx-user-circle"></i>
-                <span>{props.t("Authentication")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/profile">{props.t("Profile")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Login")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Login 2")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Register")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Register 2")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Recover Password")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Recover Password 2")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Lock Screen")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Lock Screen 2")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Confirm Mail")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Confirm Mail 2")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Email Verification")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Email Verification 2")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Two Step Verification")}</Link>
-                </li>
-                <li>
-                  <Link to="#">{props.t("Two Step Verification 2")}</Link>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <Link to="/#" className="has-arrow ">
-                <i className="bx bx-file"></i>
-                <span>{props.t("Utility")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/pages-faqs">{props.t("FAQs")}</Link>
-                </li>
-              </ul>
-            </li> */}
+            {renderMenuItems(filteredMenuItems)}
           </ul>
         </div>
       </SimpleBar>

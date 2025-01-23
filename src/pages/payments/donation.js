@@ -80,6 +80,8 @@ const Donation = () => {
             {cellProps.row.original.user.firstName}
           </Link>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Last Name",
@@ -89,6 +91,8 @@ const Donation = () => {
             {cellProps.row.original.user.lastName}
           </Link>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Email",
@@ -98,6 +102,19 @@ const Donation = () => {
             {cellProps.row.original.user.email}
           </Link>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
+      },
+      {
+        header: "Cin",
+        accessorKey: "cin",
+        cell: cellProps => (
+          <Link to="#" className="text-dark">
+            {cellProps.row.original.cin}
+          </Link>
+        ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
 
       {
@@ -109,6 +126,8 @@ const Donation = () => {
             {cellProps.row.original.amount} TND
           </Link>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
     ],
     []
@@ -128,13 +147,6 @@ const Donation = () => {
                   <CardBody>
                     <div className="d-flex justify-content-between">
                       <h4 className="card-title">User List</h4>
-                      {/* <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={handleUserClicks}
-                      >
-                        Add User
-                      </button> */}
                     </div>
                     <TableContainer columns={columns} data={projects} />
                     <p className="mt-3">Amount of donations: {amount} TND</p>

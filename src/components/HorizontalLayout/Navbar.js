@@ -120,7 +120,7 @@ const Navbar = props => {
                     {props.t("Apps")} <div className="arrow-down"></div>
                   </Link>
                   <div className={classname("dropdown-menu", { show: app })}>
-                    <Link to="/calendar" className="dropdown-item">
+                    <Link to="/action" className="dropdown-item">
                       {props.t("Calendar")}
                     </Link>
 

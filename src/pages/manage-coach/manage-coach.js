@@ -24,7 +24,7 @@ import { ToastContainer, toast } from "react-toastify"
 import axios from "axios"
 
 const ManageCoaches = () => {
-  document.title = "Coach List | Skote - React Admin & Dashboard Template"
+  document.title = "Coach List"
 
   const [coaches, setCoaches] = useState([])
   const [isLoading, setLoading] = useState(true)

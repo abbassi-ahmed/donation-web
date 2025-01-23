@@ -18,7 +18,7 @@ import axios from "axios"
 import "./styles.css"
 import DropZone from "../../components/dropzone/dropzone"
 
-const RecentFile = ({ files, fetchFiles, fetchStats, folderId }) => {
+const RecentFile = ({ files, fetchFiles, folderId }) => {
   const [modalCategory, setModalCategory] = useState(false)
   const [TheFile, setTheFile] = useState(null)
   const [fileName, setFileName] = useState("")
@@ -30,7 +30,6 @@ const RecentFile = ({ files, fetchFiles, fetchStats, folderId }) => {
         .delete(`${process.env.REACT_APP_DATABASEURL}/documents/remove/${id}`)
         .then(res => {
           fetchFiles()
-          fetchStats()
         })
     } catch (error) {
       console.error("Error deleting file:", error)
@@ -63,7 +62,6 @@ const RecentFile = ({ files, fetchFiles, fetchStats, folderId }) => {
       setTheFile(null)
       setFileName("")
       togglee()
-      fetchStats()
     } catch (error) {
       console.error("Error adding new file:", error)
     }

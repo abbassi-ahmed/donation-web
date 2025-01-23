@@ -11,7 +11,6 @@ import {
 import { Link } from "react-router-dom"
 import ScrollspyNav from "./scrollSpy"
 
-//Import Images
 import logoDark from "../../../../assets/images/logo-dark.png"
 import logoLight from "../../../../assets/images/logo-light.png"
 
@@ -29,7 +28,6 @@ const Navbar_Page = props => {
   const [isOpenMenu, setisOpenMenu] = useState(false)
   const [navClass, setNavClass] = useState("")
 
-  //Store all NavigationbaFr Id into TargetID variable(Used for Scrollspy)
   let TargetId = navItems.map(item => {
     return item.idnm
   })
@@ -55,7 +53,7 @@ const Navbar_Page = props => {
         }
       >
         <Container>
-          <Link className="navbar-logo" to="/calendar">
+          <Link className="navbar-logo" to="/profile">
             <img src={logoDark} alt="" height="19" className="logo logo-dark" />
             <img
               src={logoLight}

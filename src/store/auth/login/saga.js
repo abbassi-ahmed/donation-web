@@ -39,7 +39,7 @@ function* loginUser({ payload: { user, history } }) {
     if (response && response.token) {
       localStorage.setItem("authUser", JSON.stringify(response.token))
       yield put(loginSuccess(response))
-      history("/calendar")
+      history("/profile")
     } else {
       yield put(apiError(response.message || "Login failed"))
     }
@@ -65,14 +65,14 @@ function* socialLogin({ payload: { type, history } }) {
       const fireBaseBackend = getFirebaseBackend()
       const response = yield call(fireBaseBackend.socialLoginUser, type)
       if (response) {
-        history("/calendar")
+        history("/profile")
       } else {
         history("/login")
       }
       localStorage.setItem("authUser", JSON.stringify(response))
       yield put(loginSuccess(response))
     }
-    if (response) history("/calendar")
+    if (response) history("/profile")
   } catch (error) {
     yield put(apiError(error))
   }

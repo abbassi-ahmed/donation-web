@@ -12,7 +12,7 @@ import axios from "axios"
 import ContactInfoModal from "components/Modal/ContactInfoModal"
 
 const ManageUsers = () => {
-  document.title = "User List | Skote - React Admin & Dashboard Template"
+  document.title = "User List"
 
   const [users, setUsers] = useState([])
   const [isLoading, setLoading] = useState(true)
@@ -23,20 +23,19 @@ const ManageUsers = () => {
   const [showModal, setShowModal] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_DATABASEURL}/users/find-all`
-        )
-        setUsers(response.data)
-        setLoading(false)
-      } catch (error) {
-        console.error("Error fetching users:", error)
-        setLoading(false)
-      }
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_DATABASEURL}/users/find-all`
+      )
+      setUsers(response.data)
+      setLoading(false)
+    } catch (error) {
+      console.error("Error fetching users:", error)
+      setLoading(false)
     }
-
+  }
+  useEffect(() => {
     fetchUsers()
   }, [])
 
@@ -53,12 +52,21 @@ const ManageUsers = () => {
   const handleViewUser = user => {
     setSelectedUser(user)
     setShowModal(true)
-    console.log(user)
   }
-  const handleUserClicks = () => {
-    setContact(null)
-    setIsEdit(false)
-    toggle()
+  const handleModerator = async user => {
+    await axios
+      .put(`${process.env.REACT_APP_DATABASEURL}/users/update/${user.id}`, {
+        ...user,
+        isModerator: !user.isModerator,
+      })
+      .then(response => {
+        fetchUsers()
+        toast.success(
+          `${user.firstName} is now  ${
+            !user.isModerator ? "a" : "not a"
+          } moderator`
+        )
+      })
   }
 
   const validation = useFormik({
@@ -157,14 +165,20 @@ const ManageUsers = () => {
       {
         header: "First Name",
         accessorKey: "firstName",
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Last Name",
         accessorKey: "lastName",
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Email",
         accessorKey: "email",
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Action",
@@ -176,6 +190,17 @@ const ManageUsers = () => {
               onClick={() => handleViewUser(cellProps.row.original)}
             >
               <i className="mdi mdi-eye font-size-18" />
+            </Link>
+            <Link
+              to="#"
+              className="text-success"
+              onClick={() => handleModerator(cellProps.row.original)}
+            >
+              {cellProps.row.original.isModerator ? (
+                <i className="mdi mdi-account-star font-size-18" />
+              ) : (
+                <i className="mdi mdi-account-star-outline font-size-18" />
+              )}
             </Link>
 
             <Link
@@ -217,13 +242,6 @@ const ManageUsers = () => {
                   <CardBody>
                     <div className="d-flex justify-content-between">
                       <h4 className="card-title">User List</h4>
-                      {/* <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={handleUserClicks}
-                      >
-                        Add User
-                      </button> */}
                     </div>
                     <TableContainer
                       columns={columns}

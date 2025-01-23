@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from "react"
-import { Link } from "react-router-dom"
 import TableContainer from "components/Common/TableContainer"
 import { Card, CardBody, Col, Container, Row } from "reactstrap"
 import Breadcrumbs from "components/Common/Breadcrumb"
@@ -8,7 +7,7 @@ import { ToastContainer } from "react-toastify"
 import axios from "axios"
 
 const SubscriptionProject = () => {
-  document.title = "Subscription Subscription"
+  document.title = "Subscription"
 
   const [subscriptions, setSubscriptions] = useState([])
   const [isLoading, setLoading] = useState(true)
@@ -50,6 +49,8 @@ const SubscriptionProject = () => {
         cell: cellProps => (
           <span className="text-dark">{cellProps.getValue()}</span>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Subscription Title",
@@ -57,6 +58,8 @@ const SubscriptionProject = () => {
         cell: cellProps => (
           <span className="text-dark">{cellProps.getValue()}</span>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Subscription Price (TND)",
@@ -64,6 +67,8 @@ const SubscriptionProject = () => {
         cell: cellProps => (
           <span className="text-dark">{cellProps.getValue()}</span>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Payment Date",
@@ -73,6 +78,8 @@ const SubscriptionProject = () => {
             {new Date(cellProps.getValue()).toLocaleDateString()}
           </span>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
 
       {
@@ -83,6 +90,8 @@ const SubscriptionProject = () => {
             {new Date(cellProps.getValue()).toLocaleDateString()}
           </span>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
     ],
     []

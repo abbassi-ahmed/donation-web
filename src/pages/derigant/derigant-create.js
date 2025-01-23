@@ -24,8 +24,7 @@ import { useFormik } from "formik"
 import axios from "axios"
 
 const DerigantsCreate = () => {
-  document.title =
-    "Create New Derigant | Skote - React Admin & Dashboard Template"
+  document.title = "Create New Derigant"
 
   const [selectedFiles, setSelectedFiles] = useState([])
   const [selectedImage, setSelectedImage] = useState(null)

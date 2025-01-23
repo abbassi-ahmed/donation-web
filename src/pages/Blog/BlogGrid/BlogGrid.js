@@ -51,7 +51,7 @@ const BlogGrid = () => {
                 className={classnames({ active: activeTab === "1" })}
                 onClick={() => toggleTab("1")}
               >
-                All Post
+                All Blogs
               </NavLink>
             </NavItem>
           </Nav>
@@ -67,37 +67,6 @@ const BlogGrid = () => {
                             <h5 className="mb-0">Blog List</h5>
                           </div>
                         </div>
-                        {/* <Col xs={8}>
-                          <div className="float-end">
-                            <Nav
-                              tag="ul"
-                              className="nav-pills justify-content-end"
-                            >
-                              <NavItem tag="li">
-                                <NavLink
-                                  className="disabled"
-                                  to="#"
-                                  tabIndex="-1"
-                                >
-                                  View :
-                                </NavLink>
-                              </NavItem>
-                              <NavItem tag="li">
-                                <Link className="nav-link" to="/blog-list">
-                                  <i className="mdi mdi-format-list-bulleted"></i>
-                                </Link>
-                              </NavItem>
-                              <NavItem>
-                                <Link
-                                  to="/blog-grid"
-                                  className="nav-link active"
-                                >
-                                  <i className="mdi mdi-view-grid-outline"></i>
-                                </Link>
-                              </NavItem>
-                            </Nav>
-                          </div>
-                        </Col> */}
                       </div>
                       <hr className="mb-4" />
                       <Row>
@@ -131,15 +100,18 @@ const BlogGrid = () => {
                                   />
                                 </div>
                                 <div className="p-3">
-                                  {/* <ul className="list-inline">
-                                    <li className="list-inline-item me-3">
-                                      <Link to="#" className="text-muted">
-                                        <i className="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>{" "}
-                                        {blog.category}
-                                      </Link>
-                                    </li>
-                                  </ul> */}
-                                  <p>{blog.content}</p>
+                                  <p
+                                    style={{
+                                      display: "-webkit-box",
+                                      "-webkit-line-clamp": "3",
+                                      "-webkit-box-orient": "vertical",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "normal",
+                                    }}
+                                  >
+                                    {blog.content}
+                                  </p>
                                   <div>
                                     <Link
                                       to={`/blog-details/${blog.id}`}
@@ -158,46 +130,6 @@ const BlogGrid = () => {
                         )}
                       </Row>
                       <hr className="my-4" />
-                      {/* pagination */}
-                      {/* <div className="text-center">
-                        <ul className="pagination justify-content-center pagination-rounded">
-                          <li className="page-item disabled">
-                            <Link to="#" className="page-link">
-                              <i className="mdi mdi-chevron-left"></i>
-                            </Link>
-                          </li>
-                          <li className="page-item">
-                            <Link to="#" className="page-link">
-                              1
-                            </Link>
-                          </li>
-                          <li className="page-item active">
-                            <Link to="#" className="page-link">
-                              2
-                            </Link>
-                          </li>
-                          <li className="page-item">
-                            <Link to="#" className="page-link">
-                              3
-                            </Link>
-                          </li>
-                          <li className="page-item">
-                            <Link to="#" className="page-link">
-                              ...
-                            </Link>
-                          </li>
-                          <li className="page-item">
-                            <Link to="#" className="page-link">
-                              10
-                            </Link>
-                          </li>
-                          <li className="page-item">
-                            <Link to="#" className="page-link">
-                              <i className="mdi mdi-chevron-right"></i>
-                            </Link>
-                          </li>
-                        </ul>
-                      </div> */}
                     </div>
                   </Col>
                 </Row>
@@ -208,9 +140,7 @@ const BlogGrid = () => {
                 <Row className="justify-content-center">
                   <Col xl={8}>
                     <h5>Archive</h5>
-                    <div className="mt-5">
-                      {/* Archive content can go here */}
-                    </div>
+                    <div className="mt-5"></div>
                   </Col>
                 </Row>
               </div>

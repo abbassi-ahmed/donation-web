@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 //Import Components
 import Navbar from "./Navbar/Navbar"
@@ -13,9 +13,8 @@ import FAQs from "./Faqs/FAQs"
 import Footer from "./Footer/footer"
 
 const CryptoIcoLanding = () => {
-  
   //meta title
-  document.title="ICO Landing | Skote - React Admin & Dashboard Template";
+  document.title = "ICO Landing"
 
   return (
     <React.Fragment>

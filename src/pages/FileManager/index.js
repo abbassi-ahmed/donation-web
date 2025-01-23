@@ -10,7 +10,7 @@ import axios from "axios"
 
 const Index = () => {
   //meta title
-  document.title = "File Manager | Skote - React Admin & Dashboard Template"
+  document.title = "File Manager"
 
   const [folders, setFolders] = useState({})
   const [user, setUser] = useState({})
@@ -51,8 +51,6 @@ const Index = () => {
           <div className="d-xl-flex">
             <div className="w-100">
               <div className="d-md-flex">
-                {/* FileRightBar  */}
-                {/* <FileLeftBar folders={folders} fetchFolders={fetchFolders} /> */}
                 <div className="w-100">
                   <Card>
                     <CardBody>
@@ -62,7 +60,6 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            {/* <Storage options={options} series={series} stats={stats} /> */}
           </div>
         </Container>
       </div>

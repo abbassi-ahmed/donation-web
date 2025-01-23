@@ -4,24 +4,17 @@ import { useSelector } from "react-redux"
 import { createSelector } from "reselect"
 import { Routes, Route } from "react-router-dom"
 import { layoutTypes } from "./constants/layout"
-// Import Routes all
+
 import { authProtectedRoutes, publicRoutes } from "./routes"
 
-// Import all middleware
 import Authmiddleware from "./routes/route"
 
-// layouts Format
 import VerticalLayout from "./components/VerticalLayout/"
 import HorizontalLayout from "./components/HorizontalLayout/"
 import NonAuthLayout from "./components/NonAuthLayout"
 
-// Import scss
 import "./assets/scss/theme.scss"
-
-// Import Firebase Configuration file
-// import { initFirebaseBackend } from "./helpers/firebase_helper";
-
-// Activating fake backend
+import PermissionRoute from "helpers/permissionRoute"
 
 const getLayout = layoutType => {
   let Layout = VerticalLayout
@@ -65,7 +58,12 @@ const App = () => {
             path={route.path}
             element={
               <Authmiddleware>
-                <Layout>{route.component}</Layout>
+                <Layout>
+                  <PermissionRoute
+                    element={route.component}
+                    requiredPermission={route.permission}
+                  />
+                </Layout>
               </Authmiddleware>
             }
             key={idx}

@@ -62,18 +62,26 @@ const Contact = () => {
       {
         header: "First Name",
         accessorKey: "firstName",
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Last Name",
         accessorKey: "lastName",
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Email",
         accessorKey: "email",
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Phone",
         accessorKey: "phone",
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Message",
@@ -83,6 +91,8 @@ const Contact = () => {
             {cellProps.row.original.message}
           </div>
         ),
+        enableColumnFilter: false,
+        enableSorting: false,
       },
 
       {

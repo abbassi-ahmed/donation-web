@@ -22,18 +22,23 @@ import DeleteModal from "components/Common/DeleteModal"
 import Spinners from "components/Common/Spinner"
 import { ToastContainer, toast } from "react-toastify"
 import axios from "axios"
+import PermissonModal from "components/Modal/permessionModal"
 
 const ManageAdmins = () => {
-  document.title = "Admin List | Skote - React Admin & Dashboard Template"
+  document.title = "Admin List"
+  const [selectedPermissions, setSelectedPermissions] = useState([])
 
   const [admins, setAdmins] = useState([])
   const [isLoading, setLoading] = useState(true)
   const [contact, setContact] = useState(null)
   const [modal, setModal] = useState(false)
+  const [isShowPass, setIsShowPass] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
   const [user, setUser] = useState(null)
-
+  const [showModal, setShowModal] = useState(false)
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [permissions, setPermissions] = useState([])
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -48,27 +53,57 @@ const ManageAdmins = () => {
     }
     getUser()
   }, [])
+  const fetchAdmins = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_DATABASEURL}/admins/find-all`
+      )
+      if (response.data) {
+        setAdmins(response.data.filter(admin => admin.id !== user.id))
+      }
+      setLoading(false)
+    } catch (error) {
+      console.error("Error fetching admins:", error)
+      setLoading(false)
+    }
+  }
+
+  const handleUpdatePermission = async () => {
+    await axios
+      .post(`${process.env.REACT_APP_DATABASEURL}/admins/give-permission`, {
+        adminId: selectedUser.id,
+        permissionIds: selectedPermissions,
+      })
+      .then(response => {
+        fetchAdmins()
+        setShowModal(false)
+      })
+      .catch(error => {
+        console.error("Error updating permissions:", error)
+      })
+  }
+
+  const fetchPermissions = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_DATABASEURL}/permissions/find-all`
+      )
+      if (response.data) {
+        setPermissions(response.data)
+      }
+    } catch (error) {
+      console.error("Error fetching permissions:", error)
+    }
+  }
 
   useEffect(() => {
-    const fetchAdmins = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_DATABASEURL}/admins/find-all`
-        )
-        if (response.data) {
-          setAdmins(response.data.filter(admin => admin.id !== user.id))
-        }
-        setLoading(false)
-      } catch (error) {
-        console.error("Error fetching admins:", error)
-        setLoading(false)
-      }
-    }
-
     if (user) {
       fetchAdmins()
     }
   }, [user])
+  useEffect(() => {
+    fetchPermissions()
+  }, [])
   const toggle = () => {
     setModal(!modal)
   }
@@ -78,19 +113,17 @@ const ManageAdmins = () => {
     setIsEdit(true)
     toggle()
   }
-
-  const handleAdminClicks = () => {
-    setContact(null)
-    setIsEdit(false)
-    toggle()
+  const handleViewUser = user => {
+    setSelectedUser(user)
+    setShowModal(true)
   }
-
   const validation = useFormik({
     enableReinitialize: true,
     initialValues: {
-      firstName: contact ? contact.firstName : "",
-      lastName: contact ? contact.lastName : "",
-      email: contact?.email || "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required("Please Enter Your First Name"),
@@ -98,6 +131,10 @@ const ManageAdmins = () => {
       email: Yup.string()
         .email("Please Enter Valid Email")
         .required("Please Enter Your Email"),
+      password: Yup.string().when("isEdit", {
+        is: false,
+        then: Yup.string().required("Please Enter Password"),
+      }),
     }),
     onSubmit: async values => {
       const newAdmin = {
@@ -105,6 +142,7 @@ const ManageAdmins = () => {
         firstName: values.firstName,
         lastName: values.lastName || "",
         email: values.email,
+        password: values.password,
         avatar: contact?.avatar || "",
       }
 
@@ -125,7 +163,16 @@ const ManageAdmins = () => {
           console.error("Error updating admin:", error)
         }
       } else {
-        setAdmins(prevAdmins => [...prevAdmins, newAdmin])
+        await axios
+          .post(`${process.env.REACT_APP_DATABASEURL}/admins/signup`, newAdmin)
+          .then(response => {
+            if (response.data.message) {
+              toast.error(response.data.message)
+            } else {
+              fetchAdmins()
+              validation.resetForm()
+            }
+          })
       }
       toggle()
       validation.resetForm()
@@ -183,19 +230,32 @@ const ManageAdmins = () => {
       {
         header: "First Name",
         accessorKey: "firstName",
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Last Name",
         accessorKey: "lastName",
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Email",
         accessorKey: "email",
+        enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Action",
         cell: cellProps => (
           <div className="d-flex gap-3">
+            <Link
+              to="#"
+              className="text-success"
+              onClick={() => handleViewUser(cellProps.row.original)}
+            >
+              <i className="mdi mdi-eye font-size-18" />
+            </Link>
             <Link
               to="#"
               className="text-danger"
@@ -217,6 +277,15 @@ const ManageAdmins = () => {
         onDeleteClick={handleDeleteAdmin}
         onCloseClick={() => setDeleteModal(false)}
       />
+      <PermissonModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        user={selectedUser}
+        permission={permissions}
+        handleUpdatePermission={handleUpdatePermission}
+        selectedPermissions={selectedPermissions}
+        setSelectedPermissions={setSelectedPermissions}
+      />
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title="Contacts" breadcrumbItem="Admin List" />
@@ -229,13 +298,13 @@ const ManageAdmins = () => {
                   <CardBody>
                     <div className="d-flex justify-content-between">
                       <h4 className="card-title">Admin List</h4>
-                      {/* <button
+                      <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={handleAdminClicks}
+                        onClick={toggle}
                       >
                         Add Admin
-                      </button> */}
+                      </button>
                     </div>
                     <TableContainer
                       columns={columns}
@@ -294,7 +363,7 @@ const ManageAdmins = () => {
               </Col>
             </Row>
             <Row>
-              <Col md="12">
+              <Col md="6">
                 <div className="mb-3">
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -312,7 +381,36 @@ const ManageAdmins = () => {
                   <FormFeedback>{validation.errors.email}</FormFeedback>
                 </div>
               </Col>
+              <Col md="6">
+                <div className="mb-3">
+                  <Label htmlFor="password">Password</Label>
+                  <div className="input-group">
+                    <Input
+                      type={isShowPass ? "text" : "password"}
+                      id="password"
+                      name="password"
+                      placeholder="Enter Password"
+                      onChange={validation.handleChange}
+                      onBlur={validation.handleBlur}
+                      value={validation.values.password}
+                      invalid={
+                        validation.touched.password &&
+                        !!validation.errors.password
+                      }
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-light"
+                      onClick={() => setIsShowPass(!isShowPass)}
+                    >
+                      <i className="bx bx-show" />
+                    </button>
+                  </div>
+                  <FormFeedback>{validation.errors.password}</FormFeedback>
+                </div>
+              </Col>
             </Row>
+
             <div className="text-end">
               <button type="submit" className="btn btn-primary">
                 {isEdit ? "Update" : "Add"}

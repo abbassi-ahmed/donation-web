@@ -20,7 +20,6 @@ import logo from "assets/images/logo.svg"
 import axios from "axios"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { loginUser } from "../../store/actions"
 const Login = ({ history }) => {
   const [email, setEmail] = useState("")
   const [emailError, setEmailError] = useState(false)
@@ -29,7 +28,6 @@ const Login = ({ history }) => {
   const [error, setError] = useState("")
   const navigate = useNavigate()
 
-  //meta title
   document.title = "Login Page"
   const dispatch = useDispatch()
 
@@ -59,13 +57,19 @@ const Login = ({ history }) => {
       } else {
         localStorage.setItem("authUser", JSON.stringify(response.data.token))
         localStorage.setItem("admin", JSON.stringify(response.data.admin))
+        localStorage.setItem(
+          "userPermissions",
+          JSON.stringify(
+            response.data.admin.permissions.flatMap(p => p.name.toLowerCase())
+          )
+        )
         io("wss://api.olympiquemnihla.com", {
           query: {
             client: JSON.stringify(response.data.admin),
           },
         })
         // dispatch(loginUser(response.data.token, history))
-        navigate("/calendar")
+        navigate("/profile")
       }
     } catch (error) {
       if (error.response.status === 404) {

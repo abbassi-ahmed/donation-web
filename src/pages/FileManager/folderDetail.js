@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useLocation, useParams } from "react-router-dom"
 import RecentFile from "./RecentFile"
-import Storage from "./Storage"
 import axios from "axios"
 import { Card, CardBody, Container } from "reactstrap"
 
@@ -15,7 +14,6 @@ export default function FolderDetail() {
   const location = useLocation()
   const folder = location.state?.folder
 
-  const [stats, setStats] = useState({})
   const [authorizedAdmins, setAuthorizedAdmins] = useState([])
   const [folderPrivacy, setFolderPrivacy] = useState("")
 
@@ -34,22 +32,8 @@ export default function FolderDetail() {
     }
   }
 
-  const fetchStats = async () => {
-    try {
-      const response = await axios.get(
-        process.env.REACT_APP_DATABASEURL +
-          `
-/documents/get-sum-size-by-folder/${id}`
-      )
-      setStats(response.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   useEffect(() => {
     fetchFiles()
-    fetchStats()
   }, [id])
   return (
     <React.Fragment>
@@ -66,7 +50,6 @@ export default function FolderDetail() {
                       <RecentFile
                         files={files}
                         fetchFiles={fetchFiles}
-                        fetchStats={fetchStats}
                         folderId={id}
                       />
                       {folderPrivacy === "private" && (
@@ -83,7 +66,6 @@ export default function FolderDetail() {
                 </div>
               </div>
             </div>
-            <Storage stats={stats} />
           </div>
         </Container>
       </div>

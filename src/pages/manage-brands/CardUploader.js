@@ -2,7 +2,7 @@ import React from "react"
 import { Input, Label } from "reactstrap"
 import imageCompression from "browser-image-compression"
 
-const CardUploader = ({ index, brands, setBrands, validation }) => {
+const CardUploader = ({ index, partners, setPartners, validation }) => {
   const handleFileChange = async e => {
     if (e.target.files.length) {
       const file = e.target.files[0]
@@ -16,12 +16,12 @@ const CardUploader = ({ index, brands, setBrands, validation }) => {
       try {
         const compressedFile = await imageCompression(file, options)
 
-        const updatedBrands = [...brands]
+        const updatedBrands = [...partners]
         updatedBrands[index] = {
           ...updatedBrands[index],
           image: compressedFile,
         }
-        setBrands(updatedBrands)
+        setPartners(updatedBrands)
 
         validation.setFieldValue(`cardImage${index + 1}`, compressedFile)
       } catch (error) {
@@ -31,21 +31,21 @@ const CardUploader = ({ index, brands, setBrands, validation }) => {
   }
 
   const handleTileChange = e => {
-    const updatedBrands = [...brands]
+    const updatedBrands = [...partners]
     updatedBrands[index] = { ...updatedBrands[index], title: e.target.value }
-    setBrands(updatedBrands)
+    setPartners(updatedBrands)
   }
 
   const handleLinkChange = e => {
-    const updatedBrands = [...brands]
+    const updatedBrands = [...partners]
     updatedBrands[index] = { ...updatedBrands[index], link: e.target.value }
-    setBrands(updatedBrands)
+    setPartners(updatedBrands)
   }
 
   const getImageSrc = image =>
     image instanceof Blob ? URL.createObjectURL(image) : image
 
-  const currentBrand = brands[index]
+  const currentBrand = partners[index]
   const imageSrc = currentBrand?.image ? getImageSrc(currentBrand.image) : null
 
   return (

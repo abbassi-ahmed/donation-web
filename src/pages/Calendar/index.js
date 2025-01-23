@@ -33,9 +33,10 @@ import imageCompression from "browser-image-compression"
 
 import DeleteModal from "./DeleteModal"
 import axios from "axios"
+import { ListGroup } from "react-bootstrap"
 
 const Calender = props => {
-  document.title = "Calendar | Skote - React Admin & Dashboard Template"
+  document.title = "Action"
 
   const [event, setEvent] = useState({})
   const [isEdit, setIsEdit] = useState(false)
@@ -277,7 +278,7 @@ const Calender = props => {
       />
       <div className="page-content mt-5">
         <Container fluid={true}>
-          <Breadcrumbs title="Calendar" breadcrumbItem="Full Calendar" />
+          <Breadcrumbs title="Actions" breadcrumbItem="Manage Actions" />
           <Row>
             <Col xs={12}>
               <Row>
@@ -295,13 +296,38 @@ const Calender = props => {
                           New Event
                         </Button>
                       </div>
-                      <Row className="justify-content-center mt-5">
-                        <img
-                          src={verification}
-                          alt=""
-                          className="img-fluid d-block"
-                        />
-                      </Row>
+                      {events && events.length > 0 ? (
+                        <div className="mt-4">
+                          <h5 className="font-size-14 mb-3">Events</h5>
+                          <Card className="shadow-sm">
+                            <ListGroup variant="flush">
+                              {events.map((event, index) => (
+                                <ListGroup.Item key={index}>
+                                  <Row className="align-items-center">
+                                    <Col xs="auto" className="text-primary">
+                                      <i className="bx bx-calendar-event fs-4"></i>
+                                    </Col>
+                                    <Col>
+                                      <h6 className="mb-1">{event.title}</h6>
+                                      <small className="text-muted">
+                                        {event.startDate} - {event.endDate}
+                                      </small>
+                                    </Col>
+                                  </Row>
+                                </ListGroup.Item>
+                              ))}
+                            </ListGroup>
+                          </Card>
+                        </div>
+                      ) : (
+                        <Row className="justify-content-center mt-5">
+                          <img
+                            src={verification}
+                            alt=""
+                            className="img-fluid d-block"
+                          />
+                        </Row>
+                      )}
                     </CardBody>
                   </Card>
                 </Col>
@@ -455,11 +481,9 @@ const Calender = props => {
                       invalid={!!eventValidation.errors.category}
                     >
                       <option value="">Select Category</option>
-                      <option value="social">Social</option>
-                      <option value="idee de projet">Idea de Projet</option>
-                      <option value="Economie sociale et solidaire">
-                        Economie Sociale et Solidaire
-                      </option>
+                      <option value="event">Événement</option>
+                      <option value="project">Projet</option>
+                      <option value="activity">Activité</option>
                     </Input>
                     <FormFeedback>
                       {eventValidation.errors.category}

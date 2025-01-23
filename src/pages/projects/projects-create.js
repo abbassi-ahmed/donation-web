@@ -29,8 +29,7 @@ import axios from "axios"
 
 const ProjectsCreate = () => {
   //meta title
-  document.title =
-    "Create New Project | Skote - React Admin & Dashboard Template"
+  document.title = "Create New Project"
 
   const [selectedFiles, setSelectedFiles] = useState([])
   const [selectedImage, setSelectedImage] = useState(null)
