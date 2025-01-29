@@ -60,6 +60,15 @@ const SidebarContent = props => {
       ],
     },
     {
+      label: "Clubs",
+      icon: "bx bx-group",
+      permission: "clubs",
+      subMenu: [
+        { path: "/clubs", label: "Clubs" },
+        { path: "/clubs-create", label: "Create New" },
+      ],
+    },
+    {
       label: "Derigants",
       icon: "bx bx-user",
       permission: "derigants",

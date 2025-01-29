@@ -41,6 +41,9 @@ import Gallery from "pages/gallery/gallery"
 import ManagePartners from "pages/manage-brands/manage-brands"
 import ManageTogether from "pages/manage-together/manage-together"
 import NoPermission from "pages/Authentication/noPermission"
+import Clubs from "pages/clubs/clubs"
+import ClubsCreate from "pages/clubs/clubs-create"
+import ClubsOverview from "pages/clubs/ClubsOverview/clubs-overview"
 
 const authProtectedRoutes = [
   { path: "/profile", component: <UserProfile />, permission: "all" },
@@ -61,15 +64,25 @@ const authProtectedRoutes = [
     permission: "projects",
   },
   {
-    path: "/projects-overview",
-    component: <ProjectsOverview />,
-    permission: "projects",
-  },
-  {
     path: "/projects-overview/:id",
     component: <ProjectsOverview />,
     permission: "projects",
   },
+  // ////////////////////
+  { path: "/clubs", component: <Clubs />, permission: "clubs" },
+  {
+    path: "/clubs-create",
+    component: <ClubsCreate />,
+    permission: "clubs",
+  },
+  {
+    path: "/clubs-overview/:id",
+    component: <ClubsOverview />,
+    permission: "clubs",
+  },
+
+  // ////////////////////
+
   {
     path: "/project-donation",
     component: <DonationProject />,

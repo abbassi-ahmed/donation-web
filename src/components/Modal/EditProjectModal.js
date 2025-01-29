@@ -81,7 +81,7 @@ const EditProjectModal = ({
 
   return (
     <Modal
-      size="md"
+      size="lg"
       isOpen={show}
       toggle={() => {
         onCloseClick()
@@ -238,10 +238,8 @@ const EditProjectModal = ({
               }
             >
               <option value="social">Social</option>
-              <option value="idee de projet">Idea de Projet</option>
-              <option value="Economie sociale et solidaire">
-                Economie Sociale et Solidaire
-              </option>
+              <option value="startup">Startup</option>
+              <option value="Projet participatif">Projet participatif</option>
             </Input>
           </FormGroup>
 

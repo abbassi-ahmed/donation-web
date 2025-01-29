@@ -27,9 +27,9 @@ import moment from "moment"
 import SimpleBar from "simplebar-react"
 import axios from "axios"
 
-const ProjectsCreate = () => {
+const ClubsCreate = () => {
   //meta title
-  document.title = "Create New Project"
+  document.title = "Create New Club"
 
   const [selectedFiles, setSelectedFiles] = useState([])
   const [selectedImage, setSelectedImage] = useState(null)
@@ -55,7 +55,7 @@ const ProjectsCreate = () => {
       const reader = new FileReader()
       reader.onloadend = () => {
         setSelectedImage(reader.result)
-        validation.setFieldValue("projectImage", reader.result)
+        validation.setFieldValue("clubImage", reader.result)
       }
       reader.readAsDataURL(file)
       setImg(file)
@@ -64,38 +64,38 @@ const ProjectsCreate = () => {
 
   const validation = useFormik({
     initialValues: {
-      projectname: "",
-      projectShortDesc: "",
-      projectLongDesc: "",
-      projecttarget: "",
+      clubname: "",
+      clubShortDesc: "",
+      clubLongDesc: "",
+      clubtarget: "",
       targetDate: "",
-      projectImage: "",
+      clubImage: "",
       startDate: "",
       type: "",
     },
     validationSchema: Yup.object({
-      projectname: Yup.string().required("Please Enter Your Project Name"),
-      projectShortDesc: Yup.string().required("Please Enter Your Project Desc"),
-      projectLongDesc: Yup.string().required("Please Enter Your Project Desc"),
-      projecttarget: Yup.string().required("Please Enter Your Project Target"),
+      clubname: Yup.string().required("Please Enter Your Club Name"),
+      clubShortDesc: Yup.string().required("Please Enter Your Club Desc"),
+      clubLongDesc: Yup.string().required("Please Enter Your Club Desc"),
+      clubtarget: Yup.string().required("Please Enter Your Club Target"),
       targetDate: Yup.string().required("Please Enter Your Target Date"),
-      projectImage: Yup.string().required("Please Select Image"),
-      projectType: Yup.string().required("Please Select Project Type"),
+      clubImage: Yup.string().required("Please Select Image"),
+      clubType: Yup.string().required("Please Select Club Type"),
     }),
     onSubmit: async values => {
       const formDat = new FormData()
-      formDat.append("name", values.projectname)
-      formDat.append("shortDescription", values.projectShortDesc)
-      formDat.append("longDescription", values.projectLongDesc)
-      formDat.append("target", values.projecttarget)
+      formDat.append("name", values.clubname)
+      formDat.append("shortDescription", values.clubShortDesc)
+      formDat.append("longDescription", values.clubLongDesc)
+      formDat.append("target", values.clubtarget)
       formDat.append("targetDate", values.targetDate)
       formDat.append("startDate", values.startDate)
       formDat.append("image", img)
-      formDat.append("type", values.projectType)
+      formDat.append("type", values.clubType)
       try {
         setLoader(true)
         const response = await axios.post(
-          process.env.REACT_APP_DATABASEURL + "/projects/create",
+          process.env.REACT_APP_DATABASEURL + "/clubs/create",
           formDat,
           {
             headers: {
@@ -109,7 +109,7 @@ const ProjectsCreate = () => {
           setSelectedImage(null)
           setImgStore([])
           setImg(null)
-          toast.success("🎉 Project Created Successfully")
+          toast.success("🎉 Club Created Successfully")
           setLoader(false)
         }
       } catch (error) {
@@ -124,9 +124,9 @@ const ProjectsCreate = () => {
       <div className="page-content">
         <Container fluid>
           {/* Render Breadcrumbs */}
-          <Breadcrumbs title="Projects" breadcrumbItem="Create New" />
+          <Breadcrumbs title="Clubs" breadcrumbItem="Create New" />
           <Form
-            id="createproject-form"
+            id="createclub-form"
             onSubmit={e => {
               e.preventDefault()
               validation.handleSubmit()
@@ -147,18 +147,18 @@ const ProjectsCreate = () => {
                     <input
                       type="hidden"
                       className="form-control"
-                      id="project-id-input"
+                      id="club-id-input"
                     />
                     <div className="mb-3">
-                      <Label className="form-label">Project Image</Label>
+                      <Label className="form-label">Club Image</Label>
 
                       <div className="text-center">
                         <div className="position-relative d-inline-block">
                           <div className="position-absolute bottom-0 end-0">
                             <Label
-                              htmlFor="project-image-input"
+                              htmlFor="club-image-input"
                               className="mb-0"
-                              id="projectImageInput"
+                              id="clubImageInput"
                             >
                               <div className="avatar-xs">
                                 <div className="avatar-title bg-light border rounded-circle text-muted cursor-pointer shadow font-size-16">
@@ -168,13 +168,13 @@ const ProjectsCreate = () => {
                             </Label>
                             <UncontrolledTooltip
                               placement="right"
-                              target="projectImageInput"
+                              target="clubImageInput"
                             >
                               Select Image
                             </UncontrolledTooltip>
                             <input
                               className="form-control d-none"
-                              id="project-image-input"
+                              id="club-image-input"
                               type="file"
                               accept="image/png, image/gif, image/jpeg"
                               onChange={handleImageChange}
@@ -184,7 +184,7 @@ const ProjectsCreate = () => {
                             <div className="rounded-circle">
                               <img
                                 src={selectedImage || ""}
-                                id="projectlogo-img"
+                                id="clublogo-img"
                                 alt=""
                                 height="75"
                                 width={"95px"}
@@ -197,112 +197,112 @@ const ProjectsCreate = () => {
                             </div>
                           </div>
                         </div>
-                        {validation.touched.projectImage &&
-                        validation.errors.projectImage ? (
+                        {validation.touched.clubImage &&
+                        validation.errors.clubImage ? (
                           <FormFeedback type="invalid" className="d-block">
-                            {validation.errors.projectImage}
+                            {validation.errors.clubImage}
                           </FormFeedback>
                         ) : null}
                       </div>
                     </div>
                     <div className="mb-3">
-                      <Label htmlFor="projectname-input">Project Name</Label>
+                      <Label htmlFor="clubname-input">Club Name</Label>
                       <Input
-                        id="projectname"
-                        name="projectname"
+                        id="clubname"
+                        name="clubname"
                         type="text"
-                        placeholder="Enter Project Name..."
+                        placeholder="Enter Club Name..."
                         onChange={validation.handleChange}
-                        value={validation.values.projectname || ""}
+                        value={validation.values.clubname || ""}
                       />
-                      {validation.touched.projectname &&
-                      validation.errors.projectname ? (
+                      {validation.touched.clubname &&
+                      validation.errors.clubname ? (
                         <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.projectname}
+                          {validation.errors.clubname}
                         </FormFeedback>
                       ) : null}
                     </div>
                     <div className="mb-3">
-                      <Label htmlFor="projectShortDesc-input">
-                        Project Description
+                      <Label htmlFor="clubShortDesc-input">
+                        Club Description
                       </Label>
                       <Input
                         as="textarea"
-                        id="projectShortDesc"
+                        id="clubShortDesc"
                         rows={3}
-                        name="projectShortDesc"
-                        placeholder="Enter Project Description..."
+                        name="clubShortDesc"
+                        placeholder="Enter Club Description..."
                         onChange={validation.handleChange}
-                        value={validation.values.projectShortDesc || ""}
+                        value={validation.values.clubShortDesc || ""}
                       />
-                      {validation.touched.projectShortDesc &&
-                      validation.errors.projectShortDesc ? (
+                      {validation.touched.clubShortDesc &&
+                      validation.errors.clubShortDesc ? (
                         <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.projectShortDesc}
+                          {validation.errors.clubShortDesc}
                         </FormFeedback>
                       ) : null}
                     </div>{" "}
                     <div className="mb-3">
-                      <Label htmlFor="projectLongDesc-input">
-                        Project Long Description
+                      <Label htmlFor="clubLongDesc-input">
+                        Club Long Description
                       </Label>
                       <Input
                         as="textarea"
                         type="textarea"
-                        id="projectLongDesc"
+                        id="clubLongDesc"
                         rows={3}
-                        name="projectLongDesc"
-                        placeholder="Enter Project Long Description..."
+                        name="clubLongDesc"
+                        placeholder="Enter Club Long Description..."
                         onChange={validation.handleChange}
-                        value={validation.values.projectLongDesc || ""}
+                        value={validation.values.clubLongDesc || ""}
                       />
-                      {validation.touched.projectLongDesc &&
-                      validation.errors.projectLongDesc ? (
+                      {validation.touched.clubLongDesc &&
+                      validation.errors.clubLongDesc ? (
                         <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.projectLongDesc}
+                          {validation.errors.clubLongDesc}
                         </FormFeedback>
                       ) : null}
                     </div>
                     <div className="mb-3">
-                      <Label htmlFor="projecttarget-input">
-                        Project Target Amount
+                      <Label htmlFor="clubtarget-input">
+                        Club Target Amount
                       </Label>
                       <Input
                         as="textarea"
-                        id="projecttarget"
+                        id="clubtarget"
                         rows={3}
-                        name="projecttarget"
-                        placeholder="Enter Project Target Amount..."
+                        name="clubtarget"
+                        placeholder="Enter Club Target Amount..."
                         onChange={validation.handleChange}
-                        value={validation.values.projecttarget || ""}
+                        value={validation.values.clubtarget || ""}
                       />
-                      {validation.touched.projecttarget &&
-                      validation.errors.projecttarget ? (
+                      {validation.touched.clubtarget &&
+                      validation.errors.clubtarget ? (
                         <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.projecttarget}
+                          {validation.errors.clubtarget}
                         </FormFeedback>
                       ) : null}
                     </div>
                     <div className="mb-3">
-                      <Label htmlFor="projectType">Project Type</Label>
+                      <Label htmlFor="clubType">Club Type</Label>
                       <Input
                         type="select"
-                        id="projectType"
-                        name="projectType"
+                        id="clubType"
+                        name="clubType"
                         onChange={validation.handleChange}
-                        value={validation.values.projectType || ""}
+                        value={validation.values.clubType || ""}
                       >
-                        <option value="">Select Project Type</option>
+                        <option value="">Select Club Type</option>
                         <option value="social">Social</option>
                         <option value="startup">Startup</option>
                         <option value="Projet participatif">
                           Projet participatif
                         </option>
                       </Input>
-                      {validation.touched.projectType &&
-                      validation.errors.projectType ? (
+                      {validation.touched.clubType &&
+                      validation.errors.clubType ? (
                         <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.projectType}
+                          {validation.errors.clubType}
                         </FormFeedback>
                       ) : null}
                     </div>
@@ -370,7 +370,7 @@ const ProjectsCreate = () => {
               <Col lg={8}>
                 <div className="text-end mb-4">
                   <Button type="submit" color="primary" disabled={loader}>
-                    Create Project
+                    Create Club
                   </Button>
                 </div>
               </Col>
@@ -382,4 +382,4 @@ const ProjectsCreate = () => {
   )
 }
 
-export default ProjectsCreate
+export default ClubsCreate
