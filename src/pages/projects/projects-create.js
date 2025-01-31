@@ -34,8 +34,6 @@ const ProjectsCreate = () => {
   const [selectedFiles, setSelectedFiles] = useState([])
   const [selectedImage, setSelectedImage] = useState(null)
   const [imgStore, setImgStore] = useState([])
-  const [dropList, setDropList] = useState(false)
-  const [active, setActive] = useState(0)
   const [img, setImg] = useState(null)
   const [loader, setLoader] = useState(false)
   const handleAcceptedFiles = files => {

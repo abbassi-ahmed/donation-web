@@ -16,10 +16,10 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 import "flatpickr/dist/themes/material_blue.css"
 import axios from "axios"
 import imageCompression from "browser-image-compression"
-const ClubsCreate = () => {
-  document.title = "Create New Club"
+const SportsCreate = () => {
+  document.title = "Create New Sport"
 
-  const [tempClub, setTempClub] = useState({
+  const [tempSport, setTempSport] = useState({
     name: "",
     description: "",
     cover: null,
@@ -33,9 +33,9 @@ const ClubsCreate = () => {
   const [error, setError] = useState(null)
 
   const handleRemoveImage = index => {
-    const newImages = tempClub.images.filter((_, i) => i !== index)
+    const newImages = tempSport.images.filter((_, i) => i !== index)
     const newPreviews = imagesPreviews.filter((_, i) => i !== index)
-    setTempClub({ ...tempClub, images: newImages })
+    setTempSport({ ...tempSport, images: newImages })
     setImagesPreviews(newPreviews)
   }
 
@@ -56,15 +56,15 @@ const ClubsCreate = () => {
           const base64Image = reader.result
 
           if (type === "cover") {
-            setTempClub({ ...tempClub, cover: compressedFile })
+            setTempSport({ ...tempSport, cover: compressedFile })
             setCoverPreview(base64Image)
           } else if (type === "logo") {
-            setTempClub({ ...tempClub, logo: compressedFile })
+            setTempSport({ ...tempSport, logo: compressedFile })
             setLogoPreview(base64Image)
           } else if (type === "gallery") {
-            setTempClub({
-              ...tempClub,
-              images: [...tempClub.images, compressedFile],
+            setTempSport({
+              ...tempSport,
+              images: [...tempSport.images, compressedFile],
             })
             setImagesPreviews([...imagesPreviews, base64Image])
           }
@@ -82,25 +82,25 @@ const ClubsCreate = () => {
     setError(null)
     try {
       const formData = new FormData()
-      formData.append("name", tempClub.name)
-      formData.append("description", tempClub.description)
+      formData.append("name", tempSport.name)
+      formData.append("description", tempSport.description)
 
-      if (tempClub.cover) formData.append("cover", tempClub.cover)
-      if (tempClub.logo) formData.append("logo", tempClub.logo)
+      if (tempSport.cover) formData.append("cover", tempSport.cover)
+      if (tempSport.logo) formData.append("logo", tempSport.logo)
 
-      tempClub.images.forEach(image => {
+      tempSport.images.forEach(image => {
         formData.append("images", image)
       })
 
       await axios.post(
-        `${process.env.REACT_APP_DATABASEURL}/clubs/create`,
+        `${process.env.REACT_APP_DATABASEURL}/sports/create`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       )
 
-      setTempClub({
+      setTempSport({
         name: "",
         description: "",
         cover: null,
@@ -111,8 +111,8 @@ const ClubsCreate = () => {
       setLogoPreview(null)
       setImagesPreviews([])
     } catch (error) {
-      console.error("Error updating club", error)
-      setError("Failed to update club. Please try again.")
+      console.error("Error updating sport", error)
+      setError("Failed to update sport. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -127,20 +127,20 @@ const ClubsCreate = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumbs title="Clubs" breadcrumbItem="Create New" />
+          <Breadcrumbs title="Sports" breadcrumbItem="Create New" />
           <Card className="shadow-sm">
             <CardBody>
-              <h4 className="card-title mb-4">Create New Club</h4>
-              <Form id="createclub-form" onSubmit={handleSave}>
+              <h4 className="card-title mb-4">Create New Sport</h4>
+              <Form id="createsport-form" onSubmit={handleSave}>
                 <FormGroup>
-                  <Label for="name">Club Name</Label>
+                  <Label for="name">Sport Name</Label>
                   <Input
                     type="text"
                     id="name"
                     name="name"
-                    value={tempClub.name}
+                    value={tempSport.name}
                     onChange={e =>
-                      setTempClub({ ...tempClub, name: e.target.value })
+                      setTempSport({ ...tempSport, name: e.target.value })
                     }
                     required
                     className="form-control-lg"
@@ -154,9 +154,12 @@ const ClubsCreate = () => {
                     name="description"
                     type="textarea"
                     rows="4"
-                    value={tempClub.description}
+                    value={tempSport.description}
                     onChange={e =>
-                      setTempClub({ ...tempClub, description: e.target.value })
+                      setTempSport({
+                        ...tempSport,
+                        description: e.target.value,
+                      })
                     }
                     required
                     className="form-control-lg"
@@ -317,7 +320,7 @@ const ClubsCreate = () => {
                     disabled={loading}
                     className="px-5"
                   >
-                    {loading ? "Saving..." : "Save Club"}
+                    {loading ? "Saving..." : "Save Sport"}
                   </Button>
                 </div>
               </Form>
@@ -329,4 +332,4 @@ const ClubsCreate = () => {
   )
 }
 
-export default ClubsCreate
+export default SportsCreate

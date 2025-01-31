@@ -69,6 +69,15 @@ const SidebarContent = props => {
       ],
     },
     {
+      label: "Sports",
+      icon: "bx bx-run",
+      permission: "sports",
+      subMenu: [
+        { path: "/sports", label: "Sports" },
+        { path: "/sports-create", label: "Create New" },
+      ],
+    },
+    {
       label: "Derigants",
       icon: "bx bx-user",
       permission: "derigants",

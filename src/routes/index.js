@@ -44,6 +44,9 @@ import NoPermission from "pages/Authentication/noPermission"
 import Clubs from "pages/clubs/clubs"
 import ClubsCreate from "pages/clubs/clubs-create"
 import ClubsOverview from "pages/clubs/ClubsOverview/clubs-overview"
+import Sports from "pages/sports/sports"
+import SportsCreate from "pages/sports/sports-create"
+import SportsOverview from "pages/sports/SportsOverview/sports-overview"
 
 const authProtectedRoutes = [
   { path: "/profile", component: <UserProfile />, permission: "all" },
@@ -79,6 +82,18 @@ const authProtectedRoutes = [
     path: "/clubs-overview/:id",
     component: <ClubsOverview />,
     permission: "clubs",
+  },
+  // ////////////////////
+  { path: "/sports", component: <Sports />, permission: "sports" },
+  {
+    path: "/sports-create",
+    component: <SportsCreate />,
+    permission: "sports",
+  },
+  {
+    path: "/sports-overview/:id",
+    component: <SportsOverview />,
+    permission: "sports",
   },
 
   // ////////////////////

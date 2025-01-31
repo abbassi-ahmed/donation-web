@@ -17,59 +17,59 @@ import {
 } from "reactstrap"
 import axios from "axios"
 import imageCompression from "browser-image-compression"
-const EditClubModal = ({
+const EditSportModal = ({
   show,
   toggle,
-  club,
+  sport,
   onCloseClick,
   onSaveFinished,
 }) => {
-  const [tempClub, setTempClub] = useState(club)
-  const [coverPreview, setCoverPreview] = useState(club.cover)
-  const [logoPreview, setLogoPreview] = useState(club.logo)
-  const [imagesPreviews, setImagesPreviews] = useState(club.images)
+  const [tempSport, setTempSport] = useState(sport)
+  const [coverPreview, setCoverPreview] = useState(sport.cover)
+  const [logoPreview, setLogoPreview] = useState(sport.logo)
+  const [imagesPreviews, setImagesPreviews] = useState(sport.images)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [oldImages, setOldImages] = useState([])
 
   useEffect(() => {
     if (show) {
-      setTempClub(club)
-      setCoverPreview(club.cover)
-      setLogoPreview(club.logo)
-      setImagesPreviews(club.images)
+      setTempSport(sport)
+      setCoverPreview(sport.cover)
+      setLogoPreview(sport.logo)
+      setImagesPreviews(sport.images)
       setError(null)
-      setOldImages(club.images)
+      setOldImages(sport.images)
     }
-  }, [show, club])
+  }, [show, sport])
 
   useEffect(() => {
     if (show) {
-      setOldImages(tempClub.images.filter(image => typeof image === "string"))
+      setOldImages(tempSport.images.filter(image => typeof image === "string"))
     }
-  }, [tempClub.images])
+  }, [tempSport.images])
 
   const onSave = async () => {
     setLoading(true)
     setError(null)
     try {
       const formData = new FormData()
-      formData.append("name", tempClub.name)
-      formData.append("description", tempClub.description)
+      formData.append("name", tempSport.name)
+      formData.append("description", tempSport.description)
 
       oldImages.forEach(image => {
         formData.append("oldImages", image)
       })
 
-      if (tempClub.cover) formData.append("cover", tempClub.cover)
-      if (tempClub.logo) formData.append("logo", tempClub.logo)
+      if (tempSport.cover) formData.append("cover", tempSport.cover)
+      if (tempSport.logo) formData.append("logo", tempSport.logo)
 
-      tempClub.images.forEach(image => {
+      tempSport.images.forEach(image => {
         formData.append("images", image)
       })
 
       await axios.put(
-        `${process.env.REACT_APP_DATABASEURL}/clubs/update/${club.id}`,
+        `${process.env.REACT_APP_DATABASEURL}/sports/update/${sport.id}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       )
@@ -77,8 +77,8 @@ const EditClubModal = ({
       onSaveFinished()
       onCloseClick()
     } catch (error) {
-      console.error("Error updating club", error)
-      setError("Failed to update club. Please try again.")
+      console.error("Error updating sport", error)
+      setError("Failed to update sport. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -100,15 +100,15 @@ const EditClubModal = ({
           const base64Image = reader.result
 
           if (type === "cover") {
-            setTempClub({ ...tempClub, cover: compressedFile })
+            setTempSport({ ...tempSport, cover: compressedFile })
             setCoverPreview(base64Image)
           } else if (type === "logo") {
-            setTempClub({ ...tempClub, logo: compressedFile })
+            setTempSport({ ...tempSport, logo: compressedFile })
             setLogoPreview(base64Image)
           } else if (type === "gallery") {
-            setTempClub({
-              ...tempClub,
-              images: [...tempClub.images, compressedFile],
+            setTempSport({
+              ...tempSport,
+              images: [...tempSport.images, compressedFile],
             })
             setImagesPreviews([...imagesPreviews, base64Image])
           }
@@ -122,9 +122,9 @@ const EditClubModal = ({
   }
 
   const handleRemoveImage = index => {
-    const newImages = tempClub.images.filter((_, i) => i !== index)
+    const newImages = tempSport.images.filter((_, i) => i !== index)
     const newPreviews = imagesPreviews.filter((_, i) => i !== index)
-    setTempClub({ ...tempClub, images: newImages })
+    setTempSport({ ...tempSport, images: newImages })
     setImagesPreviews(newPreviews)
   }
 
@@ -135,19 +135,21 @@ const EditClubModal = ({
 
   return (
     <Modal size="lg" isOpen={show} toggle={onCloseClick} centered={true}>
-      <ModalHeader toggle={onCloseClick}>Edit Club</ModalHeader>
+      <ModalHeader toggle={onCloseClick}>Edit Sport</ModalHeader>
       <Form onSubmit={handleSave}>
         <ModalBody>
           {error && <Alert color="danger">{error}</Alert>}
 
           <FormGroup>
-            <Label for="name">Club Name</Label>
+            <Label for="name">Sport Name</Label>
             <Input
               type="text"
               id="name"
               name="name"
-              value={tempClub.name}
-              onChange={e => setTempClub({ ...tempClub, name: e.target.value })}
+              value={tempSport.name}
+              onChange={e =>
+                setTempSport({ ...tempSport, name: e.target.value })
+              }
               required
             />
           </FormGroup>
@@ -159,9 +161,9 @@ const EditClubModal = ({
               name="description"
               type="textarea"
               rows="4"
-              value={tempClub.description}
+              value={tempSport.description}
               onChange={e =>
-                setTempClub({ ...tempClub, description: e.target.value })
+                setTempSport({ ...tempSport, description: e.target.value })
               }
               required
             />
@@ -279,10 +281,10 @@ const EditClubModal = ({
   )
 }
 
-EditClubModal.propTypes = {
+EditSportModal.propTypes = {
   show: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
-  club: PropTypes.shape({
+  sport: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
@@ -294,4 +296,4 @@ EditClubModal.propTypes = {
   onSaveFinished: PropTypes.func.isRequired,
 }
 
-export default EditClubModal
+export default EditSportModal
