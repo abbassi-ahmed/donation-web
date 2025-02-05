@@ -5,6 +5,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 import { toast } from "react-toastify"
 import EditSubscriptionModal from "components/Modal/EditSubscriptionModal"
 import DeleteModal from "components/Common/DeleteModal"
+import { Switch } from "@mui/material"
 
 const SubscriptionList = () => {
   document.title = "Subscription List"
@@ -14,10 +15,12 @@ const SubscriptionList = () => {
   const [editModal, setEditModal] = useState(false)
   const [selectedSubscription, setSelectedSubscription] = useState(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showClub, setShowClub] = useState(false)
   const fetchSubscriptions = async () => {
     try {
+      const queryParam = showClub ? "club" : "sport"
       const response = await axios.get(
-        `${process.env.REACT_APP_DATABASEURL}/subscription/find-all`,
+        `${process.env.REACT_APP_DATABASEURL}/subscription/get-type?type=${queryParam}`,
         {
           headers: {
             token: localStorage.getItem("authUser")?.replace(/"/g, ""),
@@ -66,6 +69,9 @@ const SubscriptionList = () => {
       toast.error("Failed to delete subscription. Please try again.")
     }
   }
+  useEffect(() => {
+    fetchSubscriptions()
+  }, [showClub])
   return (
     <React.Fragment>
       <div className="page-content">
@@ -81,57 +87,75 @@ const SubscriptionList = () => {
                   <Spinner color="primary" />
                 </div>
               ) : (
-                <Table bordered className="mt-4">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Title</th>
-                      <th>Description</th>
-                      <th>Price</th>
-                      <th>Duration</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {subscriptions.length > 0 ? (
-                      subscriptions.map((subscription, index) => (
-                        <tr key={subscription.id}>
-                          <td>{index + 1}</td>
-                          <td>{subscription.title}</td>
-                          <td>{subscription.description}</td>
-                          <td>{subscription.price} TND</td>
-                          <td>{subscription.duration} Months</td>
-                          <td>
-                            <Button
-                              color="info"
-                              size="sm"
-                              className="me-2"
-                              onClick={() => handleEdit(subscription)}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              color="danger"
-                              size="sm"
-                              onClick={() => {
-                                setSelectedSubscription(subscription)
-                                setShowDeleteModal(true)
-                              }}
-                            >
-                              Delete
-                            </Button>
+                <div>
+                  <div className="d-flex justify-content-end align-items-center">
+                    <Switch
+                      checked={showClub}
+                      onChange={() => setShowClub(!showClub)}
+                    />
+                    {showClub ? "Show Club" : "Show Sport"}
+                  </div>
+
+                  <Table bordered className="mt-2">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>{showClub ? "Club" : "Sport"}</th>
+                        <th>Duration</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {subscriptions.length > 0 ? (
+                        subscriptions.map((subscription, index) => (
+                          <tr key={subscription.id}>
+                            <td>{index + 1}</td>
+                            <td>{subscription.title}</td>
+                            <td>{subscription.description}</td>
+                            <td>{subscription.price} TND</td>
+
+                            {showClub ? (
+                              <td>{subscription.club?.name || "N/A"}</td>
+                            ) : (
+                              <td>{subscription.sport?.name || "N/A"}</td>
+                            )}
+
+                            <td>{subscription.duration} Months</td>
+                            <td>
+                              <Button
+                                color="info"
+                                size="sm"
+                                className="me-2"
+                                onClick={() => handleEdit(subscription)}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                color="danger"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedSubscription(subscription)
+                                  setShowDeleteModal(true)
+                                }}
+                              >
+                                Delete
+                              </Button>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="7" className="text-center">
+                            No subscriptions found.
                           </td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="7" className="text-center">
-                          No subscriptions found.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </Table>
+                      )}
+                    </tbody>
+                  </Table>
+                </div>
               )}
             </Col>
           </Row>
