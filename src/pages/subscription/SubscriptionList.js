@@ -13,6 +13,8 @@ const SubscriptionList = () => {
   const [subscriptions, setSubscriptions] = useState([])
   const [loading, setLoading] = useState(true)
   const [editModal, setEditModal] = useState(false)
+  const [sports, setSports] = useState([])
+  const [clubs, setClubs] = useState([])
   const [selectedSubscription, setSelectedSubscription] = useState(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showClub, setShowClub] = useState(false)
@@ -35,8 +37,36 @@ const SubscriptionList = () => {
     }
   }
 
+  const fetchSports = async () => {
+    try {
+      await axios
+        .get(`${process.env.REACT_APP_DATABASEURL}/sports/find`)
+        .then(response => {
+          setSports(response.data)
+        })
+    } catch (error) {
+      console.error("Error fetching sports:", error)
+      toast.error("Failed to load sports")
+    }
+  }
+
+  const fetchClubs = async () => {
+    try {
+      await axios
+        .get(`${process.env.REACT_APP_DATABASEURL}/clubs/find`)
+        .then(response => {
+          setClubs(response.data)
+        })
+    } catch (error) {
+      console.error("Error fetching clubs:", error)
+      toast.error("Failed to load clubs")
+    }
+  }
+
   useEffect(() => {
     fetchSubscriptions()
+    fetchSports()
+    fetchClubs()
   }, [])
 
   const toggleEditModal = () => setEditModal(!editModal)
@@ -167,6 +197,8 @@ const SubscriptionList = () => {
             toggle={toggleEditModal}
             subscription={selectedSubscription}
             onCloseClick={toggleEditModal}
+            clubs={clubs}
+            sports={sports}
             onSaveFinished={handleSaveFinished}
           />
         )}

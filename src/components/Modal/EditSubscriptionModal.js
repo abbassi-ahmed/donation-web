@@ -18,12 +18,26 @@ const EditSubscriptionModal = ({
   subscription,
   onCloseClick,
   onSaveFinished,
+  clubs,
+  sports,
 }) => {
-  const [tempSubscription, setTempSubscription] = useState(subscription)
+  const [tempSubscription, setTempSubscription] = useState({
+    title: "",
+    description: "",
+    price: "",
+    duration: "",
+  })
+  const [subscriptionType, setSubscriptionType] = useState("sport")
+  const [selectedSportId, setSelectedSportId] = useState("")
+  const [selectedClubId, setSelectedClubId] = useState("")
 
   useEffect(() => {
     if (show) {
       setTempSubscription(subscription)
+      console.log(subscription)
+      setSubscriptionType(subscription?.sport?.id ? "sport" : "club")
+      setSelectedSportId(subscription?.sport?.id || "")
+      setSelectedClubId(subscription?.club?.id || "")
     }
   }, [show, subscription])
 
@@ -36,6 +50,8 @@ const EditSubscriptionModal = ({
           description: tempSubscription.description,
           price: Number(tempSubscription.price),
           duration: Number(tempSubscription.duration),
+          [subscriptionType === "sport" ? "sportId" : "clubId"]:
+            subscriptionType === "sport" ? selectedSportId : selectedClubId,
         },
         {
           headers: {
@@ -50,7 +66,6 @@ const EditSubscriptionModal = ({
       toast.error("Failed to update subscription. Please try again.")
     }
   }
-
   const handleSave = async e => {
     e.preventDefault()
     await onSave()
@@ -62,6 +77,26 @@ const EditSubscriptionModal = ({
       <ModalHeader toggle={toggle}>Edit Subscription</ModalHeader>
       <ModalBody>
         <Form onSubmit={handleSave}>
+          <FormGroup className="d-flex gap-3">
+            <Label for="type">Type</Label>
+            <Input
+              type="radio"
+              name="type"
+              value="sport"
+              checked={subscriptionType === "sport"}
+              onChange={() => setSubscriptionType("sport")}
+            />
+            Sport
+            <Input
+              type="radio"
+              name="type"
+              value="club"
+              checked={subscriptionType === "club"}
+              onChange={() => setSubscriptionType("club")}
+            />
+            Club
+          </FormGroup>
+
           <FormGroup>
             <Label for="title">Title</Label>
             <Input
@@ -125,6 +160,44 @@ const EditSubscriptionModal = ({
               }
             />
           </FormGroup>
+          {subscriptionType === "sport" && (
+            <FormGroup>
+              <Label for="sport">Sport</Label>
+              <Input
+                type="select"
+                id="sport"
+                name="sport"
+                value={selectedSportId}
+                onChange={e => setSelectedSportId(e.target.value)}
+              >
+                <option value="">Select Sport</option>
+                {sports.map(sport => (
+                  <option key={sport.id} value={sport.id}>
+                    {sport.name}
+                  </option>
+                ))}
+              </Input>
+            </FormGroup>
+          )}
+          {subscriptionType === "club" && (
+            <FormGroup>
+              <Label for="club">Club</Label>
+              <Input
+                type="select"
+                id="club"
+                name="club"
+                value={selectedClubId}
+                onChange={e => setSelectedClubId(e.target.value)}
+              >
+                <option value="">Select Club</option>
+                {clubs.map(club => (
+                  <option key={club.id} value={club.id}>
+                    {club.name}
+                  </option>
+                ))}
+              </Input>
+            </FormGroup>
+          )}
 
           <Button type="submit" color="primary">
             Save Changes

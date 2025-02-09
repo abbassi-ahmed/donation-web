@@ -19,7 +19,7 @@ function CreateSubscription() {
   const fetchSports = async () => {
     try {
       await axios
-        .get(`${process.env.REACT_APP_DATABASEURL}/sports/find`)
+        .get(`${process.env.REACT_APP_DATABASEURL}/sports/find-all`)
         .then(response => {
           setSports(response.data)
         })
@@ -32,7 +32,7 @@ function CreateSubscription() {
   const fetchClubs = async () => {
     try {
       await axios
-        .get(`${process.env.REACT_APP_DATABASEURL}/clubs/find`)
+        .get(`${process.env.REACT_APP_DATABASEURL}/clubs/find-all`)
         .then(response => {
           setClubs(response.data)
         })
