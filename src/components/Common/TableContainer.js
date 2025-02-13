@@ -1,5 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react"
 import { Row, Table, Button, Col } from "reactstrap"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+
 import { Link } from "react-router-dom"
 
 import {
@@ -17,6 +19,7 @@ import {
 
 import { rankItem } from "@tanstack/match-sorter-utils"
 import JobListGlobalFilter from "./GlobalSearchFilter"
+import { Pagination } from "react-bootstrap"
 
 // Column Filter
 const Filter = ({ column }) => {
@@ -91,7 +94,6 @@ const TableContainer = ({
   isJobListGlobalFilter,
   totalRecords,
   onPageChange,
-
   currentPage,
   pageSize,
 }) => {
@@ -141,6 +143,32 @@ const TableContainer = ({
   // useEffect(() => {
   //   Number(customPageSize) && setPageSize(Number(customPageSize));
   // }, [customPageSize, setPageSize]);
+  const totalPages = Math.ceil(totalRecords / pageSize)
+
+  const renderPageNumbers = () => {
+    const pageNumbers = []
+    const maxVisiblePages = 5
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2))
+    const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1)
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1)
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <Pagination.Item
+          key={i}
+          active={currentPage === i}
+          onClick={() => onPageChange(i, pageSize)}
+        >
+          {i}
+        </Pagination.Item>
+      )
+    }
+
+    return pageNumbers
+  }
 
   return (
     <Fragment>
@@ -262,63 +290,30 @@ const TableContainer = ({
       </div>
 
       {isPagination && (
-        <Row>
-          <Col sm={12} md={5}>
-            <div className="dataTables_info">
+        <Row className="align-items-center mt-4">
+          <Col xs={12} md={5} className="mb-2 mb-md-0">
+            <div className="text-muted">
               Showing {data.length} of {totalRecords} Results
             </div>
           </Col>
-          <Col sm={12} md={7}>
-            <div className={paginationWrapper}>
-              <ul className={pagination}>
-                <li
-                  className={`paginate_button page-item previous ${
-                    currentPage === 1 ? "disabled" : ""
-                  }`}
-                >
-                  <Link
-                    to="#"
-                    className="page-link"
-                    onClick={() => onPageChange(currentPage - 1, pageSize)}
-                  >
-                    <i className="mdi mdi-chev  ron-left"></i>
-                  </Link>
-                </li>
-                {Array.from({ length: Math.ceil(totalRecords / pageSize) }).map(
-                  (_, index) => (
-                    <li
-                      key={index}
-                      className={`paginate_button page-item ${
-                        currentPage === index + 1 ? "active" : ""
-                      }`}
-                    >
-                      <Link
-                        to="#"
-                        className="page-link"
-                        onClick={() => onPageChange(index + 1, pageSize)}
-                      >
-                        {index + 1}
-                      </Link>
-                    </li>
-                  )
-                )}
-                <li
-                  className={`paginate_button page-item next ${
-                    currentPage === Math.ceil(totalRecords / pageSize)
-                      ? "disabled"
-                      : ""
-                  }`}
-                >
-                  <Link
-                    to="#"
-                    className="page-link"
-                    onClick={() => onPageChange(currentPage + 1, pageSize)}
-                  >
-                    <i className="mdi mdi-chevron-right"></i>
-                  </Link>
-                </li>
-              </ul>
-            </div>
+          <Col xs={12} md={7}>
+            <Pagination className="justify-content-md-end">
+              <Pagination.Prev
+                disabled={currentPage === 1}
+                onClick={() => onPageChange(currentPage - 1, pageSize)}
+              >
+                <ChevronLeft size={16} />
+              </Pagination.Prev>
+
+              {renderPageNumbers()}
+
+              <Pagination.Next
+                disabled={currentPage === totalPages}
+                onClick={() => onPageChange(currentPage + 1, pageSize)}
+              >
+                <ChevronRight size={16} />
+              </Pagination.Next>
+            </Pagination>
           </Col>
         </Row>
       )}

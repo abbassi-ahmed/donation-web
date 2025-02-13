@@ -47,7 +47,7 @@ const ManageTogether = () => {
 
         if (response.data) {
           fetchDefaultOnes()
-          toast.success("🎉 Project Created Successfully")
+          toast.success("🎉 Created Successfully")
         }
       } catch (error) {
         console.error("Error:", error)

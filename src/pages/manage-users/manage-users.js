@@ -10,6 +10,7 @@ import Spinners from "components/Common/Spinner"
 import { ToastContainer, toast } from "react-toastify"
 import axios from "axios"
 import ContactInfoModal from "components/Modal/ContactInfoModal"
+import { debounce } from "lodash"
 
 const ManageUsers = () => {
   document.title = "User List"
@@ -22,22 +23,53 @@ const ManageUsers = () => {
   const [deleteModal, setDeleteModal] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const rowsPerPage = 10
+  const [paginationParams, setPaginationParams] = useState({
+    pageNumber: page,
+    pageSize: rowsPerPage,
+    sortOrder: "DESC",
+  })
 
+  const handlePageChange = newPage => {
+    setPage(newPage)
+  }
+  const handleSearch = debounce(e => {
+    setPaginationParams({
+      ...paginationParams,
+      searchQuery: e.target.value,
+    })
+    fetchUsers()
+  }, 400)
   const fetchUsers = async () => {
     try {
+      const params = new URLSearchParams({
+        pageNumber: page,
+        pageSize: paginationParams.pageSize,
+        sortOrder: paginationParams.sortOrder,
+        searchQuery: paginationParams.searchQuery || "",
+      })
       const response = await axios.get(
-        `${process.env.REACT_APP_DATABASEURL}/users/find-all`
+        `${process.env.REACT_APP_DATABASEURL}/users/find?${params.toString()}`
       )
-      setUsers(response.data)
+
+      setUsers(response.data.data)
+      setTotalPages(response.data.total)
       setLoading(false)
     } catch (error) {
       console.error("Error fetching users:", error)
       setLoading(false)
     }
   }
+
   useEffect(() => {
     fetchUsers()
-  }, [])
+  }, [paginationParams])
+
+  useEffect(() => {
+    fetchUsers()
+  }, [page])
 
   const toggle = () => {
     setModal(!modal)
@@ -242,11 +274,24 @@ const ManageUsers = () => {
                   <CardBody>
                     <div className="d-flex justify-content-between">
                       <h4 className="card-title">User List</h4>
+                      <div className="d-flex gap-3">
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Search..."
+                          onChange={handleSearch}
+                        />
+                      </div>
                     </div>
                     <TableContainer
                       columns={columns}
                       data={users}
+                      currentPage={page}
+                      pageSize={rowsPerPage}
+                      totalRecords={totalPages}
+                      isPagination
                       onEditClick={handleUserClick}
+                      onPageChange={handlePageChange}
                     />
                   </CardBody>
                 </Card>

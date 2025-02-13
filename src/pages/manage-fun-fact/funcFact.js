@@ -1,22 +1,8 @@
 import React, { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
-import {
-  Button,
-  Card,
-  CardBody,
-  Col,
-  Container,
-  Form,
-  FormFeedback,
-  UncontrolledTooltip,
-  Input,
-  Label,
-  Row,
-} from "reactstrap"
+import { Button, Card, CardBody, Col, Container, Form, Row } from "reactstrap"
 import { toast } from "react-toastify"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 import "flatpickr/dist/themes/material_blue.css"
-import FlatPickr from "react-flatpickr"
 import * as Yup from "yup"
 import { useFormik } from "formik"
 import axios from "axios"
@@ -64,7 +50,7 @@ const ManageFacts = () => {
         } catch (error) {
           console.error("error", error)
         } finally {
-          toast.success("🎉 Project Created Successfully")
+          toast.success("🎉  Created Successfully")
 
           setLoader(false)
         }

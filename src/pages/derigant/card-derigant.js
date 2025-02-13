@@ -62,7 +62,8 @@ const CardDerigant = ({ derigants, fetchDerigants }) => {
               <h5 className="card-title mb-1">
                 {derigant.firstName} {derigant.lastName}
               </h5>
-              <p className="text-muted">{derigant.email}</p>
+              <p className="text-muted mb-1">{derigant.email}</p>
+              <p className="text-muted text-capitalize">{derigant.role}</p>
               <div className="mt-3">
                 <a
                   href={`https://${derigant.facebook || ""}`}

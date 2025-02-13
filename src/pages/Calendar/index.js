@@ -45,7 +45,23 @@ const Calender = props => {
   const [deleteId, setDeleteId] = useState()
   const [modalCategory, setModalCategory] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
+  const [startDate, setStartDate] = useState()
+  const [endDate, setEndDate] = useState()
   const [img, setImg] = useState(null)
+  const [isLocal, setIsLocal] = useState({
+    code: "en-nz",
+    week: {
+      dow: 1,
+      doy: 4,
+    },
+    buttonHints: {
+      prev: "Previous $0",
+      next: "Next $0",
+      today: "This $0",
+    },
+    viewHint: "$0 view",
+    navLinkHint: "Go to $0",
+  })
 
   const handleImageChange = async e => {
     e.preventDefault()
@@ -89,15 +105,32 @@ const Calender = props => {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_DATABASEURL}/events/find-all`
+      const startDateString = startDate.split("T")[0]
+      const endDateString = endDate.split("T")[0]
+
+      const res = await axios.post(
+        `${process.env.REACT_APP_DATABASEURL}/events/find`,
+        {
+          start: startDateString,
+          end: endDateString,
+        }
       )
-      const data = await response.json()
-      setEvents(data)
+
+      setEvents(prevEvents => {
+        const existingIds = new Set(prevEvents.map(event => event.id))
+        const filteredEvents = res.data.filter(
+          event => !existingIds.has(event.id)
+        )
+        return [...prevEvents, ...filteredEvents]
+      })
     } catch (error) {
       console.error("Error fetching events:", error)
     }
   }
+
+  useEffect(() => {
+    fetchEvents()
+  }, [startDate, endDate])
 
   const addNewEvent = async newEvent => {
     try {
@@ -344,12 +377,17 @@ const Calender = props => {
                         ]}
                         slotDuration={"00:15:00"}
                         handleWindowResize={true}
+                        datesSet={info => {
+                          setStartDate(info.startStr)
+                          setEndDate(info.endStr)
+                        }}
                         themeSystem="bootstrap"
                         headerToolbar={{
                           left: "prev,next today",
                           center: "title",
                           right: "dayGridMonth,dayGridWeek,dayGridDay,listWeek",
                         }}
+                        locale={isLocal}
                         events={events.map(event => ({
                           id: event.id,
                           title: event.title,

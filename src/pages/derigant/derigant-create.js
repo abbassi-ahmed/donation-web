@@ -74,6 +74,7 @@ const DerigantsCreate = () => {
       derigantFirstName: "",
       derigantLastName: "",
       derigantEmail: "",
+      derigantRole: "",
       facebook: "",
       twitter: "",
       instagram: "",
@@ -81,6 +82,7 @@ const DerigantsCreate = () => {
     validationSchema: Yup.object({
       derigantFirstName: Yup.string().required("First Name is required"),
       derigantLastName: Yup.string().required("Last Name is required"),
+      derigantRole: Yup.string().required("Role is required"),
       derigantEmail: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
@@ -91,6 +93,7 @@ const DerigantsCreate = () => {
       formDat.append("lastName", values.derigantLastName)
       formDat.append("email", values.derigantEmail)
       formDat.append("facebook", values.facebook)
+      formDat.append("role", values.derigantRole)
       formDat.append("twitter", values.twitter)
       formDat.append("instagram", values.instagram)
       formDat.append("avatar", img)
@@ -262,6 +265,23 @@ const DerigantsCreate = () => {
                       validation.errors.derigantEmail ? (
                         <FormFeedback type="invalid" className="d-block">
                           {validation.errors.derigantEmail}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                    <div className="mb-3">
+                      <Label htmlFor="derigantRole-input">Derigant Role</Label>
+                      <Input
+                        id="derigantRole"
+                        name="derigantRole"
+                        type="text"
+                        placeholder="Enter Derigant Role..."
+                        onChange={validation.handleChange}
+                        value={validation.values.derigantRole || ""}
+                      />
+                      {validation.touched.derigantRole &&
+                      validation.errors.derigantRole ? (
+                        <FormFeedback type="invalid" className="d-block">
+                          {validation.errors.derigantRole}
                         </FormFeedback>
                       ) : null}
                     </div>

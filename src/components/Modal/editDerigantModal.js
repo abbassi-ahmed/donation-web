@@ -39,6 +39,7 @@ const EditDerigantModal = ({
       formData.append("lastName", tempDerigant.lastName)
       formData.append("email", tempDerigant.email)
       formData.append("twitter", tempDerigant.twitter)
+      formData.append("role", tempDerigant.role)
       formData.append("facebook", tempDerigant.facebook)
       formData.append("instagram", tempDerigant.instagram)
 
@@ -173,6 +174,19 @@ const EditDerigantModal = ({
               value={tempDerigant.email}
               onChange={e =>
                 setTempDerigant({ ...tempDerigant, email: e.target.value })
+              }
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label for="role">Role</Label>
+            <Input
+              type="text"
+              id="role"
+              name="role"
+              value={tempDerigant.role}
+              onChange={e =>
+                setTempDerigant({ ...tempDerigant, role: e.target.value })
               }
             />
           </FormGroup>

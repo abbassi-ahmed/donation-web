@@ -94,7 +94,6 @@ const ManageSlider = () => {
       setOldCards(data)
     } catch (error) {
       console.error("Error fetching sliders:", error)
-      toast.error("Error fetching sliders")
     }
   }
 

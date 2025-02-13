@@ -24,6 +24,7 @@ const SubscriptionProject = () => {
             email: user.email,
             subscriptionTitle: history.subscriptionTitle,
             subscriptionPrice: history.subscriptionPrice,
+            subscriptionType: history.subscriptionType,
             paymentDate: history.dateStart,
             duration: history.duration,
             endDate: history.dateEnd,
@@ -70,6 +71,16 @@ const SubscriptionProject = () => {
         enableColumnFilter: false,
         enableSorting: false,
       },
+      {
+        header: "Subscription Type",
+        accessorKey: "subscriptionType",
+        cell: cellProps => (
+          <span className="text-dark">{cellProps.getValue()}</span>
+        ),
+        enableColumnFilter: false,
+        enableSorting: false,
+      },
+
       {
         header: "Payment Date",
         accessorKey: "paymentDate",
