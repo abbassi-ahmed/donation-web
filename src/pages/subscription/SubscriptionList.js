@@ -22,7 +22,7 @@ const SubscriptionList = () => {
     try {
       const queryParam = showClub ? "club" : "sport"
       const response = await axios.get(
-        `${process.env.REACT_APP_DATABASEURL}/subscription/get-type?type=${queryParam}`,
+        `${process.env.REACT_APP_DATABASEURL}/subscription/get-type-admin?type=${queryParam}`,
         {
           headers: {
             token: localStorage.getItem("authUser")?.replace(/"/g, ""),
@@ -81,6 +81,25 @@ const SubscriptionList = () => {
     fetchSubscriptions()
   }
 
+  const handleVisibilityChange = async subscription => {
+    const token = localStorage.getItem("authUser")?.replace(/"/g, "")
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_DATABASEURL}/subscription/update/${subscription.id}`,
+        {
+          visibility: !subscription.visibility,
+        },
+        {
+          headers: { token },
+        }
+      )
+      fetchSubscriptions()
+      toast.success("Subscription updated successfully")
+    } catch (error) {
+      toast.error("Failed to update subscription. Please try again.")
+    }
+  }
+
   const handleDelete = async id => {
     const token = localStorage.getItem("authUser")?.replace(/"/g, "")
     try {
@@ -134,6 +153,7 @@ const SubscriptionList = () => {
                         <th>Description</th>
                         <th>Price</th>
                         <th>{showClub ? "Club" : "Sport"}</th>
+                        <th>Visibility</th>
                         <th>Duration</th>
                         <th>Actions</th>
                       </tr>
@@ -144,7 +164,12 @@ const SubscriptionList = () => {
                           <tr key={subscription.id}>
                             <td>{index + 1}</td>
                             <td>{subscription.title}</td>
-                            <td>{subscription.description}</td>
+                            <td
+                              className="text-truncate"
+                              style={{ maxWidth: 400 }}
+                            >
+                              {subscription.description}
+                            </td>
                             <td>{subscription.price} TND</td>
 
                             {showClub ? (
@@ -152,6 +177,15 @@ const SubscriptionList = () => {
                             ) : (
                               <td>{subscription.sport?.name || "N/A"}</td>
                             )}
+                            <td>
+                              <Switch
+                                checked={subscription.visibility}
+                                onChange={() =>
+                                  handleVisibilityChange(subscription)
+                                }
+                              />
+                              {subscription.visibility ? "Visible" : "Hidden"}
+                            </td>
 
                             <td>{subscription.duration} Months</td>
                             <td>

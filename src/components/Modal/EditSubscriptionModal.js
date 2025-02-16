@@ -73,7 +73,7 @@ const EditSubscriptionModal = ({
   }
 
   return (
-    <Modal isOpen={show} toggle={onCloseClick} centered={true}>
+    <Modal isOpen={show} toggle={onCloseClick} centered={true} size="xl">
       <ModalHeader toggle={toggle}>Edit Subscription</ModalHeader>
       <ModalBody>
         <Form onSubmit={handleSave}>

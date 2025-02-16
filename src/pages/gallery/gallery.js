@@ -12,6 +12,8 @@ export default function ImageGallery() {
   const [fileNames, setFileNames] = useState([])
   const [loader, setLoader] = useState(false)
 
+  const [pending, setPending] = useState(false)
+
   const fetchFiles = async () => {
     try {
       setLoader(true)
@@ -43,6 +45,7 @@ export default function ImageGallery() {
     })
 
     try {
+      setPending(true)
       await axios.post(
         `${process.env.REACT_APP_DATABASEURL}/gallerie/create`,
         formData,
@@ -57,6 +60,7 @@ export default function ImageGallery() {
       toast.success("Images uploaded successfully.")
       setIsOpen(false)
       fetchFiles()
+      setPending(false)
     } catch (error) {
       console.error("Error adding new files:", error)
       toast.error("Failed to upload images.")
@@ -179,8 +183,8 @@ export default function ImageGallery() {
                 >
                   Close
                 </Button>
-                <Button variant="primary" type="submit">
-                  Upload
+                <Button variant="primary" type="submit" disabled={pending}>
+                  {pending ? "Uploading..." : "Upload"}
                 </Button>
               </div>
             </Form>

@@ -25,7 +25,9 @@ const SubscriptionProject = () => {
             subscriptionTitle: history.subscriptionTitle,
             subscriptionPrice: history.subscriptionPrice,
             subscriptionType: history.subscriptionType,
+            subscriptionPaymentType: history.paymentType,
             paymentDate: history.dateStart,
+            moderator: history.moderator,
             duration: history.duration,
             endDate: history.dateEnd,
           }))
@@ -41,7 +43,6 @@ const SubscriptionProject = () => {
 
     fetchSubscriptions()
   }, [])
-
   const columns = useMemo(
     () => [
       {
@@ -74,6 +75,37 @@ const SubscriptionProject = () => {
       {
         header: "Subscription Type",
         accessorKey: "subscriptionType",
+        cell: cellProps => (
+          <span className="text-dark">{cellProps.getValue()}</span>
+        ),
+        enableColumnFilter: false,
+        enableSorting: false,
+      },
+      {
+        header: "Payment Type",
+        accessorKey: "subscriptionPaymentType",
+        cell: cellProps => (
+          <span className="text-dark " style={{ textTransform: "capitalize" }}>
+            {cellProps.getValue()}
+          </span>
+        ),
+        enableColumnFilter: false,
+        enableSorting: false,
+      },
+
+      {
+        header: "Moderator",
+        accessorKey: "moderator",
+        cell: cellProps => (
+          <span className="text-dark">{cellProps.getValue()}</span>
+        ),
+        enableColumnFilter: false,
+        enableSorting: false,
+      },
+
+      {
+        header: "Duration",
+        accessorKey: "duration",
         cell: cellProps => (
           <span className="text-dark">{cellProps.getValue()}</span>
         ),

@@ -23,6 +23,7 @@ const RecentFile = ({ files, fetchFiles, folderId }) => {
   const [TheFile, setTheFile] = useState(null)
   const [fileName, setFileName] = useState("")
   const [isOpen, setIsOpen] = useState(true)
+  const [pending, setPending] = useState(false)
 
   const removeFile = async id => {
     try {
@@ -48,6 +49,7 @@ const RecentFile = ({ files, fetchFiles, folderId }) => {
     formData.append("files", TheFile)
 
     try {
+      setPending(true)
       const res = await axios.post(
         `${process.env.REACT_APP_DATABASEURL}/documents/create`,
         formData,
@@ -62,6 +64,7 @@ const RecentFile = ({ files, fetchFiles, folderId }) => {
       setTheFile(null)
       setFileName("")
       togglee()
+      setPending(false)
     } catch (error) {
       console.error("Error adding new file:", error)
     }
@@ -215,8 +218,13 @@ const RecentFile = ({ files, fetchFiles, folderId }) => {
                   >
                     Close
                   </Button>
-                  <Button type="submit" color="success" id="btn-save-event">
-                    Save
+                  <Button
+                    type="submit"
+                    color="success"
+                    id="btn-save-event"
+                    disabled={pending}
+                  >
+                    {pending ? "Uploading..." : "Save"}
                   </Button>
                 </Col>
               </Row>

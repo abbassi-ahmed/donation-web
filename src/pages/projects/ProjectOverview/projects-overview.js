@@ -134,7 +134,6 @@ const ProjectsOverview = () => {
                   <TeamMembers team={donators} sum={sum} />
                 </Col>
               </Row>
-
               <Row>
                 <Col lg="12">
                   <OverviewChart
