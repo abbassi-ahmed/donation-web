@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import axios from "axios"
-import { debounce } from "lodash"
-import { Container, Row, Col, Button, Form, InputGroup } from "react-bootstrap"
+import { Container, Row, Col, Button } from "react-bootstrap"
 import TagFilter from "./tagFilter"
 import ImageCard from "./ImageCard"
 import Pagination from "./pagination"
