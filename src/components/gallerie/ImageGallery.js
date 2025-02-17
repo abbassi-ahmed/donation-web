@@ -12,7 +12,7 @@ export default function ImageGallery() {
   const [isOpen, setIsOpen] = useState(false)
   const [loader, setLoader] = useState(false)
   const [page, setPage] = useState(1)
-  // const [totalPages, setTotalPages] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
   const [selectedTags, setSelectedTags] = useState([])
   const [allTags, setAllTags] = useState([])
 
@@ -60,15 +60,22 @@ export default function ImageGallery() {
   const fetchFiles = async () => {
     try {
       setLoader(true)
-
+      const params = new URLSearchParams({
+        page: page.toString(),
+        pageSize: paginationParams.pageSize.toString(),
+      })
       const response = await axios.post(
-        `${process.env.REACT_APP_DATABASEURL}/gallerie/filter-by-tags`,
+        `${
+          process.env.REACT_APP_DATABASEURL
+        }/gallerie/filter-by-tags?${params.toString()}`,
         {
           tags: selectedTags,
         }
       )
-      setImages(response.data)
-      // setTotalPages(response.data.pageCount)
+      console.log(response.data)
+      setImages(response.data.data)
+      setTotalPages(Math.ceil(response.data.total / rowsPerPage))
+
       setLoader(false)
       fetchTags()
     } catch (error) {
@@ -140,12 +147,12 @@ export default function ImageGallery() {
           ))}
         </Row>
       )}
-      {/* 
+
       <Pagination
         currentPage={page}
         totalPages={totalPages}
         onPageChange={handlePageChange}
-      /> */}
+      />
 
       <UploadModal
         isOpen={isOpen}
