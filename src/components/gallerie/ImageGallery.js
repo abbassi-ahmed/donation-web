@@ -18,11 +18,6 @@ export default function ImageGallery() {
 
   const rowsPerPage = 20
 
-  const [paginationParams, setPaginationParams] = useState({
-    pageNumber: page,
-    pageSize: rowsPerPage,
-    sortOrder: "DESC",
-  })
   const fetchTags = async () => {
     try {
       const response = await axios.get(
@@ -62,7 +57,7 @@ export default function ImageGallery() {
       setLoader(true)
       const params = new URLSearchParams({
         page: page.toString(),
-        pageSize: paginationParams.pageSize.toString(),
+        pageSize: rowsPerPage.toString(),
       })
       const response = await axios.post(
         `${
@@ -96,7 +91,7 @@ export default function ImageGallery() {
 
   useEffect(() => {
     fetchFiles()
-  }, [page, selectedTags, paginationParams.searchQuery])
+  }, [page, selectedTags])
   useEffect(() => {
     fetchTags()
   }, [])
