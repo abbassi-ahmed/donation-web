@@ -35,17 +35,14 @@ const ContactInfoModal = ({ show, onHide, user }) => {
                         <strong>Title:</strong>{" "}
                         {subscriptionItem.subscription.title}
                       </p>
-                      <p>
-                        <strong>Description:</strong>{" "}
-                        {subscriptionItem.subscription.description}
-                      </p>
+
                       <p>
                         <strong>Price:</strong> ${" "}
                         {subscriptionItem.subscription.price}
                       </p>
                       <p>
                         <strong>Duration:</strong>{" "}
-                        {subscriptionItem.subscription.duration} days
+                        {subscriptionItem.subscription.duration} Months
                       </p>
                       <p>
                         <strong>Ends:</strong>{" "}

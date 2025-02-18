@@ -53,7 +53,6 @@ const ManageUsers = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_DATABASEURL}/users/find?${params.toString()}`
       )
-
       setUsers(response.data.data)
       setTotalPages(response.data.total)
       setLoading(false)
