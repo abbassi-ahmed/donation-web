@@ -342,9 +342,20 @@ const Calender = props => {
                                     </Col>
                                     <Col>
                                       <h6 className="mb-1">{event.title}</h6>
-                                      <small className="text-muted">
-                                        {event.startDate} - {event.endDate}
-                                      </small>
+                                      <div
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                        }}
+                                      >
+                                        <small className="text-muted">
+                                          Category: {event.category}
+                                        </small>
+                                        <small className="text-muted">
+                                          Date: {event.startDate} -{" "}
+                                          {event.endDate}
+                                        </small>
+                                      </div>
                                     </Col>
                                   </Row>
                                 </ListGroup.Item>
