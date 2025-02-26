@@ -349,7 +349,15 @@ const Calender = props => {
                                         }}
                                       >
                                         <small className="text-muted">
-                                          Category: {event.category}
+                                          Category:
+                                          <span
+                                            style={{
+                                              textTransform: "capitalize",
+                                            }}
+                                          >
+                                            {" "}
+                                            {event.category}
+                                          </span>
                                         </small>
                                         <small className="text-muted">
                                           Date: {event.startDate} -{" "}
