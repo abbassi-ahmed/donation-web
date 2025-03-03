@@ -1,9 +1,7 @@
-import PropTypes from "prop-types"
 import React from "react"
 import {
   Row,
   Col,
-  Alert,
   Card,
   CardBody,
   Container,
@@ -14,40 +12,40 @@ import {
 } from "reactstrap"
 
 //redux
-import { useSelector, useDispatch } from "react-redux"
-import { createSelector } from "reselect"
-import { Link } from "react-router-dom"
-import withRouter from "components/Common/withRouter"
+import { Link, useParams } from "react-router-dom"
 
 // Formik Validation
-import * as Yup from "yup"
-import { useFormik } from "formik"
 
 // action
 
 // import images
 import profile from "../../assets/images/profile-img.png"
 import logo from "../../assets/images/logo.svg"
+import * as Yup from "yup"
+import { useFormik } from "formik"
 import { toast } from "react-toastify"
 import axios from "axios"
-const ForgetPasswordPage = props => {
-  //meta title
-  document.title = "Forget Password"
+export default function ResetPassword() {
+  const { token } = useParams()
 
   const validation = useFormik({
     enableReinitialize: true,
 
     initialValues: {
-      email: "",
+      password: "",
+      confirmPassword: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Please Enter Your Email"),
+      password: Yup.string().required("Please Enter Your Password"),
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref("password"), null], "Passwords must match")
+        .required("Please confirm your password"),
     }),
     onSubmit: async values => {
       await axios
         .post(
-          `${process.env.REACT_APP_DATABASEURL}/admins/forget-password`,
-          { email: values.email.toLowerCase() },
+          `${process.env.REACT_APP_DATABASEURL}/admins/reset-password`,
+          { password: values.password, token },
           {
             headers: {
               "Content-Type": "application/json",
@@ -55,24 +53,10 @@ const ForgetPasswordPage = props => {
           }
         )
         .then(response => {
-          toast.success(
-            "Si l'email existe, un lien de réinitialisation de mot de passe vous sera envoyé."
-          )
+          toast.success("Password reset successfully")
         })
     },
   })
-
-  const ForgotPasswordProperties = createSelector(
-    state => state.ForgetPassword,
-    forgetPassword => ({
-      forgetError: forgetPassword.forgetError,
-      forgetSuccessMsg: forgetPassword.forgetSuccessMsg,
-    })
-  )
-
-  const { forgetError, forgetSuccessMsg } = useSelector(
-    ForgotPasswordProperties
-  )
 
   return (
     <React.Fragment>
@@ -91,7 +75,7 @@ const ForgetPasswordPage = props => {
                     <Col xs={7}>
                       <div className="text-primary p-4">
                         <h5 className="text-primary">Welcome Back !</h5>
-                        <p>Sign in to continue to INNOSYS.</p>
+                        <p> Reset your password</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">
@@ -115,17 +99,6 @@ const ForgetPasswordPage = props => {
                     </Link>
                   </div>
                   <div className="p-2">
-                    {forgetError && forgetError ? (
-                      <Alert color="danger" style={{ marginTop: "13px" }}>
-                        {forgetError}
-                      </Alert>
-                    ) : null}
-                    {forgetSuccessMsg ? (
-                      <Alert color="success" style={{ marginTop: "13px" }}>
-                        {forgetSuccessMsg}
-                      </Alert>
-                    ) : null}
-
                     <Form
                       className="form-horizontal"
                       onSubmit={e => {
@@ -135,27 +108,44 @@ const ForgetPasswordPage = props => {
                       }}
                     >
                       <div className="mb-3">
-                        <Label className="form-label">Email</Label>
+                        <Label htmlFor="userpassword">Password</Label>
                         <Input
-                          name="email"
+                          type="password"
+                          id="password"
+                          name="password"
                           className="form-control"
-                          placeholder="Enter email"
-                          type="email"
+                          placeholder="Enter password"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.email || ""}
-                          invalid={
-                            validation.touched.email && validation.errors.email
-                              ? true
-                              : false
-                          }
+                          value={validation.values.password}
                         />
-                        {validation.touched.email && validation.errors.email ? (
+                        {validation.touched.password &&
+                        validation.errors.password ? (
                           <FormFeedback type="invalid">
-                            {validation.errors.email}
+                            {validation.errors.password}
                           </FormFeedback>
                         ) : null}
                       </div>
+                      <div className="mb-3">
+                        <Label htmlFor="userpassword">Confirm Password</Label>
+                        <Input
+                          type="password"
+                          id="confirmPassword"
+                          name="confirmPassword"
+                          className="form-control"
+                          placeholder="Enter password"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.confirmPassword}
+                        />
+                        {validation.touched.confirmPassword &&
+                        validation.errors.confirmPassword ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.confirmPassword}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
                       <Row className="mb-3">
                         <Col className="text-end">
                           <button
@@ -189,9 +179,3 @@ const ForgetPasswordPage = props => {
     </React.Fragment>
   )
 }
-
-ForgetPasswordPage.propTypes = {
-  history: PropTypes.object,
-}
-
-export default withRouter(ForgetPasswordPage)

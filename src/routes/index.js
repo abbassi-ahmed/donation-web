@@ -47,6 +47,7 @@ import ClubsOverview from "pages/clubs/ClubsOverview/clubs-overview"
 import Sports from "pages/sports/sports"
 import SportsCreate from "pages/sports/sports-create"
 import SportsOverview from "pages/sports/SportsOverview/sports-overview"
+import ResetPassword from "pages/Authentication/ResetPassword"
 
 const authProtectedRoutes = [
   { path: "/profile", component: <UserProfile />, permission: "all" },
@@ -202,6 +203,10 @@ const authProtectedRoutes = [
 const publicRoutes = [
   { path: "/login", component: <Login /> },
   { path: "/logout", component: <Logout /> },
+  {
+    path: "/reset-password/:token",
+    component: <ResetPassword />,
+  },
   { path: "/forgot-password", component: <ForgetPwd /> },
   { path: "/register", component: <Register /> },
   { path: "/no-permission", component: <NoPermission /> },
