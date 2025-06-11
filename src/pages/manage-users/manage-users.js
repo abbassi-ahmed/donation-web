@@ -212,6 +212,17 @@ const ManageUsers = () => {
         enableSorting: false,
       },
       {
+        header: "Phone",
+        accessorKey: "phone",
+        enableColumnFilter: false,
+        enableSorting: false,
+        cell: cell => (
+          <div className="d-flex gap-3">
+            <p className="text-primary">{cell.getValue() || "-"}</p>
+          </div>
+        ),
+      },
+      {
         header: "Action",
         cell: cellProps => (
           <div className="d-flex gap-3">
