@@ -218,7 +218,7 @@ const ManageUsers = () => {
         enableSorting: false,
         cell: cell => (
           <div className="d-flex gap-3">
-            <p className="text-primary">{cell.getValue() || "-"}</p>
+            <p className="text-black">{cell.getValue() || "-"}</p>
           </div>
         ),
       },
