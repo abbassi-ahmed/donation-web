@@ -27,6 +27,7 @@ const Donation = () => {
           0
         )
         setAmount(totalAmount)
+
         setLoading(false)
       } catch (error) {
         console.error("Error fetching users:", error)
@@ -44,40 +45,11 @@ const Donation = () => {
   const columns = useMemo(
     () => [
       {
-        header: "#",
-        accessorKey: "avatar",
-        cell: cell => (
-          <>
-            {!cell.getValue() ? (
-              <div className="avatar-xs">
-                <span className="avatar-title rounded-circle">
-                  <img
-                    src={cell.row.original.user.avatar}
-                    alt={cell.row.original.user.firstName}
-                    width={40}
-                    height={40}
-                    style={{ objectFit: "cover", borderRadius: "50%" }}
-                  />
-                </span>
-              </div>
-            ) : (
-              <img
-                className="rounded-circle avatar-xs"
-                src={cell.getValue()}
-                alt=""
-              />
-            )}
-          </>
-        ),
-        enableColumnFilter: false,
-        enableSorting: false,
-      },
-      {
         header: "First Name",
         accessorKey: "firstName",
         cell: cellProps => (
           <Link to="#" className="text-dark">
-            {cellProps.row.original.user.firstName}
+            {cellProps.row.original.firstName}
           </Link>
         ),
         enableColumnFilter: false,
@@ -88,7 +60,7 @@ const Donation = () => {
         accessorKey: "lastName",
         cell: cellProps => (
           <Link to="#" className="text-dark">
-            {cellProps.row.original.user.lastName}
+            {cellProps.row.original.lastName}
           </Link>
         ),
         enableColumnFilter: false,
@@ -99,7 +71,7 @@ const Donation = () => {
         accessorKey: "email",
         cell: cellProps => (
           <Link to="#" className="text-dark">
-            {cellProps.row.original.user.email}
+            {cellProps.row.original.email}
           </Link>
         ),
         enableColumnFilter: false,
@@ -149,7 +121,10 @@ const Donation = () => {
                       <h4 className="card-title">User List</h4>
                     </div>
                     <TableContainer columns={columns} data={projects} />
-                    <p className="mt-3">Amount of donations: {amount} TND</p>
+                    <p className="mt-3">
+                      Amount of donations: {amount ? amount.toFixed(2) : "0"}{" "}
+                      TND
+                    </p>
                   </CardBody>
                 </Card>
               </Col>
