@@ -20,7 +20,7 @@ const Comments = () => {
           <CardBody>
             <div className="d-flex flex-wrap">
               <div className="me-2">
-                <h5 className="card-title mb-3">Comments</h5>
+                <h5 className="card-title mb-3">Commentaires</h5>
               </div>
               <UncontrolledDropdown className="ms-auto">
                 <DropdownToggle
@@ -36,14 +36,14 @@ const Comments = () => {
                     Action
                   </Link>
                   <Link className="dropdown-item" to="#">
-                    Another action
+                    Autre action
                   </Link>
                   <Link className="dropdown-item" to="#">
-                    Something else
+                    Autre chose
                   </Link>
                   <div className="dropdown-divider"></div>
                   <Link className="dropdown-item" to="#">
-                    Separated link
+                    Lien séparé
                   </Link>
                 </DropdownMenu>
               </UncontrolledDropdown>
@@ -72,7 +72,7 @@ const Comments = () => {
                           <React.Fragment>
                             <div>
                               <Link to="#" className="text-success">
-                                <i className="mdi mdi-reply"></i> Reply
+                                <i className="mdi mdi-reply"></i> Répondre
                               </Link>
                             </div>
                             <div className="d-flex pt-3">
@@ -101,7 +101,7 @@ const Comments = () => {
                                 )}
                                 <div>
                                   <Link to="#" className="text-success">
-                                    <i className="mdi mdi-reply"></i> Reply
+                                    <i className="mdi mdi-reply"></i> Répondre
                                   </Link>
                                 </div>
                               </div>
@@ -111,7 +111,7 @@ const Comments = () => {
                         {!comment.replies && (
                           <div>
                             <Link to="#!" className="text-success">
-                              <i className="mdi mdi-reply me-1"></i> Reply
+                              <i className="mdi mdi-reply me-1"></i> Répondre
                             </Link>
                           </div>
                         )}

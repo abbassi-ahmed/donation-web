@@ -167,7 +167,7 @@ const BlogDetails = () => {
                           <div className="mt-5">
                             <h5 className="font-size-15">
                               <i className="bx bx-message-dots text-muted align-middle me-1"></i>{" "}
-                              Comments:
+                              Commentaires:
                             </h5>
                             <div className="mt-4">
                               {comments.length > 0 ? (

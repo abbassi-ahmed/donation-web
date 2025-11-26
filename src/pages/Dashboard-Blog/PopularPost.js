@@ -19,32 +19,32 @@ const PopularPost = () => {
     {
       id: 1,
       img: img1,
-      title: "Beautiful Day with Friends",
-      date: "10 Nov, 2020",
+      title: "Belle journée entre amis",
+      date: "10 nov. 2020",
       like: "125",
       comment: "68",
     },
     {
       id: 2,
       img: img2,
-      title: "Drawing a sketch",
-      date: "02 Nov, 2020",
+      title: "Dessin d'un croquis",
+      date: "02 nov. 2020",
       like: "102",
       comment: "48",
     },
     {
       id: 3,
       img: img3,
-      title: "Riding bike on road",
-      date: "24 Oct, 2020",
+      title: "Vélo sur la route",
+      date: "24 oct. 2020",
       like: "98",
       comment: "35",
     },
     {
       id: 4,
       img: img1,
-      title: "Project discussion with team",
-      date: "15 Oct, 2020",
+      title: "Discussion de projet avec l'équipe",
+      date: "15 oct. 2020",
       like: "92",
       comment: "22",
     },
@@ -56,7 +56,7 @@ const PopularPost = () => {
           <CardBody>
             <div className="d-flex">
               <div className="me-2">
-                <h5 className="card-title mb-4">Popular post</h5>
+                <h5 className="card-title mb-4">Publications populaires</h5>
               </div>
               <UncontrolledDropdown className="ms-auto">
                 <DropdownToggle
@@ -71,14 +71,14 @@ const PopularPost = () => {
                     Action
                   </Link>
                   <Link className="dropdown-item" to="#">
-                    Another action
+                    Autre action
                   </Link>
                   <Link className="dropdown-item" to="#">
-                    Something else
+                    Autre chose
                   </Link>
                   <div className="dropdown-divider"></div>
                   <Link className="dropdown-item" to="#">
-                    Separated link
+                    Lien séparé
                   </Link>
                 </DropdownMenu>
               </UncontrolledDropdown>
@@ -89,10 +89,10 @@ const PopularPost = () => {
                 <thead>
                   <tr>
                     <th scope="col" colSpan="2">
-                      Post
+                      Publication
                     </th>
-                    <th scope="col">Likes</th>
-                    <th scope="col">Comments</th>
+                    <th scope="col">J'aime</th>
+                    <th scope="col">Commentaires</th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
@@ -132,21 +132,19 @@ const PopularPost = () => {
                           >
                             <i className="mdi mdi-dots-horizontal"></i>
                           </DropdownToggle>
-                          <DropdownMenu
-                            className="dropdown-menu-end"
-                          >
+                          <DropdownMenu className="dropdown-menu-end">
                             <Link className="dropdown-item" to="#">
                               Action
                             </Link>
                             <Link className="dropdown-item" to="#">
-                              Another action
+                              Autre action
                             </Link>
                             <Link className="dropdown-item" to="#">
-                              Something else
+                              Autre chose
                             </Link>
                             <div className="dropdown-divider"></div>
                             <Link className="dropdown-item" to="#">
-                              Separated link
+                              Lien séparé
                             </Link>
                           </DropdownMenu>
                         </UncontrolledDropdown>
