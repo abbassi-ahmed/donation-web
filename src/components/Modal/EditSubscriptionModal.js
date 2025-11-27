@@ -34,7 +34,6 @@ const EditSubscriptionModal = ({
   useEffect(() => {
     if (show) {
       setTempSubscription(subscription)
-      console.log(subscription)
       setSubscriptionType(subscription?.sport?.id ? "sport" : "club")
       setSelectedSportId(subscription?.sport?.id || "")
       setSelectedClubId(subscription?.club?.id || "")
