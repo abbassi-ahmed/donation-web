@@ -10,7 +10,7 @@ import SidebarContent from "./SidebarContent"
 import { Link } from "react-router-dom"
 
 import logo from "../../assets/images/logo.svg"
-import logoLightPng from "../../assets/images/output-onlinepngtools.png"
+import logoLightPng from "../../assets/images/logo-o.png"
 import logoLightSvg from "../../assets/images/logo-light.svg"
 import logoDark from "../../assets/images/logo-dark.png"
 

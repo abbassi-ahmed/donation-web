@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.7df40e81.css",
-    "main.js": "/static/js/main.46c8b992.js",
+    "main.js": "/static/js/main.d9bf0628.js",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
     "static/media/materialdesignicons-webfont.ttf?v=5.8.55": "/static/media/materialdesignicons-webfont.506bc8215df8660d8f04.ttf",
     "static/media/fa-solid-900.svg": "/static/media/fa-solid-900.18df003f90a7f1313b98.svg",
@@ -9,7 +9,7 @@
     "static/media/fa-brands-400.svg": "/static/media/fa-brands-400.3c45c98f6f6c1b009c08.svg",
     "static/media/materialdesignicons-webfont.woff?v=5.8.55": "/static/media/materialdesignicons-webfont.d06df622bc47f0db9812.woff",
     "static/media/materialdesignicons-webfont.woff2?v=5.8.55": "/static/media/materialdesignicons-webfont.6147fc3741c622c5de2c.woff2",
-    "static/media/output-onlinepngtools.png": "/static/media/output-onlinepngtools.f842282dd9335dc30163.png",
+    "static/media/logo-o.png": "/static/media/logo-o.f842282dd9335dc30163.png",
     "static/media/boxicons.eot": "/static/media/boxicons.6829ebb16362074c0c30.eot",
     "static/media/boxicons.woff": "/static/media/boxicons.dcaf6a260cca4a061aff.woff",
     "static/media/boxicons.ttf": "/static/media/boxicons.e2ffa5b9254ec286b380.ttf",
@@ -51,10 +51,10 @@
     "static/media/logo-light.svg": "/static/media/logo-light.96c274dae02dae215c95d0a7ef202e3a.svg",
     "static/media/logo.svg": "/static/media/logo.a0143fa8ed5f53bf9ab4425b9a374176.svg",
     "main.7df40e81.css.map": "/static/css/main.7df40e81.css.map",
-    "main.46c8b992.js.map": "/static/js/main.46c8b992.js.map"
+    "main.d9bf0628.js.map": "/static/js/main.d9bf0628.js.map"
   },
   "entrypoints": [
     "static/css/main.7df40e81.css",
-    "static/js/main.46c8b992.js"
+    "static/js/main.d9bf0628.js"
   ]
 }
